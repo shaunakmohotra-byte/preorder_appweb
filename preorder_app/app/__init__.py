@@ -6,8 +6,10 @@ from flask import Flask
 def create_app():
     # Tell Flask the template folder is one level up from this file
     template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
-    
-    app = Flask(__name__, template_folder=template_dir)
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    static_dir = os.path.abspath(os.path.join(base_dir, '..', 'static'))
+
+   app = Flask(__name__, template_folder=template_dir)
     
     app.config['SECRET_KEY'] = 'dev-secret-key-123'
 
