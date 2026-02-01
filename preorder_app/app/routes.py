@@ -26,23 +26,35 @@ def view_cart():
         flash('Please login to view cart')
         return redirect(url_for('auth.login'))
 
+    # Load data safely
     carts = load_json(CARTS_FILE, {})
-    items_map = {i.get('id'): i for i in load_json(ITEMS_FILE, []) if i.get('id')}
+    # If carts is accidentally a list, reset it to a dict
+    if not isinstance(carts, dict): carts = {}
     
-    # Use .get('id') and default to a string to prevent KeyError
+    all_items = load_json(ITEMS_FILE, [])
+    items_map = {str(i.get('id')): i for i in all_items if i.get('id')}
+    
+    # Safely get user ID and their cart
     user_id = str(user.get('id', ''))
     user_cart = carts.get(user_id, [])
 
     cart_details = []
     total = 0
+    
     for c in user_cart:
-        it = items_map.get(c.get('item_id')) # Safe get
+        item_id = str(c.get('item_id', ''))
+        it = items_map.get(item_id)
+        
         if it:
-            price = it.get('price', 0)
             qty = c.get('qty', 0)
+            price = it.get('price', 0)
             subtotal = price * qty
             total += subtotal
-            cart_details.append({'item': it, 'qty': qty, 'subtotal': subtotal})
+            cart_details.append({
+                'item': it, 
+                'qty': qty, 
+                'subtotal': subtotal
+            })
 
     return render_template('cart.html', cart_details=cart_details, total=total, user=user)
 @bp.route('/add_to_cart', methods=['POST'])
