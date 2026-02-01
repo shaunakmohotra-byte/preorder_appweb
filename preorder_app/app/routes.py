@@ -28,19 +28,23 @@ def view_cart():
 
     carts = load_json(CARTS_FILE, {})
     items_map = {i.get('id'): i for i in load_json(ITEMS_FILE, []) if i.get('id')}
-    user_cart = carts.get(str(user['id']), [])
+    
+    # Use .get('id') and default to a string to prevent KeyError
+    user_id = str(user.get('id', ''))
+    user_cart = carts.get(user_id, [])
 
     cart_details = []
     total = 0
     for c in user_cart:
-        it = items_map.get(c['item_id'])
+        it = items_map.get(c.get('item_id')) # Safe get
         if it:
-            subtotal = it['price'] * c['qty']
+            price = it.get('price', 0)
+            qty = c.get('qty', 0)
+            subtotal = price * qty
             total += subtotal
-            cart_details.append({'item': it, 'qty': c['qty'], 'subtotal': subtotal})
+            cart_details.append({'item': it, 'qty': qty, 'subtotal': subtotal})
 
     return render_template('cart.html', cart_details=cart_details, total=total, user=user)
-
 @bp.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
     user = current_user()
