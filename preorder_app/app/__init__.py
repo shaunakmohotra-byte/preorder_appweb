@@ -2,7 +2,7 @@ import os
 from flask import Flask
 
 def create_app():
-    app = Flask(    preorder_app) # <--- Add 4 spaces before this line
+    app = Flask(__name__) # <--- Add 4 spaces before this line
     app.config['SECRET_KEY'] = '    asdasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf' # <--- And this one
     
     from .routes import bp as main_bp
