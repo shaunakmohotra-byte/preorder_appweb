@@ -330,23 +330,19 @@ def pay_now():
 
     flash("Payment successful. Confirmation email sent.")
     return redirect(url_for('main.menu'))
-#temp
-    print("PAY_NOW CALLED")
 
 db_user = get_user_by_id(user["id"])
-print("USER FOUND:", db_user)
 
 if db_user and db_user.get("email"):
-    print("SENDING EMAIL TO:", db_user["email"])
     try:
         send_order_email(
             user_email=db_user["email"],
             user_name=db_user["name"],
             order=order
         )
-        print("EMAIL SENT (no exception)")
     except Exception as e:
         print("EMAIL FAILED:", e)
+
 
 
 @bp.route('/cafeteria')
