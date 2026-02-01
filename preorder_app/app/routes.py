@@ -172,9 +172,26 @@ def pay_now():
     flash("Payment Successful!")
     return redirect(url_for('main.menu'))
 
-@bp.route('/login')
+@bp.route('/login', methods=['GET', 'POST'])
 def login():
-    # Placeholder: Ensure this route exists so url_for('main.login') works!
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        users = load_json(USERS_FILE, [])
+        # Find the user by email
+        user = next((u for u in users if u.get('email') == email), None)
+
+        # IMPORTANT: We use 'password_hash' to match your store.py
+        if user and check_password_hash(user.get('password_hash', ''), password):
+            session.clear()
+            session['user_id'] = user['id']
+            flash(f"Welcome back, {user.get('name')}!")
+            return redirect(url_for('main.menu'))
+        else:
+            flash("Invalid email or password.")
+            return redirect(url_for('main.login'))
+
     return render_template('login.html')
 
 # (Add your add_to_cart, remove_from_cart, etc. below this...)
