@@ -113,7 +113,7 @@ def add_to_cart():
     user = current_user()
     if not user:
         flash('Please login to add to cart')
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('main.login'))
 
     item_id = request.form['item_id']
     qty = int(request.form.get('qty', 1))
@@ -138,7 +138,7 @@ def view_cart():
     user = current_user()
     if not user:
         flash('Login to view cart')
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('main.login'))
 
     carts = load_json(CARTS_FILE, {})
     items = {i['id']: i for i in load_json(ITEMS_FILE, [])}
@@ -165,7 +165,7 @@ def view_cart():
 def remove_from_cart():
     user = current_user()
     if not user:
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('main.login'))
 
     item_id = request.form['item_id']
 
@@ -183,7 +183,7 @@ def remove_from_cart():
 def cart_increase():
     user = current_user()
     if not user:
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('main.login'))
 
     item_id = request.form['item_id']
 
@@ -204,7 +204,7 @@ def cart_increase():
 def cart_decrease():
     user = current_user()
     if not user:
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('main.login'))
 
     item_id = request.form['item_id']
 
