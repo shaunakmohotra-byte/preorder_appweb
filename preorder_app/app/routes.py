@@ -75,11 +75,15 @@ def add_to_cart():
         return redirect(url_for('auth.login'))
 
     item_id = request.form.get('item_id')
+
     carts = load_json(CARTS_FILE, {})
+    if not isinstance(carts, dict):
+        carts = {}
+
     user_id = str(user['id'])
     user_cart = carts.get(user_id, [])
 
-    existing = next((c for c in user_cart if c['item_id'] == item_id), None)
+    existing = next((c for c in user_cart if str(c.get('item_id')) == str(item_id)), None)
     if existing:
         existing['qty'] += 1
     else:
@@ -87,8 +91,10 @@ def add_to_cart():
 
     carts[user_id] = user_cart
     save_json(CARTS_FILE, carts)
+
     flash('Added to cart')
     return redirect(url_for('main.menu'))
+
 
 @bp.route('/cart/increase', methods=['POST'])
 def cart_increase():
