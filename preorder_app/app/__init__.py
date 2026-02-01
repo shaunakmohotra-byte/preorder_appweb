@@ -1,11 +1,15 @@
 import os
 from flask import Flask
+
 def create_app():
-    app = Flask(__name__, template_folder='../templates', static_folder='../static')
-    app.secret_key = os.environ.get('PREORDER_SECRET', 'asdhbasdiuabdquwubddbaijsrjasbisdbasdbasdiuiusadubausbd')
+    app = Flask(    preorder_app) # <--- Add 4 spaces before this line
+    app.config['SECRET_KEY'] = '    asdasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf' # <--- And this one
+    
+    from .routes import bp as main_bp
+    app.register_blueprint(main_bp)
+    
+    return app
     # register blueprints
-    def create_app():
-    app = Flask(__name__)
     # DO NOT FORGET THIS LINE
     app.config['SECRET_KEY'] = 'your-secret-key-here' 
     
