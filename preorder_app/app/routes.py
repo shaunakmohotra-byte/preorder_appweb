@@ -18,6 +18,10 @@ SMTP_SERVER = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
 SMTP_PORT = int(os.environ.get('SMTP_PORT', 587))
 SMTP_EMAIL = os.environ.get('SMTP_EMAIL', 'preorder.apptis@gmail.com')
 SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', 'bzmf ugav dbcy podq') 
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587
+SMTP_EMAIL = os.getenv("SMTP_EMAIL")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 
 # -----------------------
 # Helper Functions
@@ -58,30 +62,35 @@ def send_order_email(user_email, user_name, order):
     msg["From"] = SMTP_EMAIL
     msg["To"] = user_email
 
-    # Build the email body
     body = f"""
 Hi {user_name},
 
-Your order has been successfully placed!
+Your order has been successfully placed.
 
 Order ID: {order['id']}
-Total Amount: Rs. {order['total']}
+Total Amount: ₹{order['total']}
 
 Items:
 """
+
     for item in order["items"]:
-        body += f"- {item['name']} x {item['qty']} (Rs. {item['price']})\n"
+        body += f"- {item['name']} × {item['qty']} (₹{item['price']})\n"
 
     body += "\nThank you for ordering!\nCafeteria Team"
 
     msg.set_content(body)
 
-    # Send the email
-    with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+    with smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=10) as server:
         server.starttls()
         server.login(SMTP_EMAIL, SMTP_PASSWORD)
         server.send_message(msg)
-    print(f"Email sent successfully to {user_email}")
+
+def get_user_by_id(user_id):
+    users = load_json(USERS_FILE, [])
+    for user in users:
+        if user.get("id") == user_id:
+            return user
+    return None
 
 # -----------------------
 # Main Routes
