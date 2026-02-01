@@ -178,3 +178,108 @@ def login():
     return render_template('login.html')
 
 # (Add your add_to_cart, remove_from_cart, etc. below this...)
+# -----------------------
+# Cart Management Routes
+# -----------------------
+
+@bp.route('/add_to_cart', methods=['POST'])
+def add_to_cart():
+    user = current_user()
+    if not user:
+        flash('Please login to add to cart')
+        return redirect(url_for('main.login'))
+
+    item_id = request.form.get('item_id')
+    qty = int(request.form.get('qty', 1))
+
+    carts = load_json(CARTS_FILE, {})
+    user_id = str(user['id'])
+    user_cart = carts.get(user_id, [])
+
+    existing = next((c for c in user_cart if c['item_id'] == item_id), None)
+    if existing:
+        existing['qty'] += qty
+    else:
+        user_cart.append({'item_id': item_id, 'qty': qty})
+
+    carts[user_id] = user_cart
+    save_json(CARTS_FILE, carts)
+
+    flash('Added to cart')
+    return redirect(url_for('main.menu'))
+
+@bp.route('/remove_from_cart', methods=['POST'])
+def remove_from_cart():
+    user = current_user()
+    if not user:
+        return redirect(url_for('main.login'))
+
+    item_id = request.form.get('item_id')
+    carts = load_json(CARTS_FILE, {})
+    user_id = str(user['id'])
+    
+    user_cart = carts.get(user_id, [])
+    user_cart = [c for c in user_cart if c['item_id'] != item_id]
+    
+    carts[user_id] = user_cart
+    save_json(CARTS_FILE, carts)
+
+    flash('Item removed')
+    return redirect(url_for('main.view_cart'))
+
+@bp.route('/cart/increase', methods=['POST'])
+def cart_increase():
+    user = current_user()
+    if not user: return redirect(url_for('main.login'))
+
+    item_id = request.form.get('item_id')
+    carts = load_json(CARTS_FILE, {})
+    user_cart = carts.get(str(user['id']), [])
+
+    for c in user_cart:
+        if c['item_id'] == item_id:
+            c['qty'] += 1
+            break
+
+    save_json(CARTS_FILE, carts)
+    return redirect(url_for('main.view_cart'))
+
+@bp.route('/cart/decrease', methods=['POST'])
+def cart_decrease():
+    user = current_user()
+    if not user: return redirect(url_for('main.login'))
+
+    item_id = request.form.get('item_id')
+    carts = load_json(CARTS_FILE, {})
+    user_id = str(user['id'])
+    user_cart = carts.get(user_id, [])
+
+    for c in user_cart:
+        if c['item_id'] == item_id:
+            if c['qty'] > 1:
+                c['qty'] -= 1
+            else:
+                user_cart = [x for x in user_cart if x['item_id'] != item_id]
+            break
+
+    carts[user_id] = user_cart
+    save_json(CARTS_FILE, carts)
+    return redirect(url_for('main.view_cart'))
+
+# -----------------------
+# Admin/Cafeteria Routes
+# -----------------------
+
+@bp.route('/cafeteria')
+def cafeteria():
+    orders = load_orders()
+    return render_template("cafeteria.html", orders=orders)
+
+@bp.route('/cafeteria/mark_paid/<order_id>', methods=['POST'])
+def mark_order_paid(order_id):
+    orders = load_orders()
+    # Remove the order once delivered/paid
+    orders = [o for o in orders if str(o.get('id')) != str(order_id)]
+    save_orders(orders)
+    flash("Order completed!")
+    return redirect(url_for('main.cafeteria'))
