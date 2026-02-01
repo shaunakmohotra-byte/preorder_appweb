@@ -7,7 +7,10 @@ from email.message import EmailMessage
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from .store import load_json, save_json, ITEMS_FILE, CARTS_FILE, ORDERS_FILE, USERS_FILE
 from utils.repair import repair_json  # Assuming this exists based on your snippet
-
+import threading  # <--- Add this
+import smtplib
+from email.message import EmailMessage
+# ... (rest of your imports)
 bp = Blueprint('main', __name__)
 
 # -----------------------
