@@ -75,6 +75,9 @@ def add_to_cart():
         return redirect(url_for('auth.login'))
 
     item_id = request.form.get('item_id')
+    if not item_id:
+        flash('Invalid item')
+        return redirect(url_for('main.menu'))
 
     carts = load_json(CARTS_FILE, {})
     if not isinstance(carts, dict):
@@ -83,9 +86,10 @@ def add_to_cart():
     user_id = str(user['id'])
     user_cart = carts.get(user_id, [])
 
-    existing = next((c for c in user_cart if str(c.get('item_id')) == str(item_id)), None)
-    if existing:
-        existing['qty'] += 1
+    for c in user_cart:
+        if str(c.get('item_id')) == str(item_id):
+            c['qty'] += 1
+            break
     else:
         user_cart.append({'item_id': item_id, 'qty': 1})
 
