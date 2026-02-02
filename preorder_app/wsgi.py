@@ -1,5 +1,5 @@
 import os
-from app import create_app
+from preorder_app.app import create_app
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = create_app()
