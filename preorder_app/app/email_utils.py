@@ -11,8 +11,8 @@ def send_order_email(to_email, subject, body):
     try:
         # Create email message
         msg = MIMEMultipart()
-        msg["From"] = "preorder.apptis@gmail.com"
-        msg["To"] = EMAIL_ADDRESS
+        msg["From"] = EMAIL_ADDRESS
+        msg["To"] = to_email
         msg["Subject"] = subject
         msg.attach(MIMEText(body, "plain"))
 
