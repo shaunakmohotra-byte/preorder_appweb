@@ -199,21 +199,74 @@ def checkout():
                            total=total, 
                            user=user)
 
+from .email_utils import send_order_email
+
 @bp.route('/pay_now', methods=['POST'])
 def pay_now():
     user = current_user()
-    if not user: return redirect(url_for('auth.login'))
-    
+    if not user:
+        return redirect(url_for('auth.login'))
+
     carts = load_json(CARTS_FILE, {})
-    user_id = str(user['id'])
+    items = load_json(ITEMS_FILE, [])
+    items_map = {str(i["id"]): i for i in items}
+
+    user_id = str(user["id"])
     user_cart = carts.get(user_id, [])
-    
-    # Process order... (Simplified for brevity)
+
+    if not user_cart:
+        flash("Cart empty")
+        return redirect(url_for('main.menu'))
+
+    order_items = []
+    total = 0
+
+    for c in user_cart:
+        item = items_map.get(str(c["item_id"]))
+        if not item:
+            continue
+        qty = c["qty"]
+        subtotal = item["price"] * qty
+        total += subtotal
+        order_items.append({
+            "name": item["name"],
+            "qty": qty
+        })
+
+    # Save order
     orders = load_json(ORDERS_FILE, [])
-    orders.append({'id': str(uuid.uuid4())[:8], 'user': user['name'], 'status': 'Paid'})
+    orders.append({
+        "id": str(uuid.uuid4())[:8],
+        "user_name": user["username"],
+        "items": order_items,
+        "total": total,
+        "status": "Paid"
+    })
     save_json(ORDERS_FILE, orders)
-    
+
+    # Clear cart
     carts[user_id] = []
     save_json(CARTS_FILE, carts)
-    flash("Order Placed!")
+
+    # EMAIL CONTENT
+    email_body = f"""
+Hi {user['username']},
+
+Your order has been placed successfully!
+
+Order Items:
+""" + "\n".join([f"- {i['qty']} × {i['name']}" for i in order_items]) + f"""
+
+Total: ₹{total}
+
+Thank you for ordering!
+"""
+
+    send_order_email(
+        to_email=user["email"],
+        subject="Your Order Receipt",
+        body=email_body
+    )
+
+    flash("Payment successful! Receipt sent to email.")
     return redirect(url_for('main.menu'))
