@@ -273,5 +273,5 @@ threading.Thread(
     daemon=True
 ).start()
 
-    flash("Payment successful! Receipt will be emailed shortly.")
-    return redirect(url_for('main.menu'))
+flash("Payment successful! Receipt will be emailed shortly.")
+return redirect(url_for('main.menu'))
