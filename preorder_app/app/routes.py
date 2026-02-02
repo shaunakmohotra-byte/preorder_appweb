@@ -250,7 +250,7 @@ def pay_now():
 
     # EMAIL CONTENT
     email_body = f"""
-Hi {user['username']},
+    Hi {user['username']},
 
 Your order has been placed successfully!
 
@@ -263,15 +263,15 @@ Thank you for ordering!
 """
 
    # send email in background
-threading.Thread(
-    target=send_order_email,
-    args=(
-        user["email"],
-        "Your Order Receipt",
-        email_body
-    ),
-    daemon=True
-).start()
+    threading.Thread(
+        target=send_order_email,
+        args=(
+            user["email"],
+            "Your Order Receipt",
+            email_body
+        ),
+        daemon=True
+    ).start()
 
-flash("Payment successful! Receipt will be emailed shortly.")
-return redirect(url_for('main.menu'))
+    flash("Payment successful! Receipt will be emailed shortly.")
+    return redirect(url_for('main.menu'))
