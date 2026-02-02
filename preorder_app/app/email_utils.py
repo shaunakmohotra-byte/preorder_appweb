@@ -5,8 +5,8 @@ from email.mime.multipart import MIMEMultipart
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 
-EMAIL_ADDRESS = "yourprojectemail@gmail.com"
-EMAIL_PASSWORD = "YOUR_APP_PASSWORD"   # NOT normal password
+EMAIL_ADDRESS = "preorder.apptis@gmail.com"
+EMAIL_PASSWORD = "bzmf ugav dbcy podq"   # NOT normal password
 
 def send_order_email(to_email, subject, body):
     try:
