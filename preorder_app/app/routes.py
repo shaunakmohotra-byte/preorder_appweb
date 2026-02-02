@@ -1,7 +1,7 @@
 import os, datetime, uuid, threading
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from .store import load_json, save_json, ITEMS_FILE, CARTS_FILE, ORDERS_FILE, USERS_FILE
-from app.utils.pdf_invoice import generate_invoice_pdf
+from .utils.pdf_invoice import generate_invoice_pdf
 from flask import send_file
 
 bp = Blueprint('main', __name__)
