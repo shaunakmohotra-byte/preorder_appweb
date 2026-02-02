@@ -6,9 +6,11 @@ bp = Blueprint('main', __name__)
 
 def current_user():
     uid = session.get('user_id')
-    if not uid: return None
+    if not uid:
+        return None
     users = load_json(USERS_FILE, [])
-    return next((u for u in users if u.get('id') == uid), None)
+    return next((u for u in users if str(u.get('id')) == str(uid)), None)
+
 
 @bp.route('/')
 def index():
