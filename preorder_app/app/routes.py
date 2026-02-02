@@ -275,7 +275,3 @@ threading.Thread(
 
 flash("Payment successful! Receipt will be emailed shortly.")
 return redirect(url_for('main.menu'))
-
-
-    flash("Payment successful! Receipt sent to email.")
-    return redirect(url_for('main.menu'))
