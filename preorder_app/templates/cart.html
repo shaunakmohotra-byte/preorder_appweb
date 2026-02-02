@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
+
 <h2>Your Cart</h2>
 
+{% if cart_details %}
 <table>
     <tr>
         <th>Item</th>
@@ -12,18 +14,18 @@
 
     {% for c in cart_details %}
     <tr>
-        <td>{{ c.item.name }}</td>
+        <td>{{ c.name }}</td>
 
         <td>
             <form action="{{ url_for('main.cart_decrease') }}" method="POST" style="display:inline;">
-                <input type="hidden" name="item_id" value="{{ c.item.id }}">
+                <input type="hidden" name="item_id" value="{{ c.item_id }}">
                 <button type="submit">−</button>
             </form>
 
             {{ c.qty }}
 
             <form action="{{ url_for('main.cart_increase') }}" method="POST" style="display:inline;">
-                <input type="hidden" name="item_id" value="{{ c.item.id }}">
+                <input type="hidden" name="item_id" value="{{ c.item_id }}">
                 <button type="submit">+</button>
             </form>
         </td>
@@ -31,8 +33,8 @@
         <td>₹{{ c.subtotal }}</td>
 
         <td>
-            <form action="{{ url_for('main.remove_from_cart') }}" method="POST">
-                <input type="hidden" name="item_id" value="{{ c.item.id }}">
+            <form action="{{ url_for('main.cart_decrease') }}" method="POST">
+                <input type="hidden" name="item_id" value="{{ c.item_id }}">
                 <button type="submit">Remove</button>
             </form>
         </td>
@@ -45,5 +47,9 @@
 <form action="{{ url_for('main.checkout') }}" method="GET">
     <button type="submit">Proceed to Checkout</button>
 </form>
+
+{% else %}
+<p>Your cart is empty.</p>
+{% endif %}
 
 {% endblock %}
