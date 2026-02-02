@@ -14,12 +14,5 @@
     "password_hash": "scrypt:32768:8:1$iWXPeuXRRmGRZ4FM$d3a44a82ae5b7d0bcadcef5110306ba45d1dd01f2023705db523a94a24dadc56482184a1472812b50e42dfd57f32437b21d3002dc2c935caa0b47578129e1c50",
     "is_admin": true,
     "username": "Shaunak Mohotra"
-  },
-  {
-    "id": "d8063486-5b00-425f-b2d0-d135f4b30b90",
-    "name": "Admin",
-    "email": "admin@example.com",
-    "password_hash": "scrypt:32768:8:1$eBJlpJcm7yPYzI8s$72e8b7e6b0327e899c8f24b4426f3c1b263fdd69445fda93ca7322b132c4a5bcd1d2aaeea1708d442cb58b14f8e11c99e948226aaf612ccd770f73bacfc25c42",
-    "is_admin": true
   }
 ]
