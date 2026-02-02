@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
-
 {% block content %}
+
 <h2>Admin Dashboard</h2>
 
+<!-- ================= USERS ================= -->
 <h3>Users</h3>
 
 <table border="1" cellpadding="8">
@@ -20,16 +21,14 @@
         <td>{{ 'Yes' if user.is_admin else 'No' }}</td>
 
         <td>
-            <!-- Edit Button -->
-            <a href="{{ url_for('admin.edit_user', user_id=user.id) }}">
-                <form action="{{ url_for('admin.edit_user', user_id=user.id) }}" method="GET">
-    <button class="edit-btn">Edit</button>
-</form>
+            <!-- Edit (GET is correct here) -->
+            <form action="{{ url_for('admin.edit_user', user_id=user.id) }}"
+                  method="GET"
+                  style="display:inline;">
+                <button type="submit">Edit</button>
+            </form>
 
-
-            </a>
-
-            <!-- Delete Button -->
+            <!-- Delete -->
             <form method="POST"
                   action="{{ url_for('admin.delete_user') }}"
                   style="display:inline;">
@@ -44,17 +43,24 @@
     {% endfor %}
 </table>
 
-
+<!-- ================= ITEMS ================= -->
 <h3>Items</h3>
+
 <table border="1" cellpadding="6">
-<tr><th>Name</th><th>Price</th><th>Action</th></tr>
+<tr>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Action</th>
+</tr>
+
 {% for it in items %}
 <tr>
-    <td>{{ it["name"] }}</td>
-    <td>₹{{ it["price"] }}</td>
+    <td>{{ it.name if it.name is defined else it["name"] }}</td>
+    <td>₹{{ it.price if it.price is defined else it["price"] }}</td>
     <td>
-        <form method="post" action="{{ url_for('admin.delete_item') }}">
-            <input type="hidden" name="item_id" value="{{ it["id"] }}">
+        <form method="POST" action="{{ url_for('admin.delete_item') }}">
+            <input type="hidden" name="item_id"
+                   value="{{ it.id if it.id is defined else it['id'] }}">
             <button type="submit">Delete</button>
         </form>
     </td>
@@ -63,28 +69,38 @@
 </table>
 
 <h4>Add Item</h4>
-<form method="post" action="{{ url_for('admin.add_item') }}">
+<form method="POST" action="{{ url_for('admin.add_item') }}">
     Name: <input name="name" required>
-    Price: <input name="price" required type="number">
+    Price: <input name="price" type="number" required>
     <button type="submit">Add</button>
 </form>
 
+<!-- ================= ORDERS ================= -->
 <h3>Orders</h3>
+
 <table border="1" cellpadding="6">
-<tr><th>Order ID</th><th>User</th><th>Items</th><th>Total</th><th>Status</th></tr>
+<tr>
+    <th>Order ID</th>
+    <th>User</th>
+    <th>Items</th>
+    <th>Total</th>
+    <th>Status</th>
+</tr>
+
 {% for o in orders %}
 <tr>
-    <td>{{ o["id"] }}</td>
-    <td>{{ o["user_name"] }}</td>
+    <td>{{ o.id if o.id is defined else o["id"] }}</td>
+    <td>{{ o.user_name if o.user_name is defined else o["user_name"] }}</td>
     <td>
         <ul>
-        {% for it in o["items"] %}
-            <li>{{ it["qty"] }} × {{ it["name"] }}</li>
+        {% for it in o.items if o.items is defined else o["items"] %}
+            <li>{{ it.qty if it.qty is defined else it["qty"] }}
+                × {{ it.name if it.name is defined else it["name"] }}</li>
         {% endfor %}
         </ul>
     </td>
-    <td>₹{{ o["total"] }}</td>
-    <td>{{ o["status"] }}</td>
+    <td>₹{{ o.total if o.total is defined else o["total"] }}</td>
+    <td>{{ o.status if o.status is defined else o["status"] }}</td>
 </tr>
 {% endfor %}
 </table>
