@@ -23,6 +23,7 @@ def send_order_email(to_email, subject, body):
             server.ehlo()
             server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
             server.send_message(msg)
+            server.set_debuglevel(1)  # shows SMTP communication
 
         print(f"EMAIL SENT to {to_email}")
 
