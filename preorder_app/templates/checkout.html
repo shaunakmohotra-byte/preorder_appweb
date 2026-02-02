@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block content %}
 <h2>Mock Transaction Page</h2>
 
@@ -11,7 +10,7 @@
 
 <h3>Total: ₹{{ total }}</h3>
 
-<form method="post" action="{{ url_for('main.pay_now') }}">
+<form action="{{ url_for('main.pay_now') }}" method="post">
     <button type="submit">Pay Now</button>
 </form>
 {% endblock %}

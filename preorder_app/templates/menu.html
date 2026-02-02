@@ -3,6 +3,16 @@
 {% block content %}
 <h2>Menu</h2>
 
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for message in messages %}
+        <div class="alert">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
 <div class="grid">
 {% for it in items %}
   <div class="card">
