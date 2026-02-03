@@ -285,5 +285,16 @@ def pay_now():
         download_name=f"invoice_{order_id}.pdf"
     )
 
+@bp.route('/cafeteria')
+def cafeteria():
+    user = current_user()
+
+    orders = load_json(ORDERS_FILE, [])
+
+    return render_template(
+        'cafeteria.html',
+        orders=orders,
+        user=user
+    )
 
 
