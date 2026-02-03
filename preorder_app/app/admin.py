@@ -102,7 +102,7 @@ def delete_user():
     flash('User deleted')
     return redirect(url_for('admin.index'))
 
-@admin_bp.route('/dashboard')
+@bp.route('/dashboard')
 def dashboard():
     users = load_json(USERS_FILE, [])
     orders = load_json(ORDERS_FILE, [])
