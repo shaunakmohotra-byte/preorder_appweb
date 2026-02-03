@@ -1,7 +1,7 @@
 import os, datetime, uuid, threading
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from .store import load_json, save_json, ITEMS_FILE, CARTS_FILE, ORDERS_FILE, USERS_FILE
-from .utils.pdf_invoice.py import generate_invoice_pdf
+from .utils.pdf_invoice import generate_invoice_pdf
 from flask import send_file
 
 bp = Blueprint('main', __name__)
@@ -205,9 +205,8 @@ def checkout():
 
 @bp.route('/pay_now', methods=['POST'])
 def pay_now():
-    from utils.pdf_invoice import generate_invoice
-    from flask import send_file
     import os, uuid
+    from flask import send_file
 
     user = current_user()
     if not user:
@@ -235,13 +234,12 @@ def pay_now():
     for c in user_cart:
         item_id = str(c.get("item_id"))
         qty = int(c.get("qty", 0))
-
         item = items_map.get(item_id)
+
         if not item or qty <= 0:
             continue
 
-        price = int(item.get("price", 0))
-        subtotal = price * qty
+        subtotal = item.get("price", 0) * qty
         total += subtotal
 
         order_items.append({
@@ -250,48 +248,42 @@ def pay_now():
         })
 
     if not order_items:
-        flash("Order could not be processed")
+        flash("Order failed")
         return redirect(url_for("main.menu"))
 
-    display_name = (
-        user.get("username")
-        or user.get("name")
-        or user.get("email")
-        or "User"
-    )
+    order_id = str(uuid.uuid4())[:8]
 
-    # ORDER OBJECT
-    order = {
-        "id": str(uuid.uuid4())[:8],
-        "user_name": display_name,
+    # SAVE ORDER
+    orders = load_json(ORDERS_FILE, [])
+    orders.append({
+        "id": order_id,
+        "user_name": user.get("username", user.get("email")),
         "items": order_items,
         "total": total,
         "status": "Paid"
-    }
-
-    # Save order
-    orders = load_json(ORDERS_FILE, [])
-    orders.append(order)
+    })
     save_json(ORDERS_FILE, orders)
 
-    # Clear cart
+    # CLEAR CART
     carts[user_id] = []
     save_json(CARTS_FILE, carts)
 
-    # ===== PDF GENERATION =====
+    # ===== GENERATE PDF =====
     invoice_dir = "invoices"
     os.makedirs(invoice_dir, exist_ok=True)
 
-    pdf_path = os.path.join(
-        invoice_dir, f"invoice_{order['id']}.pdf"
+    pdf_path = generate_invoice_pdf(
+        order_id=order_id,
+        user=user,
+        order_items=order_items,
+        total=total
     )
-
-    generate_invoice(order, pdf_path)
 
     return send_file(
         pdf_path,
         as_attachment=True,
-        download_name=f"invoice_{order['id']}.pdf"
+        download_name=f"invoice_{order_id}.pdf"
     )
+
 
 
