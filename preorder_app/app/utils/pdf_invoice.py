@@ -25,6 +25,11 @@ def generate_invoice_pdf(order_id, user, order_items, total):
     c.drawString(2 * cm, y, "CAFETERIA E-BILL")
     y -= 1.2 * cm
 
+    logo_path = os.path.join(current_app.root_path, "static", "logo.png")
+if os.path.exists(logo_path):
+    c.drawImage(logo_path, 2*cm, height-3*cm, width=3*cm, height=3*cm, preserveAspectRatio=True)
+
+    
     c.setFont("Helvetica", 10)
     c.drawString(2 * cm, y, "Tagore International School – Cafeteria")
     c.drawRightString(
