@@ -3,7 +3,7 @@ from flask import current_app
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import cm
-from reportlab.lib.colors import HexColor, grey, black, white
+from reportlab.lib.colors import grey, black
 from datetime import datetime
 
 
@@ -16,102 +16,136 @@ def generate_invoice_pdf(order_id, user, order_items, total):
     c = canvas.Canvas(file_path, pagesize=A4)
     width, height = A4
 
-    # =================================================
-    # HEADER BAND
-    # =================================================
-    header_color = HexColor("#1F2937")  # dark slate
-    c.setFillColor(header_color)
-    c.rect(0, height - 3.2 * cm, width, 4.0 * cm, fill=1, stroke=0)
+    y = height - 2 * cm
 
-    c.setFillColor(white)
-    c.setFont("Times-Bold", 22)
-    c.drawString(2 * cm, height - 2 * cm, "CAFETERIA E-BILL")
+    # =================================================
+    # HEADER
+    # =================================================
+    c.setFont("Helvetica-Bold", 22)
+    c.drawString(2 * cm, y, "CAFETERIA E-BILL")
+    y -= 1.2 * cm
 
-    c.setFont("Times-Roman", 10)
-    c.drawRightString(width - 2 * cm, height - 2.1 * cm, "INVOICE")
-    c.drawRightString(width - 2 * cm, height - 2.7 * cm, f"Order ID: {order_id}")
+    c.setFont("Helvetica", 10)
+    c.drawString(2 * cm, y, "Tagore International School – Cafeteria")
     c.drawRightString(
         width - 2 * cm,
-        height - 3.3 * cm,
-        datetime.now().strftime("%d %b %Y • %I:%M %p")
+        y,
+        f"Invoice No: {order_id}"
     )
+
+    y -= 0.6 * cm
+    c.drawRightString(
+        width - 2 * cm,
+        y,
+        datetime.now().strftime("%d %b %Y, %I:%M %p")
+    )
+
+    # Divider
+    y -= 0.8 * cm
+    c.setStrokeColor(grey)
+    c.line(2 * cm, y, width - 2 * cm, y)
 
     # =================================================
     # CUSTOMER DETAILS
     # =================================================
-    y = height - 4.5 * cm
+    y -= 1.2 * cm
+    c.setFont("Helvetica-Bold", 11)
     c.setFillColor(black)
-
-    c.setFont("Times-Bold", 12)
-    c.drawString(2 * cm, y, "Billed To")
+    c.drawString(2 * cm, y, "Billed To:")
 
     y -= 0.6 * cm
-    c.setFont("Times-Roman", 11)
-    c.drawString(2 * cm, y, user.get("username", "User"))
-
+    c.setFont("Helvetica", 10)
+    c.drawString(2 * cm, y, user.get("username", "Student"))
     y -= 0.5 * cm
-    c.setFont("Times-Roman", 10)
     c.drawString(2 * cm, y, user.get("email", ""))
 
     # =================================================
-    # TABLE HEADER
+    # ORDER TABLE HEADER
     # =================================================
     y -= 1.4 * cm
-    c.setFont("Times-Bold", 11)
-
+    c.setFont("Helvetica-Bold", 11)
     c.drawString(2 * cm, y, "Item")
-    c.drawRightString(11 * cm, y, "Price")
-    c.drawRightString(14 * cm, y, "Qty")
-    c.drawRightString(18 * cm, y, "Amount")
+    c.drawRightString(12 * cm, y, "Qty")
+    c.drawRightString(15 * cm, y, "Price")
+    c.drawRightString(18 * cm, y, "Subtotal")
 
-    c.setStrokeColor(grey)
-    c.line(2 * cm, y - 0.3 * cm, width - 2 * cm, y - 0.3 * cm)
+    y -= 0.3 * cm
+    c.line(2 * cm, y, width - 2 * cm, y)
 
     # =================================================
-    # TABLE ROWS
+    # ORDER ITEMS
     # =================================================
-    c.setFont("Times-Roman", 10)
-    y -= 0.8 * cm
+    c.setFont("Helvetica", 10)
+    y -= 0.7 * cm
 
     for item in order_items:
-        name = item.get("name", "")
-        qty = int(item.get("qty", 0))
-        price = int(item.get("price", 0))
-        subtotal = qty * price
+        c.drawString(2 * cm, y, item["name"])
+        c.drawRightString(12 * cm, y, str(item["qty"]))
+        c.drawRightString(15 * cm, y, f"Rs {item['price']}")
+        c.drawRightString(18 * cm, y, f"Rs {item['subtotal']}")
+        y -= 0.6 * cm
 
-        c.drawString(2 * cm, y, name)
-        c.drawRightString(11 * cm, y, f"Rs {price}")
-        c.drawRightString(14 * cm, y, str(qty))
-        c.drawRightString(18 * cm, y, f"Rs {subtotal}")
-
-        y -= 0.65 * cm
-
-        if y < 4 * cm:
+        # Page break safety
+        if y < 6 * cm:
             c.showPage()
             y = height - 3 * cm
-            c.setFont("Times-Roman", 10)
 
     # =================================================
-    # TOTAL BOX
+    # TOTAL SECTION
     # =================================================
-    y -= 0.6 * cm
-    c.setStrokeColor(black)
-    c.line(11 * cm, y, width - 2 * cm, y)
+    y -= 0.8 * cm
+    c.line(12 * cm, y, width - 2 * cm, y)
 
-    y -= 0.9 * cm
-    c.setFont("Times-Bold", 14)
-    c.drawRightString(14 * cm, y, "TOTAL PAYABLE")
+    y -= 1 * cm
+    c.setFont("Helvetica-Bold", 14)
+    c.drawRightString(15 * cm, y, "TOTAL AMOUNT:")
     c.drawRightString(18 * cm, y, f"Rs {total}")
 
     # =================================================
-    # FOOTER
+    # PAYMENT INFO (EXTENDS PAGE)
     # =================================================
-    c.setFont("Times-Italic", 9)
+    y -= 2 * cm
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(2 * cm, y, "Payment Information")
+
+    y -= 0.7 * cm
+    c.setFont("Helvetica", 10)
+    c.drawString(2 * cm, y, "Payment Mode: Mock Digital Payment")
+    y -= 0.5 * cm
+    c.drawString(2 * cm, y, "Payment Status: Successful")
+    y -= 0.5 * cm
+    c.drawString(2 * cm, y, "Transaction Type: Cafeteria Pre-Order")
+
+    # =================================================
+    # TERMS & NOTES (FILLS A4)
+    # =================================================
+    y -= 1.8 * cm
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(2 * cm, y, "Notes & Terms")
+
+    y -= 0.7 * cm
+    c.setFont("Helvetica", 9)
+    terms = [
+        "• This receipt is system-generated and does not require a signature.",
+        "• Items once ordered cannot be cancelled after preparation.",
+        "• Payments shown here are part of a prototype cafeteria system.",
+        "• This invoice is generated for academic and demonstration purposes.",
+        "• Please contact cafeteria staff in case of any discrepancy.",
+    ]
+
+    for t in terms:
+        c.drawString(2 * cm, y, t)
+        y -= 0.5 * cm
+
+    # =================================================
+    # FOOTER (BOTTOM OF A4)
+    # =================================================
+    c.setFont("Helvetica-Oblique", 9)
     c.setFillColor(grey)
     c.drawCentredString(
         width / 2,
         2 * cm,
-        "This is a computer-generated invoice. No signature required."
+        "Thank you for using the Cafeteria Pre-Order System"
     )
 
     c.showPage()
