@@ -8,11 +8,10 @@ def generate_invoice_pdf(order_id, user, order_items, total):
     invoices_dir = "invoices"
     os.makedirs(invoices_dir, exist_ok=True)
 
-    file_path = f"{invoices_dir}/invoice_{order_id}.pdf"
+    file_path = os.path.join(invoices_dir, f"invoice_{order_id}.pdf")
 
     c = canvas.Canvas(file_path, pagesize=A4)
     width, height = A4
-
     y = height - 2 * cm
 
     # Header
@@ -23,9 +22,17 @@ def generate_invoice_pdf(order_id, user, order_items, total):
     c.setFont("Helvetica", 10)
     c.drawString(2 * cm, y, f"Order ID: {order_id}")
     y -= 0.6 * cm
-    c.drawString(2 * cm, y, f"Customer: {user['username']}")
+
+    customer_name = (
+        user.get("username")
+        or user.get("name")
+        or user.get("email")
+        or "Customer"
+    )
+
+    c.drawString(2 * cm, y, f"Customer: {customer_name}")
     y -= 0.6 * cm
-    c.drawString(2 * cm, y, f"Email: {user['email']}")
+    c.drawString(2 * cm, y, f"Email: {user.get('email', 'N/A')}")
     y -= 0.6 * cm
     c.drawString(2 * cm, y, f"Date: {datetime.now().strftime('%d-%m-%Y %H:%M')}")
     y -= 1.2 * cm
@@ -39,8 +46,12 @@ def generate_invoice_pdf(order_id, user, order_items, total):
     c.setFont("Helvetica", 10)
 
     for item in order_items:
-        c.drawString(2 * cm, y, item["name"])
-        c.drawString(11 * cm, y, str(item["qty"]))
+        if y < 2 * cm:  # new page safety
+            c.showPage()
+            y = height - 2 * cm
+
+        c.drawString(2 * cm, y, item.get("name", "Item"))
+        c.drawString(11 * cm, y, str(item.get("qty", 1)))
         y -= 0.5 * cm
 
     y -= 0.8 * cm
