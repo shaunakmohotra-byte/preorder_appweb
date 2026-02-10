@@ -111,13 +111,12 @@ setTimeout(() => {
 }, 5000);
 </script>
 
-<!-- Mobile Side Nav Toggle -->
 <script>
-function toggleSideNav() {
-    const nav = document.getElementById("side-nav");
-    nav.style.left = (nav.style.left === "0px") ? "-260px" : "0px";
+function toggleDrawer() {
+    document.getElementById("drawer").classList.toggle("open");
 }
 </script>
+
 
 </body>
 </html>
