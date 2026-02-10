@@ -54,6 +54,21 @@
         {% endif %}
     </div>
 </div>
+
+    <!-- Mobile Menu Button -->
+<button class="menu-btn" onclick="toggleSideNav()">☰</button>
+
+<!-- Mobile Side Navigation -->
+<div id="side-nav" class="side-nav">
+    <a href="javascript:void(0)" class="close-btn" onclick="toggleSideNav()">×</a>
+
+    <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('admin.dashboard') }}#users">Users</a>
+    <a href="{{ url_for('admin.dashboard') }}#items">Items</a>
+    <a href="{{ url_for('admin.dashboard') }}#orders">Orders</a>
+</div>
+
+
 <div class="logo-container">
     <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
 </div>
