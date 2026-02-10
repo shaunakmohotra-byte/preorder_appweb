@@ -11,6 +11,15 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
 
 </head>
+<script>
+    setTimeout(() => {
+        document.querySelectorAll('.auto-hide').forEach(msg => {
+            msg.style.opacity = '0';
+            setTimeout(() => msg.remove(), 500);
+        });
+    }, 5000);
+</script>
+
 <body>
 
 <!-- Flash Messages -->
@@ -18,11 +27,12 @@
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for msg in messages %}
-                <div class="flash-msg">{{ msg }}</div>
+                <div class="flash-msg auto-hide">{{ msg }}</div>
             {% endfor %}
         {% endif %}
     {% endwith %}
 </div>
+
 
     
 <div class="navbar">
