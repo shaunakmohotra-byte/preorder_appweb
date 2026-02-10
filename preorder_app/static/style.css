@@ -23,59 +23,112 @@ body {
     }
 }
 
-/* ================= Side Navbar (Desktop) ================= */
-.side-navbar {
+/* ================= Drawer Sidebar ================= */
+.drawer {
     position: fixed;
-    left: 0;
     top: 0;
-    width: 220px;
+    left: -280px;
+    width: 260px;
     height: 100vh;
     background: #1f2933;
-    color: #fff;
-    padding: 20px 15px;
+    color: white;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    transition: left 0.3s ease;
     z-index: 1000;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.2);
 }
 
-.side-title {
+.drawer.open {
+    left: 0;
+}
+
+/* Header */
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px;
+    border-bottom: 1px solid #374151;
+}
+
+.drawer-header h2 {
+    margin: 0;
     font-size: 20px;
     font-weight: 700;
-    margin-bottom: 20px;
-    text-align: center;
 }
 
-.side-navbar a {
+/* Close button */
+.close-btn {
+    font-size: 28px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+/* Links */
+.drawer-links {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.drawer-links a {
     color: #e5e7eb;
     text-decoration: none;
-    padding: 10px 14px;
+    padding: 12px 14px;
     border-radius: 8px;
     font-weight: 500;
-    transition: background 0.2s;
 }
 
-.side-navbar a:hover {
+.drawer-links a:hover {
     background: #374151;
 }
 
-.side-footer {
+/* Footer (Logout section) */
+.drawer-footer {
     margin-top: auto;
-    font-size: 14px;
+    padding: 16px;
+    border-top: 1px solid #374151;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.side-footer span {
-    display: block;
-    margin-bottom: 8px;
+.drawer-footer span {
+    font-size: 14px;
     color: #cbd5f5;
 }
 
-/* Hide desktop sidebar on mobile */
-@media (max-width: 768px) {
-    .side-navbar {
-        display: none;
-    }
+/* Logout button */
+.logout-btn {
+    background: #e23744;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
 }
+
+.logout-btn:hover {
+    background: #c62828;
+}
+
+/* ================= Drawer Button ================= */
+.menu-btn {
+    position: fixed;
+    top: 18px;
+    left: 16px;
+    font-size: 22px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1100;
+    color: #282c3f;
+}
+
 
 /* ================= Mobile Side Nav ================= */
 .menu-btn {
