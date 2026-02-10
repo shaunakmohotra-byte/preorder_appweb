@@ -81,19 +81,18 @@
 }
 
 h1, h2, h3, h4 {
-    font-weight: 700;
-    letter-spacing: -0.2px;
+    font-weight: 600;
 }
 
 table th {
-    font-size: 13.5px;
-    letter-spacing: 0.3px;
+    font-weight: 600;
+    font-size: 14px;
 }
 
 table td {
     font-size: 14px;
-    line-height: 1.5;
 }
+
 
 button, .btn {
     font-family: inherit;
