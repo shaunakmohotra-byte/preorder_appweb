@@ -1,3 +1,86 @@
+/* ===== Responsive Navbar ===== */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 16px;
+    }
+
+    .navbar h1 {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+
+    .navbar a {
+        margin: 6px 0 0 0;
+        font-size: 14px;
+    }
+}
+
+/* ===== Responsive Container ===== */
+@media (max-width: 768px) {
+    .container {
+        margin: 16px auto;
+        padding: 0 12px;
+    }
+}
+
+/* ===== Responsive Tables ===== */
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        font-size: 13px;
+    }
+
+    table th,
+    table td {
+        padding: 10px 12px;
+    }
+}
+
+/* ===== Responsive Forms ===== */
+@media (max-width: 600px) {
+    form {
+        padding: 16px;
+    }
+
+    input,
+    form button {
+        font-size: 14px;
+    }
+}
+
+/* ===== Inline Form Fix ===== */
+@media (max-width: 600px) {
+    form.inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    form.inline input[type="number"] {
+        width: 100%;
+    }
+}
+
+/* ===== Responsive Logo ===== */
+@media (max-width: 600px) {
+    .logo-container img {
+        height: 60px;
+    }
+}
+
+/* ===== Flash Messages Mobile Fix ===== */
+@media (max-width: 600px) {
+    #flash-messages {
+        right: 10px;
+        left: 10px;
+        top: 10px;
+    }
+}
+
+
 /* ===== Swiggy-like Base ===== */
 body {
     margin: 0;
