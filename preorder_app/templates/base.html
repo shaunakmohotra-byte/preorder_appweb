@@ -20,7 +20,7 @@
 
 <body>
 
-<!-- Drawer Toggle Button -->
+<!-- ☰ Drawer Toggle Button (mobile only) -->
 <button class="menu-btn" onclick="toggleDrawer()">☰</button>
 
 <!-- Drawer Sidebar -->
@@ -32,11 +32,11 @@
     </div>
 
     <nav class="drawer-links">
-        <a href="{{ url_for('main.menu') }}">Menu</a>
-        <a href="{{ url_for('main.view_cart') }}">My Cart</a>
+        <a href="{{ url_for('main.menu') }}">🍽 Menu</a>
+        <a href="{{ url_for('main.view_cart') }}">🛒 My Cart</a>
 
         {% if user and user.is_admin %}
-            <a href="{{ url_for('admin.index') }}">Admin Dashboard</a>
+            <a href="{{ url_for('admin.index') }}">🛠 Admin</a>
         {% endif %}
     </nav>
 
@@ -51,40 +51,15 @@
     </div>
 
 </div>
-    
+
 <!-- Flash Messages -->
 <div id="flash-messages">
     {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for msg in messages %}
-                <div class="flash-msg auto-hide">{{ msg }}</div>
-            {% endfor %}
-        {% endif %}
+        {% for msg in messages %}
+            <div class="flash-msg auto-hide">{{ msg }}</div>
+        {% endfor %}
     {% endwith %}
 </div>
-
-<!-- Side Navbar -->
-<div class="side-navbar">
-    <h2 class="side-title">Cafeteria</h2>
-
-    <a href="{{ url_for('main.menu') }}">🍽 Menu</a>
-    <a href="{{ url_for('main.view_cart') }}">🛒 My Cart</a>
-
-    {% if user and user.is_admin %}
-        <a href="{{ url_for('admin.index') }}">🛠 Admin</a>
-    {% endif %}
-
-    <div class="side-footer">
-        {% if user %}
-            <span>Hello, {{ user.name }}</span>
-            <a href="{{ url_for('auth.logout') }}">🚪 Logout</a>
-        {% else %}
-            <a href="{{ url_for('auth.login') }}">Login</a>
-            <a href="{{ url_for('auth.register') }}">Register</a>
-        {% endif %}
-    </div>
-</div>
-
 
 <!-- Logo -->
 <div class="logo-container">
@@ -93,16 +68,18 @@
 
 <!-- Page Content -->
 <div class="container">
-    {% block content %}
-    {% endblock %}
+    {% block content %}{% endblock %}
 </div>
 
 <footer style="text-align:center; padding:20px; color:#7e808c; font-size:14px;">
     Made by Shaunak Mohotra
 </footer>
 
-<!-- Flash auto-hide -->
 <script>
+function toggleDrawer() {
+    document.getElementById("drawer").classList.toggle("open");
+}
+
 setTimeout(() => {
     document.querySelectorAll('.auto-hide').forEach(msg => {
         msg.style.opacity = '0';
@@ -111,13 +88,5 @@ setTimeout(() => {
 }, 5000);
 </script>
 
-<script>
-function toggleDrawer() {
-    document.getElementById("drawer").classList.toggle("open");
-}
-</script>
-
-
 </body>
 </html>
-
