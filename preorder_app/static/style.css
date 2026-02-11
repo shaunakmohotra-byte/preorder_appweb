@@ -26,14 +26,14 @@ body {
 
 /* Smaller logo */
 .nav-logo {
-    height: 72px;   /* reduced size */
+    height: 18px;   /* reduced size */
     width: auto;
 }
 
 /* Title styled with theme color */
 .nav-title {
-    font-size: 72px;
-    font-weight: 900;
+    font-size: 18px;
+    font-weight: 500;
     color: #fc8019;   /* same orange */
 }
 
