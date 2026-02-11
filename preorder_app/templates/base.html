@@ -26,8 +26,14 @@
 </div>
 
 <!-- TOP NAVBAR (WORKING VERSION) -->
+<!-- Navbar -->
 <div class="navbar">
-    <h1>Cafeteria</h1>
+
+    <div class="nav-left">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="nav-logo" alt="Logo">
+        <span class="nav-title">Cafeteria Pre-Order</span>
+    </div>
+
     <div class="nav-links">
         <a href="{{ url_for('main.menu') }}">Menu</a>
         <a href="{{ url_for('main.view_cart') }}">My Cart</a>
@@ -37,14 +43,14 @@
         {% endif %}
 
         {% if user %}
-            <span>Hello, {{ user.name }}</span>
             <a href="{{ url_for('auth.logout') }}">Logout</a>
         {% else %}
             <a href="{{ url_for('auth.login') }}">Login</a>
-            <a href="{{ url_for('auth.register') }}">Register</a>
         {% endif %}
     </div>
+
 </div>
+
 
 <!-- Logo -->
 <div class="logo-container">
