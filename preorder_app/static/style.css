@@ -32,8 +32,8 @@ body {
 
 /* Title styled with theme color */
 .nav-title {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 72px;
+    font-weight: 900;
     color: #fc8019;   /* same orange */
 }
 
