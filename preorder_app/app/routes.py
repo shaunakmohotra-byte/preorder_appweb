@@ -384,7 +384,7 @@ def delete_order_after_delay(order_id, delay=60):
 
         save_json(ORDERS_FILE, orders)
 
-    timer = threading.Timer(delay, delete)
+    timer = threading.Timer(60, delete)
     timer.start()
 
 # ===============================
