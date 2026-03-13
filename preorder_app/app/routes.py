@@ -404,6 +404,9 @@ def mark_order_paid(order_id):
 
     save_json(ORDERS_FILE, orders)
 
-    flash("Order marked as delivered")
+    # start auto-delete timer (1 minute)
+    delete_order_after_delay(order_id, 60)
+
+    flash("Order marked as delivered. It will be removed in 1 minute.")
 
     return redirect(url_for('main.cafeteria'))
