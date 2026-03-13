@@ -8,133 +8,132 @@ from datetime import datetime
 
 def generate_invoice_pdf(order_id, user, order_items, total, token=None):
 
+    # ===============================
+    # FILE SETUP
+    # ===============================
+    invoices_dir = os.path.join(current_app.root_path, "invoices")
+    os.makedirs(invoices_dir, exist_ok=True)
 
-# ===============================
-# FILE SETUP
-# ===============================
-invoices_dir = os.path.join(current_app.root_path, "invoices")
-os.makedirs(invoices_dir, exist_ok=True)
+    file_path = os.path.join(invoices_dir, f"invoice_{order_id}.pdf")
 
-file_path = os.path.join(invoices_dir, f"invoice_{order_id}.pdf")
+    c = canvas.Canvas(file_path, pagesize=A4)
+    width, height = A4
 
-c = canvas.Canvas(file_path, pagesize=A4)
-width, height = A4
+    y = height - 2 * cm
 
-y = height - 2 * cm
+    # ===============================
+    # HEADER
+    # ===============================
+    c.setFont("Times-Bold", 22)
+    c.drawString(2 * cm, y, "CAFETERIA E-BILL")
+    y -= 1.2 * cm
 
-# ===============================
-# HEADER
-# ===============================
-c.setFont("Times-Bold", 22)
-c.drawString(2 * cm, y, "CAFETERIA E-BILL")
-y -= 1.2 * cm
+    # LOGO (optional)
+    logo_path = os.path.join(current_app.root_path, "static", "logo.png")
+    if os.path.exists(logo_path):
+        c.drawImage(
+            logo_path,
+            width - 5 * cm,
+            height - 4 * cm,
+            width=3 * cm,
+            height=3 * cm,
+            preserveAspectRatio=True,
+            mask='auto'
+        )
 
-# LOGO (optional)
-logo_path = os.path.join(current_app.root_path, "static", "logo.png")
-if os.path.exists(logo_path):
-    c.drawImage(
-        logo_path,
-        width - 5 * cm,
-        height - 4 * cm,
-        width=3 * cm,
-        height=3 * cm,
-        preserveAspectRatio=True,
-        mask='auto'
+    c.setFont("Times-Roman", 10)
+    c.drawString(2 * cm, y, "Tagore International School – Cafeteria")
+    c.drawRightString(width - 2 * cm, y, f"Invoice No: {order_id}")
+
+    y -= 0.6 * cm
+    c.drawRightString(
+        width - 2 * cm,
+        y,
+        datetime.now().strftime("%d %b %Y, %I:%M %p")
     )
 
-c.setFont("Times-Roman", 10)
-c.drawString(2 * cm, y, "Tagore International School – Cafeteria")
-c.drawRightString(width - 2 * cm, y, f"Invoice No: {order_id}")
+    # ===============================
+    # TOKEN NUMBER
+    # ===============================
+    if token:
+        y -= 0.8 * cm
+        c.setFont("Times-Bold", 14)
+        c.drawString(2 * cm, y, f"Pickup Token: {token}")
 
-y -= 0.6 * cm
-c.drawRightString(
-    width - 2 * cm,
-    y,
-    datetime.now().strftime("%d %b %Y, %I:%M %p")
-)
-
-# ===============================
-# TOKEN NUMBER
-# ===============================
-if token:
+    # Divider
     y -= 0.8 * cm
-    c.setFont("Times-Bold", 14)
-    c.drawString(2 * cm, y, f"Pickup Token: {token}")
+    c.setStrokeColor(grey)
+    c.line(2 * cm, y, width - 2 * cm, y)
 
-# Divider
-y -= 0.8 * cm
-c.setStrokeColor(grey)
-c.line(2 * cm, y, width - 2 * cm, y)
+    # ===============================
+    # CUSTOMER DETAILS
+    # ===============================
+    y -= 1.2 * cm
+    c.setFont("Times-Bold", 11)
+    c.setFillColor(black)
+    c.drawString(2 * cm, y, "Billed To:")
 
-# ===============================
-# CUSTOMER DETAILS
-# ===============================
-y -= 1.2 * cm
-c.setFont("Times-Bold", 11)
-c.setFillColor(black)
-c.drawString(2 * cm, y, "Billed To:")
-
-y -= 0.6 * cm
-c.setFont("Times-Roman", 10)
-c.drawString(2 * cm, y, user.get("username", "Student"))
-
-y -= 0.5 * cm
-c.drawString(2 * cm, y, user.get("email", ""))
-
-# ===============================
-# ORDER TABLE HEADER
-# ===============================
-y -= 1.4 * cm
-c.setFont("Times-Bold", 11)
-c.drawString(2 * cm, y, "Item")
-c.drawRightString(12 * cm, y, "Qty")
-c.drawRightString(15 * cm, y, "Price")
-c.drawRightString(18 * cm, y, "Subtotal")
-
-y -= 0.3 * cm
-c.line(2 * cm, y, width - 2 * cm, y)
-
-# ===============================
-# ORDER ITEMS
-# ===============================
-c.setFont("Times-Roman", 10)
-y -= 0.7 * cm
-
-for item in order_items:
-    c.drawString(2 * cm, y, item["name"])
-    c.drawRightString(12 * cm, y, str(item["qty"]))
-    c.drawRightString(15 * cm, y, f"Rs {item['price']}")
-    c.drawRightString(18 * cm, y, f"Rs {item['subtotal']}")
     y -= 0.6 * cm
+    c.setFont("Times-Roman", 10)
+    c.drawString(2 * cm, y, user.get("username", "Student"))
 
-    if y < 6 * cm:
-        c.showPage()
-        y = height - 3 * cm
-        c.setFont("Times-Roman", 10)
+    y -= 0.5 * cm
+    c.drawString(2 * cm, y, user.get("email", ""))
 
-# ===============================
-# TOTAL
-# ===============================
-y -= 0.8 * cm
-c.line(12 * cm, y, width - 2 * cm, y)
+    # ===============================
+    # ORDER TABLE HEADER
+    # ===============================
+    y -= 1.4 * cm
+    c.setFont("Times-Bold", 11)
+    c.drawString(2 * cm, y, "Item")
+    c.drawRightString(12 * cm, y, "Qty")
+    c.drawRightString(15 * cm, y, "Price")
+    c.drawRightString(18 * cm, y, "Subtotal")
 
-y -= 1 * cm
-c.setFont("Times-Bold", 14)
-c.drawRightString(15 * cm, y, "TOTAL AMOUNT:")
-c.drawRightString(18 * cm, y, f"Rs {total}")
+    y -= 0.3 * cm
+    c.line(2 * cm, y, width - 2 * cm, y)
 
-# ===============================
-# FOOTER
-# ===============================
-c.setFont("Times-Italic", 9)
-c.setFillColor(grey)
-c.drawCentredString(
-    width / 2,
-    2 * cm,
-    "Thank you for using the Cafeteria Pre-Order System"
-)
+    # ===============================
+    # ORDER ITEMS
+    # ===============================
+    c.setFont("Times-Roman", 10)
+    y -= 0.7 * cm
 
-c.showPage()
-c.save()
+    for item in order_items:
+        c.drawString(2 * cm, y, item["name"])
+        c.drawRightString(12 * cm, y, str(item["qty"]))
+        c.drawRightString(15 * cm, y, f"Rs {item['price']}")
+        c.drawRightString(18 * cm, y, f"Rs {item['subtotal']}")
+        y -= 0.6 * cm
 
-return file_path
+        if y < 6 * cm:
+            c.showPage()
+            y = height - 3 * cm
+            c.setFont("Times-Roman", 10)
+
+    # ===============================
+    # TOTAL
+    # ===============================
+    y -= 0.8 * cm
+    c.line(12 * cm, y, width - 2 * cm, y)
+
+    y -= 1 * cm
+    c.setFont("Times-Bold", 14)
+    c.drawRightString(15 * cm, y, "TOTAL AMOUNT:")
+    c.drawRightString(18 * cm, y, f"Rs {total}")
+
+    # ===============================
+    # FOOTER
+    # ===============================
+    c.setFont("Times-Italic", 9)
+    c.setFillColor(grey)
+    c.drawCentredString(
+        width / 2,
+        2 * cm,
+        "Thank you for using the Cafeteria Pre-Order System"
+    )
+
+    c.showPage()
+    c.save()
+
+    return file_path
