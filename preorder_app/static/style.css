@@ -1,19 +1,13 @@
 :root {
-
     --primary: #fc8019;
     --primary-dark: #e96b10;
-
     --bg-light: #f5f5f5;
     --bg-soft: #eeeeee;
-
     --card-bg: white;
-
     --text-main: #282c3f;
     --border-soft: #eee;
-
     --shadow-soft: 0 4px 14px rgba(0,0,0,0.08);
 }
-
 
 /* ================= BASE ================= */
 
@@ -98,7 +92,7 @@ body {
 
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 10px;
 
     transition: transform 0.2s ease;
 }
@@ -109,7 +103,6 @@ body {
 
 .price {
     font-weight: 700;
-    margin-top: 8px;
 }
 
 .card button {
@@ -139,13 +132,13 @@ table th {
     background-color: #fdf2e9;
     padding: 14px 16px;
     font-weight: 700;
-    font-size: clamp(12px,1.4vw,14px);
+    font-size: 14px;
     text-align: left;
 }
 
 table td {
     padding: 14px 16px;
-    font-size: clamp(12px,1.4vw,14px);
+    font-size: 14px;
     border-bottom: 1px solid var(--border-soft);
 }
 
@@ -221,7 +214,7 @@ input:focus {
 }
 
 
-/* Inline forms */
+/* ================= INLINE FORM ================= */
 
 form.inline {
     flex-direction: row;
@@ -234,44 +227,13 @@ form.inline input[type="number"] {
 }
 
 
-/* ================= MENU CARD FORM FIX ================= */
+/* ================= FIX MENU CARD FORM ================= */
 
 .card form {
     background: transparent;
     box-shadow: none;
     padding: 0;
-    margin-top: 10px;
-}
-
-
-/* ================= LOGO ================= */
-
-.logo-container {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
-}
-
-.logo-container img {
-    height: 80px;
-}
-
-
-/* ================= FLASH MESSAGES ================= */
-
-#flash-messages {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 9999;
-}
-
-.flash-msg {
-    background-color: #4caf50;
-    color: white;
-    padding: 14px 18px;
-    margin-bottom: 10px;
-    border-radius: 8px;
+    margin: 10px 0 0 0;
 }
 
 
@@ -305,6 +267,24 @@ form.inline input[type="number"] {
 .cart-table button {
     padding: 4px 8px;
     font-size: 14px;
+}
+
+
+/* ================= FLASH ================= */
+
+#flash-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.flash-msg {
+    background-color: #4caf50;
+    color: white;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    border-radius: 8px;
 }
 
 
