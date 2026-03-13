@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
 <h2>Cafeteria - All Orders</h2>
@@ -7,65 +8,105 @@
 
 <div class="table-wrapper">
 
-<table border="1" cellpadding="6" style="width: 100%; border-collapse: collapse;">
+<table border="1" cellpadding="8" style="width:100%; border-collapse: collapse;">
 
 <thead>
-    <tr style="background-color: #f2f2f2;">
-        <th>Token</th>
-        <th>Order ID</th>
-        <th>User</th>
-        <th>Items</th>
-        <th>Total</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
+<tr style="background:#f2f2f2;">
+    <th>Token</th>
+    <th>Order ID</th>
+    <th>User</th>
+    <th>Items</th>
+    <th>Total</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
 </thead>
 
 <tbody>
-    {% for o in orders %}
-    <tr>
 
-    <td>
-        <strong style="font-size:20px; color:#2c7;">
-            {{ o['token'] if 'token' in o else '-' }}
-        </strong>
-    </td>
+{% for o in orders %}
 
-    <td>
-        <small>{{ o['id'] }}</small>
-    </td>
+<tr>
 
-    <td>
-        {{ o['user_name'] }}
-    </td>
+<td>
+<strong style="font-size:20px; color:#2c7;">
+{{ o['token'] if 'token' in o else '-' }}
+</strong>
+</td>
 
-    <td>
-        <ul style="margin:0; padding-left:20px;">
-            {% for it in o['items'] %}
-            <li>{{ it['qty'] }} × {{ it['name'] }}</li>
-            {% endfor %}
-        </ul>
-    </td>
+<td>
+<small>{{ o['id'] }}</small>
+</td>
 
-    <td>
-        ₹{{ o['total'] }}
-    </td>
+<td>
+{{ o['user_name'] }}
+</td>
 
-    <td>
-        <strong>{{ o['status'] }}</strong>
-    </td>
+<td>
 
-    <td>
-        <form method="POST" action="{{ url_for('main.mark_order_paid', order_id=o['id']) }}">
-            <button type="submit" class="btn"
-            onclick="return confirm('Mark this order as delivered?')">
-                Mark Delivered
-            </button>
-        </form>
-    </td>
+<ul style="margin:0; padding-left:18px;">
+{% for it in o['items'] %}
+<li>{{ it['qty'] }} × {{ it['name'] }}</li>
+{% endfor %}
+</ul>
+
+</td>
+
+<td>
+₹{{ o['total'] }}
+</td>
+
+<td>
+
+{% if o['status'] == "Delivered" %}
+<span style="color:green; font-weight:bold;">
+Delivered
+</span>
+
+{% else %}
+<span style="color:orange; font-weight:bold;">
+Preparing
+</span>
+{% endif %}
+
+</td>
+
+<td>
+
+{% if o['status'] != "Delivered" %}
+
+<form method="POST" action="{{ url_for('main.mark_order_paid', order_id=o['id']) }}">
+
+<button
+type="submit"
+style="
+background:#28a745;
+color:white;
+border:none;
+padding:6px 12px;
+cursor:pointer;
+border-radius:4px;
+"
+onclick="return confirm('Mark this order as delivered?')">
+
+Mark Delivered
+
+</button>
+
+</form>
+
+{% else %}
+
+✔
+
+{% endif %}
+
+</td>
 
 </tr>
+
 {% endfor %}
+
 </tbody>
 
 </table>
@@ -75,6 +116,6 @@
 {% else %}
 
 <p>No orders yet.</p>
-{% endif %}
 
+{% endif %}
 {% endblock %}
