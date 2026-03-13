@@ -6,11 +6,9 @@ from reportlab.lib.units import cm
 from reportlab.lib.colors import grey, black
 from datetime import datetime
 
+
 def generate_invoice_pdf(order_id, user, order_items, total, token=None):
 
-    # ===============================
-    # FILE SETUP
-    # ===============================
     invoices_dir = os.path.join(current_app.root_path, "invoices")
     os.makedirs(invoices_dir, exist_ok=True)
 
@@ -21,14 +19,11 @@ def generate_invoice_pdf(order_id, user, order_items, total, token=None):
 
     y = height - 2 * cm
 
-    # ===============================
     # HEADER
-    # ===============================
     c.setFont("Times-Bold", 22)
     c.drawString(2 * cm, y, "CAFETERIA E-BILL")
     y -= 1.2 * cm
 
-    # LOGO (optional)
     logo_path = os.path.join(current_app.root_path, "static", "logo.png")
     if os.path.exists(logo_path):
         c.drawImage(
@@ -52,25 +47,18 @@ def generate_invoice_pdf(order_id, user, order_items, total, token=None):
         datetime.now().strftime("%d %b %Y, %I:%M %p")
     )
 
-    # ===============================
-    # TOKEN NUMBER
-    # ===============================
     if token:
         y -= 0.8 * cm
         c.setFont("Times-Bold", 14)
         c.drawString(2 * cm, y, f"Pickup Token: {token}")
 
-    # Divider
     y -= 0.8 * cm
     c.setStrokeColor(grey)
     c.line(2 * cm, y, width - 2 * cm, y)
 
-    # ===============================
     # CUSTOMER DETAILS
-    # ===============================
     y -= 1.2 * cm
     c.setFont("Times-Bold", 11)
-    c.setFillColor(black)
     c.drawString(2 * cm, y, "Billed To:")
 
     y -= 0.6 * cm
@@ -80,9 +68,7 @@ def generate_invoice_pdf(order_id, user, order_items, total, token=None):
     y -= 0.5 * cm
     c.drawString(2 * cm, y, user.get("email", ""))
 
-    # ===============================
-    # ORDER TABLE HEADER
-    # ===============================
+    # TABLE HEADER
     y -= 1.4 * cm
     c.setFont("Times-Bold", 11)
     c.drawString(2 * cm, y, "Item")
@@ -93,9 +79,7 @@ def generate_invoice_pdf(order_id, user, order_items, total, token=None):
     y -= 0.3 * cm
     c.line(2 * cm, y, width - 2 * cm, y)
 
-    # ===============================
     # ORDER ITEMS
-    # ===============================
     c.setFont("Times-Roman", 10)
     y -= 0.7 * cm
 
@@ -111,9 +95,7 @@ def generate_invoice_pdf(order_id, user, order_items, total, token=None):
             y = height - 3 * cm
             c.setFont("Times-Roman", 10)
 
-    # ===============================
     # TOTAL
-    # ===============================
     y -= 0.8 * cm
     c.line(12 * cm, y, width - 2 * cm, y)
 
@@ -122,9 +104,7 @@ def generate_invoice_pdf(order_id, user, order_items, total, token=None):
     c.drawRightString(15 * cm, y, "TOTAL AMOUNT:")
     c.drawRightString(18 * cm, y, f"Rs {total}")
 
-    # ===============================
     # FOOTER
-    # ===============================
     c.setFont("Times-Italic", 9)
     c.setFillColor(grey)
     c.drawCentredString(
