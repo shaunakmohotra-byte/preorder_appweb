@@ -313,3 +313,38 @@ form.inline input[type="number"] {
     padding: 6px 8px;
     font-size: 13px;
 }
+/* ================= CART TABLE ================= */
+
+.cart-table td,
+.cart-table th {
+    text-align: center;
+}
+
+/* quantity controls */
+.qty-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+/* keep cart forms inline */
+.cart-table form {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    background: transparent;
+}
+
+/* quantity number */
+.qty-number {
+    min-width: 20px;
+    font-weight: 600;
+}
+
+/* smaller buttons */
+.cart-table button {
+    padding: 4px 8px;
+    font-size: 14px;
+}
