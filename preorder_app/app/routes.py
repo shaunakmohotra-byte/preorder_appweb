@@ -257,14 +257,20 @@ def pay_now():
     order_id = str(uuid.uuid4())[:8]
 
     # -------- SAVE ORDER ----------
-    orders = load_json(ORDERS_FILE, [])
-    orders.append({
-        "id": order_id,
-        "user_name": user.get("username") or user.get("email"),
-        "items": order_items,
-        "total": total,
-        "status": "Paid",
-        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+   orders = load_json(ORDERS_FILE, [])
+
+# Generate token number
+token_number = len(orders) + 1
+
+orders.append({
+    "id": order_id,
+    "token": token_number,
+    "user_name": user.get("username") or user.get("email"),
+    "items": order_items,
+    "total": total,
+    "status": "Paid",
+    "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+})
     })
     save_json(ORDERS_FILE, orders)
 
