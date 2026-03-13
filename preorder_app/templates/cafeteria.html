@@ -4,43 +4,74 @@
 <h2>Cafeteria - All Orders</h2>
 
 {% if orders and orders|length > 0 %}
+
 <div class="table-wrapper">
+
 <table border="1" cellpadding="6" style="width: 100%; border-collapse: collapse;">
-    <thead>
-        <tr style="background-color: #f2f2f2;">
-            <th>Order ID</th>
-            <th>User</th>
-            <th>Items</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for o in orders %}
-        <tr>
-            <td><small>{{ o['id'] }}</small></td>
-            <td>{{ o['user_name'] }}</td>
-            <td>
-                <ul style="margin: 0; padding-left: 20px;">
-                    {% for it in o['items'] %}
-                    <li>{{ it['qty'] }} × {{ it['name'] }}</li>
-                    {% endfor %}
-                </ul>
-            </td>
-            <td>₹{{ o['total'] }}</td>
-            <td><strong>{{ o['status'] }}</strong></td>
-            <td>
-                <form method="POST" action="{{ url_for('main.mark_order_paid', order_id=o['id']) }}">
-                    <button type="submit" class="btn" onclick="return confirm('Mark this order as delivered?')">
-                        Mark Delivered
-                    </button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+
+```
+<thead>
+    <tr style="background-color: #f2f2f2;">
+        <th>Token</th>
+        <th>Order ID</th>
+        <th>User</th>
+        <th>Items</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+</thead>
+
+<tbody>
+    {% for o in orders %}
+    <tr>
+
+        <td>
+            <strong style="font-size:20px; color:#2c7;">
+                {{ o['token'] if 'token' in o else '-' }}
+            </strong>
+        </td>
+
+        <td>
+            <small>{{ o['id'] }}</small>
+        </td>
+
+        <td>
+            {{ o['user_name'] }}
+        </td>
+
+        <td>
+            <ul style="margin:0; padding-left:20px;">
+                {% for it in o['items'] %}
+                <li>{{ it['qty'] }} × {{ it['name'] }}</li>
+                {% endfor %}
+            </ul>
+        </td>
+
+        <td>
+            ₹{{ o['total'] }}
+        </td>
+
+        <td>
+            <strong>{{ o['status'] }}</strong>
+        </td>
+
+        <td>
+            <form method="POST" action="{{ url_for('main.mark_order_paid', order_id=o['id']) }}">
+                <button type="submit" class="btn"
+                onclick="return confirm('Mark this order as delivered?')">
+                    Mark Delivered
+                </button>
+            </form>
+        </td>
+
+    </tr>
+    {% endfor %}
+</tbody>
+```
+
 </table>
+
 </div>
 {% else %}
 <p>No orders yet.</p>
