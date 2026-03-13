@@ -1,6 +1,7 @@
 import os
 import uuid
 from datetime import datetime
+import threading
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, send_file
 
 from .store import load_json, save_json, ITEMS_FILE, CARTS_FILE, ORDERS_FILE, USERS_FILE
@@ -368,6 +369,23 @@ def cafeteria():
         user=user
     )
 
+# ===============================
+# DELETE ORDER AFTER DELAY
+# ===============================
+def delete_order_after_delay(order_id, delay=60):
+
+    def delete():
+        orders = load_json(ORDERS_FILE, [])
+
+        if not isinstance(orders, list):
+            orders = []
+
+        orders = [o for o in orders if o.get("id") != order_id]
+
+        save_json(ORDERS_FILE, orders)
+
+    timer = threading.Timer(delay, delete)
+    timer.start()
 
 # ===============================
 # MARK ORDER DELIVERED
