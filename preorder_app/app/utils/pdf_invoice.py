@@ -7,12 +7,13 @@ from reportlab.lib.colors import grey, black
 from datetime import datetime
 
 def generate_invoice_pdf(order_id, user, order_items, total, token=None):
+
+
 # ===============================
 # FILE SETUP
 # ===============================
-    invoices_dir = os.path.join(current_app.root_path, "invoices")
-    os.makedirs(invoices_dir, exist_ok=True)
-
+invoices_dir = os.path.join(current_app.root_path, "invoices")
+os.makedirs(invoices_dir, exist_ok=True)
 
 file_path = os.path.join(invoices_dir, f"invoice_{order_id}.pdf")
 
@@ -76,6 +77,7 @@ c.drawString(2 * cm, y, "Billed To:")
 y -= 0.6 * cm
 c.setFont("Times-Roman", 10)
 c.drawString(2 * cm, y, user.get("username", "Student"))
+
 y -= 0.5 * cm
 c.drawString(2 * cm, y, user.get("email", ""))
 
