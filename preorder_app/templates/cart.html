@@ -4,6 +4,7 @@
 <h2>Your Cart</h2>
 
 {% if cart_details %}
+<div class="table-wrapper">
 <table>
     <tr>
         <th>Item</th>
@@ -41,6 +42,7 @@
     </tr>
     {% endfor %}
 </table>
+</div>
 
 <h3>Total: ₹{{ total }}</h3>
 

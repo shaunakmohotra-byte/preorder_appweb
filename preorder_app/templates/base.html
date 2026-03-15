@@ -3,10 +3,15 @@
 <head>
     <meta charset="utf-8">
     <title>Cafeteria Kiosk</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
 </head>
+
 <body>
 
 <!-- Flash Messages -->
@@ -14,16 +19,22 @@
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for msg in messages %}
-                <div class="flash-msg">{{ msg }}</div>
+                <div class="flash-msg auto-hide">{{ msg }}</div>
             {% endfor %}
         {% endif %}
     {% endwith %}
 </div>
 
-    
+<!-- TOP NAVBAR (WORKING VERSION) -->
+<!-- Navbar -->
 <div class="navbar">
-    <h1>Cafeteria Pre-Order App</h1>
-    <div>
+
+    <div class="nav-left">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="nav-logo" alt="Logo">
+        <span class="nav-title">Cafeteria Pre-Order</span>
+    </div>
+
+    <div class="nav-links">
         <a href="{{ url_for('main.menu') }}">Menu</a>
         <a href="{{ url_for('main.view_cart') }}">My Cart</a>
 
@@ -32,25 +43,36 @@
         {% endif %}
 
         {% if user %}
-            <span>Hello, {{ user.name }}</span>
             <a href="{{ url_for('auth.logout') }}">Logout</a>
         {% else %}
             <a href="{{ url_for('auth.login') }}">Login</a>
             <a href="{{ url_for('auth.register') }}">Register</a>
         {% endif %}
     </div>
-</div>
-<div class="logo-container">
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+
 </div>
 
+
+
+
+<!-- Page Content -->
 <div class="container">
-    {% block content %}
-    {% endblock %}
+    {% block content %}{% endblock %}
 </div>
+
 <footer style="text-align:center; padding:20px; color:#7e808c; font-size:14px;">
     Made by Shaunak Mohotra
 </footer>
+
+<!-- Flash auto-hide -->
+<script>
+setTimeout(() => {
+    document.querySelectorAll('.auto-hide').forEach(msg => {
+        msg.style.opacity = '0';
+        setTimeout(() => msg.remove(), 500);
+    });
+}, 5000);
+</script>
 
 </body>
 </html>

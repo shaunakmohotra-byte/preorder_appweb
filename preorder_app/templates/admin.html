@@ -6,6 +6,7 @@
 <!-- ================= USERS ================= -->
 <h3>Users</h3>
 
+<div class="table-wrapper">
 <table border="1" cellpadding="8">
     <tr>
         <th>Username</th>
@@ -20,20 +21,13 @@
         <td>{{ user["email"] }}</td>
         <td>{{ "Yes" if user.get("is_admin") else "No" }}</td>
         <td>
-            <!-- Edit user -->
-            <form action="{{ url_for('admin.edit_user', user_id=user['id']) }}"
-                  method="GET"
-                  style="display:inline;">
+            <form action="{{ url_for('admin.edit_user', user_id=user['id']) }}" method="GET" style="display:inline;">
                 <button type="submit">Edit</button>
             </form>
 
-            <!-- Delete user -->
-            <form action="{{ url_for('admin.delete_user') }}"
-                  method="POST"
-                  style="display:inline;">
+            <form action="{{ url_for('admin.delete_user') }}" method="POST" style="display:inline;">
                 <input type="hidden" name="user_id" value="{{ user['id'] }}">
-                <button type="submit"
-                        onclick="return confirm('Delete this user?');">
+                <button type="submit" onclick="return confirm('Delete this user?');">
                     Delete
                 </button>
             </form>
@@ -41,12 +35,14 @@
     </tr>
     {% endfor %}
 </table>
+</div>
 
 <hr>
 
 <!-- ================= ITEMS ================= -->
 <h3>Items</h3>
 
+<div class="table-wrapper">
 <table border="1" cellpadding="6">
     <tr>
         <th>Name</th>
@@ -59,10 +55,8 @@
         <td>{{ it["name"] }}</td>
         <td>₹{{ it["price"] }}</td>
         <td>
-            <form method="POST"
-                  action="{{ url_for('admin.delete_item', item_id=it['id']) }}">
-                <button type="submit"
-                        onclick="return confirm('Delete this item?');">
+            <form method="POST" action="{{ url_for('admin.delete_item', item_id=it['id']) }}">
+                <button type="submit" onclick="return confirm('Delete this item?');">
                     Delete
                 </button>
             </form>
@@ -70,6 +64,7 @@
     </tr>
     {% endfor %}
 </table>
+</div>
 
 <h4>Add Item</h4>
 <form method="POST" action="{{ url_for('admin.add_item') }}">
@@ -85,6 +80,7 @@
 <!-- ================= ORDERS ================= -->
 <h3>Orders</h3>
 
+<div class="table-wrapper">
 <table border="1" cellpadding="6">
     <tr>
         <th>Order ID</th>
@@ -110,6 +106,8 @@
     </tr>
     {% endfor %}
 </table>
+</div>
 
 {% endblock %}
+
 

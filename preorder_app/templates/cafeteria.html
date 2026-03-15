@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
-
 {% block content %}
+
 <h2>Cafeteria - All Orders</h2>
 
 {% if orders and orders|length > 0 %}
+<div class="table-wrapper">
 <table border="1" cellpadding="6" style="width: 100%; border-collapse: collapse;">
     <thead>
         <tr style="background-color: #f2f2f2;">
@@ -12,7 +13,8 @@
             <th>Items</th>
             <th>Total</th>
             <th>Status</th>
-            <th>Actions</th> </tr>
+            <th>Actions</th>
+        </tr>
     </thead>
     <tbody>
         {% for o in orders %}
@@ -39,6 +41,7 @@
         {% endfor %}
     </tbody>
 </table>
+</div>
 {% else %}
 <p>No orders yet.</p>
 {% endif %}
