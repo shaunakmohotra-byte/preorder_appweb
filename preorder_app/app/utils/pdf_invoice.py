@@ -7,10 +7,8 @@ from reportlab.lib.colors import grey, black
 from datetime import datetime
 
 
-def generate_invoice_pdf(order_id, user, order_items, total):
-    # ===============================
-    # FILE SETUP
-    # ===============================
+def generate_invoice_pdf(order_id, user, order_items, total, token=None):
+
     invoices_dir = os.path.join(current_app.root_path, "invoices")
     os.makedirs(invoices_dir, exist_ok=True)
 
@@ -21,14 +19,11 @@ def generate_invoice_pdf(order_id, user, order_items, total):
 
     y = height - 2 * cm
 
-    # ===============================
     # HEADER
-    # ===============================
     c.setFont("Times-Bold", 22)
     c.drawString(2 * cm, y, "CAFETERIA E-BILL")
     y -= 1.2 * cm
 
-    # LOGO (optional, safe)
     logo_path = os.path.join(current_app.root_path, "static", "logo.png")
     if os.path.exists(logo_path):
         c.drawImage(
@@ -52,28 +47,28 @@ def generate_invoice_pdf(order_id, user, order_items, total):
         datetime.now().strftime("%d %b %Y, %I:%M %p")
     )
 
-    # Divider
+    if token:
+        y -= 0.8 * cm
+        c.setFont("Times-Bold", 14)
+        c.drawString(2 * cm, y, f"Pickup Token: {token}")
+
     y -= 0.8 * cm
     c.setStrokeColor(grey)
     c.line(2 * cm, y, width - 2 * cm, y)
 
-    # ===============================
     # CUSTOMER DETAILS
-    # ===============================
     y -= 1.2 * cm
     c.setFont("Times-Bold", 11)
-    c.setFillColor(black)
     c.drawString(2 * cm, y, "Billed To:")
 
     y -= 0.6 * cm
     c.setFont("Times-Roman", 10)
     c.drawString(2 * cm, y, user.get("username", "Student"))
+
     y -= 0.5 * cm
     c.drawString(2 * cm, y, user.get("email", ""))
 
-    # ===============================
-    # ORDER TABLE HEADER
-    # ===============================
+    # TABLE HEADER
     y -= 1.4 * cm
     c.setFont("Times-Bold", 11)
     c.drawString(2 * cm, y, "Item")
@@ -84,9 +79,7 @@ def generate_invoice_pdf(order_id, user, order_items, total):
     y -= 0.3 * cm
     c.line(2 * cm, y, width - 2 * cm, y)
 
-    # ===============================
     # ORDER ITEMS
-    # ===============================
     c.setFont("Times-Roman", 10)
     y -= 0.7 * cm
 
@@ -97,15 +90,12 @@ def generate_invoice_pdf(order_id, user, order_items, total):
         c.drawRightString(18 * cm, y, f"Rs {item['subtotal']}")
         y -= 0.6 * cm
 
-        # Page break protection
         if y < 6 * cm:
             c.showPage()
             y = height - 3 * cm
             c.setFont("Times-Roman", 10)
 
-    # ===============================
     # TOTAL
-    # ===============================
     y -= 0.8 * cm
     c.line(12 * cm, y, width - 2 * cm, y)
 
@@ -114,45 +104,7 @@ def generate_invoice_pdf(order_id, user, order_items, total):
     c.drawRightString(15 * cm, y, "TOTAL AMOUNT:")
     c.drawRightString(18 * cm, y, f"Rs {total}")
 
-    # ===============================
-    # PAYMENT INFO
-    # ===============================
-    y -= 2 * cm
-    c.setFont("Times-Bold", 11)
-    c.drawString(2 * cm, y, "Payment Information")
-
-    y -= 0.7 * cm
-    c.setFont("Times-Roman", 10)
-    c.drawString(2 * cm, y, "Payment Mode: Mock Digital Payment")
-    y -= 0.5 * cm
-    c.drawString(2 * cm, y, "Payment Status: Successful")
-    y -= 0.5 * cm
-    c.drawString(2 * cm, y, "Transaction Type: Cafeteria Pre-Order")
-
-    # ===============================
-    # TERMS & NOTES
-    # ===============================
-    y -= 1.8 * cm
-    c.setFont("Times-Bold", 11)
-    c.drawString(2 * cm, y, "Notes & Terms")
-
-    y -= 0.7 * cm
-    c.setFont("Times-Roman", 9)
-    terms = [
-        "• This receipt is system-generated and does not require a signature.",
-        "• Items once ordered cannot be cancelled after preparation.",
-        "• Payments shown here are part of a prototype cafeteria system.",
-        "• This invoice is generated for academic and demonstration purposes.",
-        "• Please contact cafeteria staff in case of any discrepancy.",
-    ]
-
-    for t in terms:
-        c.drawString(2 * cm, y, t)
-        y -= 0.5 * cm
-
-    # ===============================
     # FOOTER
-    # ===============================
     c.setFont("Times-Italic", 9)
     c.setFillColor(grey)
     c.drawCentredString(

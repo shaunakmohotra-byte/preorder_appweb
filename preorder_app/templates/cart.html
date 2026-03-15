@@ -5,7 +5,7 @@
 
 {% if cart_details %}
 <div class="table-wrapper">
-<table>
+<table class="cart-table">
     <tr>
         <th>Item</th>
         <th>Qty</th>
@@ -17,19 +17,21 @@
     <tr>
         <td>{{ c.name }}</td>
 
-        <td>
-            <form action="{{ url_for('main.cart_decrease') }}" method="POST" style="display:inline;">
+            <td class="qty-controls">
+
+                <form action="{{ url_for('main.cart_decrease') }}" method="POST">
                 <input type="hidden" name="item_id" value="{{ c.item_id }}">
                 <button type="submit">−</button>
-            </form>
+                </form>
 
-            {{ c.qty }}
+                <span class="qty-number">{{ c.qty }}</span>
 
-            <form action="{{ url_for('main.cart_increase') }}" method="POST" style="display:inline;">
+                <form action="{{ url_for('main.cart_increase') }}" method="POST">
                 <input type="hidden" name="item_id" value="{{ c.item_id }}">
                 <button type="submit">+</button>
-            </form>
-        </td>
+                </form>
+
+            </td>
 
         <td>₹{{ c.subtotal }}</td>
 

@@ -1,41 +1,62 @@
-import os, datetime, uuid, threading
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+import os
+import uuid
+from datetime import datetime
+import threading
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, send_file
+
 from .store import load_json, save_json, ITEMS_FILE, CARTS_FILE, ORDERS_FILE, USERS_FILE
 from .utils.pdf_invoice import generate_invoice_pdf
-from flask import send_file
-from datetime import datetime
+
 bp = Blueprint('main', __name__)
 
+
+# ===============================
+# CURRENT USER
+# ===============================
 def current_user():
     uid = session.get('user_id')
     if not uid:
         return None
+
     users = load_json(USERS_FILE, [])
+
     return next((u for u in users if str(u.get('id')) == str(uid)), None)
 
 
+# ===============================
+# HOME
+# ===============================
 @bp.route('/')
 def index():
     return redirect(url_for('main.menu'))
 
+
+# ===============================
+# MENU
+# ===============================
 @bp.route('/menu')
 def menu():
     items = load_json(ITEMS_FILE, [])
     return render_template('menu.html', items=items, user=current_user())
 
+
+# ===============================
+# VIEW CART
+# ===============================
 @bp.route('/cart')
 def view_cart():
+
     user = current_user()
+
     if not user:
         flash('Please login to view cart')
         return redirect(url_for('auth.login'))
 
-    # Load carts safely
     carts = load_json(CARTS_FILE, {})
+
     if not isinstance(carts, dict):
         carts = {}
 
-    # Load all items
     items = load_json(ITEMS_FILE, [])
     items_map = {str(i['id']): i for i in items if 'id' in i}
 
@@ -46,21 +67,25 @@ def view_cart():
     total = 0
 
     for c in user_cart:
+
         item_id = str(c.get('item_id'))
         qty = int(c.get('qty', 0))
 
         item = items_map.get(item_id)
+
         if not item or qty <= 0:
             continue
 
         price = int(item.get('price', 0))
         subtotal = price * qty
+
         total += subtotal
 
         cart_details.append({
             'item_id': item_id,
             'name': item.get('name', 'Unknown Item'),
             'qty': qty,
+            'price': price,
             'subtotal': subtotal
         })
 
@@ -71,19 +96,23 @@ def view_cart():
         user=user
     )
 
+
+# ===============================
+# ADD TO CART
+# ===============================
 @bp.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
+
     user = current_user()
+
     if not user:
         flash('Please login first')
         return redirect(url_for('auth.login'))
 
     item_id = request.form.get('item_id')
-    if not item_id:
-        flash('Invalid item')
-        return redirect(url_for('main.menu'))
 
     carts = load_json(CARTS_FILE, {})
+
     if not isinstance(carts, dict):
         carts = {}
 
@@ -101,17 +130,25 @@ def add_to_cart():
     save_json(CARTS_FILE, carts)
 
     flash('Added to cart')
+
     return redirect(url_for('main.menu'))
 
 
+# ===============================
+# INCREASE CART
+# ===============================
 @bp.route('/cart/increase', methods=['POST'])
 def cart_increase():
+
     user = current_user()
+
     if not user:
         return redirect(url_for('auth.login'))
 
     item_id = request.form.get('item_id')
+
     carts = load_json(CARTS_FILE, {})
+
     if not isinstance(carts, dict):
         carts = {}
 
@@ -125,16 +162,25 @@ def cart_increase():
 
     carts[user_id] = user_cart
     save_json(CARTS_FILE, carts)
+
     return redirect(url_for('main.view_cart'))
 
+
+# ===============================
+# DECREASE CART
+# ===============================
 @bp.route('/cart/decrease', methods=['POST'])
 def cart_decrease():
+
     user = current_user()
+
     if not user:
         return redirect(url_for('auth.login'))
 
     item_id = request.form.get('item_id')
+
     carts = load_json(CARTS_FILE, {})
+
     if not isinstance(carts, dict):
         carts = {}
 
@@ -143,33 +189,41 @@ def cart_decrease():
 
     for c in user_cart:
         if str(c.get('item_id')) == str(item_id):
+
             c['qty'] -= 1
+
             if c['qty'] <= 0:
                 user_cart.remove(c)
+
             break
 
     carts[user_id] = user_cart
     save_json(CARTS_FILE, carts)
+
     return redirect(url_for('main.view_cart'))
 
 
-
+# ===============================
+# CHECKOUT
+# ===============================
 @bp.route('/checkout')
 def checkout():
+
     user = current_user()
+
     if not user:
         flash('Please login to checkout')
         return redirect(url_for('auth.login'))
 
-    # Load data safely
     carts = load_json(CARTS_FILE, {})
-    if not isinstance(carts, dict): carts = {}
-    
+
+    if not isinstance(carts, dict):
+        carts = {}
+
     all_items = load_json(ITEMS_FILE, [])
-    # Map items by ID for quick lookup
     items_map = {str(i.get('id')): i for i in all_items if i.get('id')}
-    
-    user_id = str(user.get('id', ''))
+
+    user_id = str(user.get('id'))
     user_cart = carts.get(user_id, [])
 
     if not user_cart:
@@ -178,17 +232,21 @@ def checkout():
 
     checkout_details = []
     total = 0
-    
+
     for c in user_cart:
-        item_id = str(c.get('item_id', ''))
+
+        item_id = str(c.get('item_id'))
         it = items_map.get(item_id)
-        
+
         if it:
+
             qty = c.get('qty', 0)
             price = it.get('price', 0)
+
             subtotal = price * qty
+
             total += subtotal
-            # We flatten the structure here for easier use in checkout.html
+
             checkout_details.append({
                 'name': it.get('name', 'Unknown Item'),
                 'price': price,
@@ -196,19 +254,22 @@ def checkout():
                 'subtotal': subtotal
             })
 
-    return render_template("checkout.html", 
-                           cart_details=checkout_details, 
-                           total=total, 
-                           user=user)
+    return render_template(
+        "checkout.html",
+        cart_details=checkout_details,
+        total=total,
+        user=user
+    )
 
 
-
+# ===============================
+# PAY NOW
+# ===============================
 @bp.route('/pay_now', methods=['POST'])
 def pay_now():
-    import os, uuid
-    from flask import send_file
 
     user = current_user()
+
     if not user:
         flash("Please login first")
         return redirect(url_for('auth.login'))
@@ -219,7 +280,7 @@ def pay_now():
     if not isinstance(carts, dict):
         carts = {}
 
-    items_map = {str(i.get("id")): i for i in items}
+    items_map = {str(i.get("id")): i for i in items if i.get("id")}
 
     user_id = str(user.get("id"))
     user_cart = carts.get(user_id, [])
@@ -232,8 +293,10 @@ def pay_now():
     total = 0
 
     for c in user_cart:
+
         item_id = str(c.get("item_id"))
         qty = int(c.get("qty", 0))
+
         item = items_map.get(item_id)
 
         if not item or qty <= 0:
@@ -241,6 +304,7 @@ def pay_now():
 
         price = int(item.get("price", 0))
         subtotal = price * qty
+
         total += subtotal
 
         order_items.append({
@@ -250,34 +314,36 @@ def pay_now():
             "subtotal": subtotal
         })
 
-    if not order_items:
-        flash("Order failed")
-        return redirect(url_for("main.menu"))
-
     order_id = str(uuid.uuid4())[:8]
 
-    # -------- SAVE ORDER ----------
     orders = load_json(ORDERS_FILE, [])
+
+    if not isinstance(orders, list):
+        orders = []
+
+    token_number = max([o.get("token", 0) for o in orders], default=0) + 1
+
     orders.append({
         "id": order_id,
+        "token": token_number,
         "user_name": user.get("username") or user.get("email"),
         "items": order_items,
         "total": total,
         "status": "Paid",
         "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     })
+
     save_json(ORDERS_FILE, orders)
 
-    # -------- CLEAR CART ----------
     carts[user_id] = []
     save_json(CARTS_FILE, carts)
 
-    # -------- GENERATE PDF --------
     pdf_path = generate_invoice_pdf(
         order_id=order_id,
         user=user,
         order_items=order_items,
-        total=total
+        total=total,
+        token=token_number
     )
 
     return send_file(
@@ -286,15 +352,13 @@ def pay_now():
         download_name=f"invoice_{order_id}.pdf"
     )
 
-    # ⏩ Auto redirect to menu after 2 seconds
-    response.headers["Refresh"] = "2; url=" + url_for("main.menu")
 
-    flash("Payment successful! Invoice downloaded.")
-
-    return response
-
+# ===============================
+# CAFETERIA DASHBOARD
+# ===============================
 @bp.route('/cafeteria')
 def cafeteria():
+
     user = current_user()
 
     orders = load_json(ORDERS_FILE, [])
@@ -305,4 +369,44 @@ def cafeteria():
         user=user
     )
 
+# ===============================
+# DELETE ORDER AFTER DELAY
+# ===============================
+def delete_order_after_delay(order_id, delay=60):
 
+    def delete():
+        orders = load_json(ORDERS_FILE, [])
+
+        if not isinstance(orders, list):
+            orders = []
+
+        orders = [o for o in orders if o.get("id") != order_id]
+
+        save_json(ORDERS_FILE, orders)
+
+    timer = threading.Timer(60, delete)
+    timer.start()
+
+# ===============================
+# MARK ORDER DELIVERED
+# ===============================
+@bp.route('/mark_order_delivered/<order_id>', methods=['POST'])
+def mark_order_paid(order_id):
+
+    orders = load_json(ORDERS_FILE, [])
+
+    if not isinstance(orders, list):
+        orders = []
+
+    for o in orders:
+        if o.get("id") == order_id:
+            o["status"] = "Delivered"
+
+    save_json(ORDERS_FILE, orders)
+
+    # start auto-delete timer (1 minute)
+    delete_order_after_delay(order_id, 60)
+
+    flash("Order marked as delivered. It will be removed in 1 minute.")
+
+    return redirect(url_for('main.cafeteria'))

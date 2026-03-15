@@ -9,7 +9,7 @@
       <h3>{{ it.name }}</h3>
       <div class="price">₹{{ it.price }}</div>
 
-      <form method="post" action="{{ url_for('main.add_to_cart') }}">
+      <form class="menu-form" method="POST" action="{{ url_for('main.add_to_cart') }}">
           <input type="hidden" name="item_id" value="{{ it.id }}">
           <input type="hidden" name="qty" value="1">
           <br>

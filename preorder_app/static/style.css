@@ -1,73 +1,99 @@
+:root {
+    --primary: #fc8019;
+    --primary-dark: #e96b10;
+    --bg-light: #f5f5f5;
+    --bg-soft: #eeeeee;
+    --card-bg: white;
+    --text-main: #282c3f;
+    --border-soft: #eee;
+    --shadow-soft: 0 4px 14px rgba(0,0,0,0.08);
+}
+
 /* ================= BASE ================= */
+
 body {
     margin: 0;
     font-family: 'Rajdhani', sans-serif;
-    background: linear-gradient(to bottom, #f5f5f5, #eeeeee);
-    color: #282c3f;
+    background: linear-gradient(to bottom, var(--bg-light), var(--bg-soft));
+    color: var(--text-main);
     line-height: 1.6;
 }
 
-/* Navbar */
+
+/* ================= NAVBAR ================= */
+
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 12px 22px;
-    background: white;
+    background: var(--card-bg);
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-/* Left section */
 .nav-left {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-/* Smaller logo */
 .nav-logo {
-    height: 56px;   /* reduced size */
-    width: auto;
+    height: 56px;
 }
 
-/* Title styled with theme color */
 .nav-title {
-    font-size: 18px;
-    font-weight: 500;
-    color: #fc8019;   /* same orange */
+    font-size: clamp(16px,2vw,20px);
+    font-weight: 1000;
+    color: var(--primary);
 }
 
-/* Links */
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
 .nav-links a {
-    margin-left: 18px;
     text-decoration: none;
-    color: #282c3f;
+    color: var(--text-main);
     font-weight: 500;
 }
 
 .nav-links a:hover {
-    color: #fc8019;
+    color: var(--primary);
 }
 
+
 /* ================= CONTAINER ================= */
+
 .container {
-    max-width: 1100px;
+    max-width: min(1100px, 92vw);
     margin: 30px auto;
     padding: 0 20px;
 }
 
-/* ================= GRID & CARDS ================= */
+
+/* ================= GRID ================= */
+
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 22px;
 }
 
+
+/* ================= CARDS ================= */
+
 .card {
-    background: white;
+    background: var(--card-bg);
     border-radius: 14px;
     padding: 18px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    box-shadow: var(--shadow-soft);
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
     transition: transform 0.2s ease;
 }
 
@@ -77,24 +103,28 @@ body {
 
 .price {
     font-weight: 700;
-    margin-top: 8px;
 }
 
+.card button {
+    width: 100%;
+}
+
+
 /* ================= TABLES ================= */
+
 .table-wrapper {
     width: 100%;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 table {
     width: 100%;
-    min-width: max-content;
+    min-width: 600px;
     border-collapse: collapse;
-    background: white;
+    background: var(--card-bg);
     border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    box-shadow: var(--shadow-soft);
     margin-bottom: 30px;
 }
 
@@ -109,7 +139,7 @@ table th {
 table td {
     padding: 14px 16px;
     font-size: 14px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-soft);
 }
 
 table tr:hover {
@@ -120,10 +150,12 @@ table tr:last-child td {
     border-bottom: none;
 }
 
+
 /* ================= BUTTONS ================= */
+
 button,
 .btn {
-    background-color: #fc8019;
+    background-color: var(--primary);
     color: white;
     border: none;
     padding: 10px 16px;
@@ -135,14 +167,13 @@ button,
 
 button:hover,
 .btn:hover {
-    background-color: #e96b10;
+    background-color: var(--primary-dark);
 }
 
 button:active {
     transform: scale(0.98);
 }
 
-/* Delete buttons */
 table form button {
     background-color: #e23744;
 }
@@ -151,13 +182,16 @@ table form button:hover {
     background-color: #c62828;
 }
 
+
 /* ================= FORMS ================= */
+
 form {
-    background: white;
+    background: var(--card-bg);
     padding: 20px;
     border-radius: 14px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    box-shadow: var(--shadow-soft);
     margin-bottom: 20px;
+
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -175,11 +209,13 @@ input[type="password"] {
 
 input:focus {
     outline: none;
-    border-color: #fc8019;
+    border-color: var(--primary);
     box-shadow: 0 0 5px rgba(252,128,25,0.4);
 }
 
-/* Inline forms */
+
+/* ================= INLINE FORM ================= */
+
 form.inline {
     flex-direction: row;
     align-items: center;
@@ -190,18 +226,52 @@ form.inline input[type="number"] {
     width: 60px;
 }
 
-/* ================= LOGO ================= */
-.logo-container {
+
+/* ================= FIX MENU CARD FORM ================= */
+
+.card form {
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+}
+
+
+/* ================= CART TABLE ================= */
+
+.cart-table td,
+.cart-table th {
+    text-align: center;
+}
+
+.qty-controls {
     display: flex;
     justify-content: center;
-    margin: 20px 0;
+    align-items: center;
+    gap: 6px;
 }
 
-.logo-container img {
-    height: 80px;
+.cart-table form {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    background: transparent;
 }
 
-/* ================= FLASH MESSAGES ================= */
+.qty-number {
+    min-width: 20px;
+    font-weight: 600;
+}
+
+.cart-table button {
+    padding: 4px 8px;
+    font-size: 14px;
+}
+
+
+/* ================= FLASH ================= */
+
 #flash-messages {
     position: fixed;
     top: 20px;
@@ -215,12 +285,12 @@ form.inline input[type="number"] {
     padding: 14px 18px;
     margin-bottom: 10px;
     border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    transition: opacity 0.5s ease;
 }
 
-/* ================= MOBILE OPTIMIZATION ================= */
-@media (max-width: 768px) {
+
+/* ================= MOBILE ================= */
+
+@media (max-width:768px) {
 
     .container {
         padding: 0 16px;
@@ -231,30 +301,11 @@ form.inline input[type="number"] {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
-        padding: 14px 18px;
     }
 
-    .navbar h1 {
-        font-size: 20px;
-    }
-
-    .navbar div {
+    .nav-links {
         width: 100%;
         justify-content: space-between;
-        flex-wrap: wrap;
-    }
-
-    .navbar a {
-        font-size: 14px;
-    }
-
-    .grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-
-    .card {
-        padding: 18px;
     }
 
     button,
@@ -278,13 +329,13 @@ form.inline input[type="number"] {
         display: block;
         overflow-x: auto;
         white-space: nowrap;
-        font-size: 13px;
     }
-
 }
 
-/* Smaller devices */
-@media (max-width: 600px) {
+
+/* ================= SMALL DEVICES ================= */
+
+@media (max-width:600px) {
 
     #flash-messages {
         left: 16px;
