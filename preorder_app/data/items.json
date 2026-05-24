@@ -2,16 +2,19 @@
   {
     "id": "item1",
     "name": "Veg Burger",
-    "price": 70
+    "price": 70,
+    "image": "burger.jpg"
   },
   {
     "id": "item2",
     "name": "Chicken Sandwich",
-    "price": 120
+    "price": 120,
+    "image": "sandwich.jpg"
   },
   {
     "id": "item3",
     "name": "Coffee",
-    "price": 40
+    "price": 40,
+    "image": "coffee.jpg"
   }
 ]
