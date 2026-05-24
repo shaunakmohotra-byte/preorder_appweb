@@ -3,6 +3,7 @@ from .store import load_json, save_json, ITEMS_FILE, USERS_FILE, ORDERS_FILE
 import uuid
 from collections import Counter
 from datetime import datetime
+import os
 UPLOAD_FOLDER = os.path.join('app', 'static', 'uploads')  # adjust if needed
 bp = Blueprint('admin', __name__)
 
