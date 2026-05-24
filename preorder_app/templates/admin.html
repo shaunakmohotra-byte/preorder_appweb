@@ -16,7 +16,7 @@
     </tr>
     {% for user in users %}
     <tr>
-        <td>{{ user["username"] }}</td>
+        <td>{{ user["name"] }}</td>
         <td>{{ user["email"] }}</td>
         <td>{{ "Yes" if user.get("is_admin") else "No" }}</td>
         <td>
