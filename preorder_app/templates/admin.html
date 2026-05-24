@@ -67,14 +67,18 @@
 </div>
 
 <h4>Add Item</h4>
-<form method="POST" action="{{ url_for('admin.add_item') }}">
+<form method="POST" action="{{ url_for('admin.add_item') }}" enctype="multipart/form-data">
     Name:
     <input name="name" required>
+
     Price:
     <input name="price" type="number" required>
+
+    Image:
+    <input type="file" name="image" accept="image/*">
+
     <button type="submit">Add</button>
 </form>
-
 <hr>
 
 <!-- ================= ORDERS ================= -->
