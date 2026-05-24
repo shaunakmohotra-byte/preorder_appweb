@@ -9,12 +9,11 @@
 <div class="table-wrapper">
 <table border="1" cellpadding="8">
     <tr>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Admin</th>
-        <th>Actions</th>
+    <th>Image</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Action</th>
     </tr>
-
     {% for user in users %}
     <tr>
         <td>{{ user["username"] }}</td>
@@ -51,33 +50,47 @@
     </tr>
 
     {% for it in items %}
-    <tr>
-        <td>{{ it["name"] }}</td>
-        <td>₹{{ it["price"] }}</td>
-        <td>
-            <form method="POST" action="{{ url_for('admin.delete_item', item_id=it['id']) }}">
-                <button type="submit" onclick="return confirm('Delete this item?');">
-                    Delete
-                </button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
+<tr>
+    <td>
+        {% if it.get('image') %}
+            <img src="{{ url_for('static', filename='uploads/' + it.image) }}" 
+                 style="width:60px; height:60px; object-fit:cover; border-radius:8px;">
+        {% else %}
+            <img src="{{ url_for('static', filename='uploads/default.png') }}" 
+                 style="width:60px; height:60px; border-radius:8px;">
+        {% endif %}
+    </td>
+
+    <td>{{ it["name"] }}</td>
+    <td>₹{{ it["price"] }}</td>
+
+    <td>
+        <form method="POST" action="{{ url_for('admin.delete_item', item_id=it['id']) }}">
+            <button type="submit" onclick="return confirm('Delete this item?');">
+                Delete
+            </button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
 </table>
 </div>
 
 <h4>Add Item</h4>
+
 <form method="POST" action="{{ url_for('admin.add_item') }}" enctype="multipart/form-data">
-    Name:
-    <input name="name" required>
 
-    Price:
-    <input name="price" type="number" required>
+    <label>Item Name</label>
+    <input type="text" name="name" placeholder="Enter food name" required>
 
-    Image:
+    <label>Price (₹)</label>
+    <input type="number" name="price" placeholder="Enter price" required>
+
+    <label>Upload Image</label>
     <input type="file" name="image" accept="image/*">
 
-    <button type="submit">Add</button>
+    <button type="submit">Add Item</button>
+
 </form>
 <hr>
 
