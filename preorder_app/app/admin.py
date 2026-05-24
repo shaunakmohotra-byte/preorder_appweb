@@ -3,7 +3,7 @@ from .store import load_json, save_json, ITEMS_FILE, USERS_FILE, ORDERS_FILE
 import uuid
 from collections import Counter
 from datetime import datetime
-
+UPLOAD_FOLDER = os.path.join('app', 'static', 'uploads')  # adjust if needed
 bp = Blueprint('admin', __name__)
 
 # --- Helper Security Check ---
@@ -32,24 +32,38 @@ def index():
                            items=items, 
                            orders=orders)
 
+
 @bp.route('/add_item', methods=['POST'])
 def add_item():
-    if not is_admin(): return redirect(url_for('auth.login'))
+    if not is_admin():
+        return redirect(url_for('auth.login'))
 
     name = request.form.get('name')
     price = request.form.get('price')
+    image = request.files.get('image')
+
+    image_filename = None
+
+    if image and image.filename != '':
+        filename = secure_filename(image.filename)
+        image_filename = str(uuid.uuid4()) + "_" + filename
+
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+        image.save(os.path.join(UPLOAD_FOLDER, image_filename))
 
     if name and price:
         items = load_json(ITEMS_FILE, [])
         new_item = {
             'id': str(uuid.uuid4())[:8],
             'name': name,
-            'price': int(price)
+            'price': int(price),
+            'image': image_filename   # 👈 NEW FIELD
         }
         items.append(new_item)
         save_json(ITEMS_FILE, items)
+
         flash(f'Added {name}')
-    
+
     return redirect(url_for('admin.index'))
 
 @bp.route('/delete_item/<item_id>', methods=['POST'])
