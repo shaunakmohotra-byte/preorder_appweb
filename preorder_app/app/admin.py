@@ -1,37 +1,30 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from .store import ITEMS_FILE, USERS_FILE, ORDERS_FILE
+from werkzeug.utils import secure_filename
+from .db import users_col, items_col, orders_col
 import uuid
-from collections import Counter
-from datetime import datetime
 import os
-UPLOAD_FOLDER = os.path.join('app', 'static', 'uploads')  # adjust if needed
-bp = Blueprint('admin', __name__)
 
-# --- Helper Security Check ---
+bp = Blueprint('admin', __name__)
+UPLOAD_FOLDER = os.path.join('app', 'static', 'uploads')
+
 def is_admin():
     uid = session.get('user_id')
     if not uid:
         return False
-    users = (USERS_FILE, [])
-    user = next((u for u in users if u.get('id') == uid), None)
+    user = users_col.find_one({'id': uid})
     return user and user.get('is_admin') is True
 
-# --- Routes ---
 
 @bp.route('/')
 def index():
     if not is_admin():
-        flash('Admin access required.')
         return redirect(url_for('auth.login'))
-    
-    users = (USERS_FILE, [])
-    items = (ITEMS_FILE, [])
-    orders = (ORDERS_FILE, [])
-    
-    return render_template('admin.html', 
-                           users=users, 
-                           items=items, 
-                           orders=orders)
+
+    users = list(users_col.find({}, {'_id': 0}))
+    items = list(items_col.find({}, {'_id': 0}))
+    orders = list(orders_col.find({}, {'_id': 0}))
+
+    return render_template('admin.html', users=users, items=items, orders=orders)
 
 
 @bp.route('/add_item', methods=['POST'])
@@ -45,71 +38,29 @@ def add_item():
 
     image_filename = None
 
-    if image and image.filename != '':
+    if image and image.filename:
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
         filename = secure_filename(image.filename)
         image_filename = str(uuid.uuid4()) + "_" + filename
-
-        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
         image.save(os.path.join(UPLOAD_FOLDER, image_filename))
 
-    if name and price:
-        items = (ITEMS_FILE, [])
-        new_item = {
-            'id': str(uuid.uuid4())[:8],
-            'name': name,
-            'price': int(price),
-            'image': image_filename   # 👈 NEW FIELD
-        }
-        items.append(new_item)
+    items_col.insert_one({
+        'id': str(uuid.uuid4())[:8],
+        'name': name,
+        'price': int(price),
+        'image': image_filename
+    })
 
-        flash(f'Added {name}')
-
+    flash("Item added")
     return redirect(url_for('admin.index'))
+
 
 @bp.route('/delete_item/<item_id>', methods=['POST'])
 def delete_item(item_id):
-    if not is_admin(): return redirect(url_for('auth.login'))
-    
-    items = (ITEMS_FILE, [])
-    items = [it for it in items if it.get('id') != item_id]
-    
-    flash('Item deleted')
-    return redirect(url_for('admin.index'))
+    if not is_admin():
+        return redirect(url_for('auth.login'))
 
-@bp.route('/edit_user/<user_id>', methods=['GET', 'POST'])
-def edit_user(user_id):
-    if not is_admin(): return redirect(url_for('auth.login'))
-
-    users = (USERS_FILE, [])
-    user = next((u for u in users if u.get('id') == user_id), None)
-    
-    if not user:
-        flash('User not found')
-        return redirect(url_for('admin.index'))
-
-    if request.method == 'POST':
-        user['name'] = request.form.get('name')
-        user['email'] = request.form.get('email')
-        user['is_admin'] = True if request.form.get('is_admin') else False
-        
-        flash('User updated')
-        return redirect(url_for('admin.index'))
-
-    return render_template('edit_user.html', user=user)
-
-@bp.route('/delete_user', methods=['POST'])
-def delete_user():
-    if not is_admin(): return redirect(url_for('auth.login'))
-
-    user_id = request.form.get('user_id')
-    users = (USERS_FILE, [])
-    
-    # Prevent admin from deleting themselves
-    if user_id == session.get('user_id'):
-        flash("You cannot delete your own account!")
-        return redirect(url_for('admin.index'))
-
-    users = [u for u in users if u.get('id') != user_id]
-    flash('User deleted')
+    items_col.delete_one({'id': item_id})
+    flash("Item deleted")
     return redirect(url_for('admin.index'))
 
