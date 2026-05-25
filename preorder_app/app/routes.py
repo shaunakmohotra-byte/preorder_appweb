@@ -96,38 +96,44 @@ def view_cart():
 # ===============================
 # ADD TO CART
 # ===============================
+from .db import carts_col
+
 @bp.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
     user = current_user()
+
     if not user:
+        flash('Please login first')
         return redirect(url_for('auth.login'))
 
     item_id = request.form.get('item_id')
+    user_id = user['id']
 
-    cart = carts_col.find_one({'user_id': user['id']})
+    cart = carts_col.find_one({'user_id': user_id})
 
     if not cart:
         carts_col.insert_one({
-            'user_id': user['id'],
+            'user_id': user_id,
             'items': [{'item_id': item_id, 'qty': 1}]
         })
     else:
-        items = cart['items']
-        for c in items:
-            if c['item_id'] == item_id:
-                c['qty'] += 1
+        found = False
+        for item in cart['items']:
+            if item['item_id'] == item_id:
+                item['qty'] += 1
+                found = True
                 break
-        else:
-            items.append({'item_id': item_id, 'qty': 1})
+
+        if not found:
+            cart['items'].append({'item_id': item_id, 'qty': 1})
 
         carts_col.update_one(
-            {'user_id': user['id']},
-            {'$set': {'items': items}}
+            {'user_id': user_id},
+            {'$set': {'items': cart['items']}}
         )
 
-    flash("Added to cart")
+    flash('Added to cart')
     return redirect(url_for('main.menu'))
-
 
 # ===============================
 # INCREASE CART
