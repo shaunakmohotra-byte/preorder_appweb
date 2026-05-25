@@ -3,7 +3,6 @@ from .db import users_col, items_col, carts_col, orders_col
 import uuid
 from datetime import datetime
 
-from .store import  ITEMS_FILE, CARTS_FILE, ORDERS_FILE, USERS_FILE
 from .utils.pdf_invoice import generate_invoice_pdf
 
 bp = Blueprint('main', __name__)
