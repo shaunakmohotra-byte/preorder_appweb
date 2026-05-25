@@ -4,7 +4,7 @@ from datetime import datetime
 import threading
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, send_file
 
-from .store import load_json, save_json, ITEMS_FILE, CARTS_FILE, ORDERS_FILE, USERS_FILE
+from .store import  ITEMS_FILE, CARTS_FILE, ORDERS_FILE, USERS_FILE
 from .utils.pdf_invoice import generate_invoice_pdf
 
 bp = Blueprint('main', __name__)
@@ -18,7 +18,7 @@ def current_user():
     if not uid:
         return None
 
-    users = load_json(USERS_FILE, [])
+    users = (USERS_FILE, [])
 
     return next((u for u in users if str(u.get('id')) == str(uid)), None)
 
@@ -36,7 +36,7 @@ def index():
 # ===============================
 @bp.route('/menu')
 def menu():
-    items = load_json(ITEMS_FILE, [])
+    items = (ITEMS_FILE, [])
     return render_template('menu.html', items=items, user=current_user())
 
 
@@ -52,12 +52,12 @@ def view_cart():
         flash('Please login to view cart')
         return redirect(url_for('auth.login'))
 
-    carts = load_json(CARTS_FILE, {})
+    carts = (CARTS_FILE, {})
 
     if not isinstance(carts, dict):
         carts = {}
 
-    items = load_json(ITEMS_FILE, [])
+    items = (ITEMS_FILE, [])
     items_map = {str(i['id']): i for i in items if 'id' in i}
 
     user_id = str(user['id'])
@@ -111,7 +111,7 @@ def add_to_cart():
 
     item_id = request.form.get('item_id')
 
-    carts = load_json(CARTS_FILE, {})
+    carts = (CARTS_FILE, {})
 
     if not isinstance(carts, dict):
         carts = {}
@@ -127,7 +127,7 @@ def add_to_cart():
         user_cart.append({'item_id': item_id, 'qty': 1})
 
     carts[user_id] = user_cart
-    save_json(CARTS_FILE, carts)
+    (CARTS_FILE, carts)
 
     flash('Added to cart')
 
@@ -147,7 +147,7 @@ def cart_increase():
 
     item_id = request.form.get('item_id')
 
-    carts = load_json(CARTS_FILE, {})
+    carts = (CARTS_FILE, {})
 
     if not isinstance(carts, dict):
         carts = {}
@@ -161,7 +161,7 @@ def cart_increase():
             break
 
     carts[user_id] = user_cart
-    save_json(CARTS_FILE, carts)
+    (CARTS_FILE, carts)
 
     return redirect(url_for('main.view_cart'))
 
@@ -179,7 +179,7 @@ def cart_decrease():
 
     item_id = request.form.get('item_id')
 
-    carts = load_json(CARTS_FILE, {})
+    carts = (CARTS_FILE, {})
 
     if not isinstance(carts, dict):
         carts = {}
@@ -198,7 +198,7 @@ def cart_decrease():
             break
 
     carts[user_id] = user_cart
-    save_json(CARTS_FILE, carts)
+    (CARTS_FILE, carts)
 
     return redirect(url_for('main.view_cart'))
 
@@ -215,12 +215,12 @@ def checkout():
         flash('Please login to checkout')
         return redirect(url_for('auth.login'))
 
-    carts = load_json(CARTS_FILE, {})
+    carts = (CARTS_FILE, {})
 
     if not isinstance(carts, dict):
         carts = {}
 
-    all_items = load_json(ITEMS_FILE, [])
+    all_items = (ITEMS_FILE, [])
     items_map = {str(i.get('id')): i for i in all_items if i.get('id')}
 
     user_id = str(user.get('id'))
@@ -274,8 +274,8 @@ def pay_now():
         flash("Please login first")
         return redirect(url_for('auth.login'))
 
-    carts = load_json(CARTS_FILE, {})
-    items = load_json(ITEMS_FILE, [])
+    carts = (CARTS_FILE, {})
+    items = (ITEMS_FILE, [])
 
     if not isinstance(carts, dict):
         carts = {}
@@ -316,7 +316,7 @@ def pay_now():
 
     order_id = str(uuid.uuid4())[:8]
 
-    orders = load_json(ORDERS_FILE, [])
+    orders = (ORDERS_FILE, [])
 
     if not isinstance(orders, list):
         orders = []
@@ -333,10 +333,10 @@ def pay_now():
         "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     })
 
-    save_json(ORDERS_FILE, orders)
+    (ORDERS_FILE, orders)
 
     carts[user_id] = []
-    save_json(CARTS_FILE, carts)
+    (CARTS_FILE, carts)
 
     pdf_path = generate_invoice_pdf(
         order_id=order_id,
@@ -361,7 +361,7 @@ def cafeteria():
 
     user = current_user()
 
-    orders = load_json(ORDERS_FILE, [])
+    orders = (ORDERS_FILE, [])
 
     return render_template(
         'cafeteria.html',
@@ -375,14 +375,14 @@ def cafeteria():
 def delete_order_after_delay(order_id, delay=60):
 
     def delete():
-        orders = load_json(ORDERS_FILE, [])
+        orders = (ORDERS_FILE, [])
 
         if not isinstance(orders, list):
             orders = []
 
         orders = [o for o in orders if o.get("id") != order_id]
 
-        save_json(ORDERS_FILE, orders)
+        (ORDERS_FILE, orders)
 
     timer = threading.Timer(60, delete)
     timer.start()
@@ -393,7 +393,7 @@ def delete_order_after_delay(order_id, delay=60):
 @bp.route('/mark_order_delivered/<order_id>', methods=['POST'])
 def mark_order_paid(order_id):
 
-    orders = load_json(ORDERS_FILE, [])
+    orders = (ORDERS_FILE, [])
 
     if not isinstance(orders, list):
         orders = []
@@ -402,7 +402,7 @@ def mark_order_paid(order_id):
         if o.get("id") == order_id:
             o["status"] = "Delivered"
 
-    save_json(ORDERS_FILE, orders)
+    (ORDERS_FILE, orders)
 
     # start auto-delete timer (1 minute)
     delete_order_after_delay(order_id, 60)
