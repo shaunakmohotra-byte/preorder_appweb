@@ -1,8 +1,7 @@
-import os
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from .db import users_col, items_col, carts_col, orders_col
 import uuid
 from datetime import datetime
-import threading
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, send_file
 
 from .store import  ITEMS_FILE, CARTS_FILE, ORDERS_FILE, USERS_FILE
 from .utils.pdf_invoice import generate_invoice_pdf
@@ -17,10 +16,7 @@ def current_user():
     uid = session.get('user_id')
     if not uid:
         return None
-
-    users = (USERS_FILE, [])
-
-    return next((u for u in users if str(u.get('id')) == str(uid)), None)
+    return users_col.find_one({'id': uid})
 
 
 # ===============================
@@ -36,8 +32,9 @@ def index():
 # ===============================
 @bp.route('/menu')
 def menu():
-    items = (ITEMS_FILE, [])
+    items = list(items_col.find({}, {'_id': 0}))
     return render_template('menu.html', items=items, user=current_user())
+
 
 
 # ===============================
@@ -102,35 +99,34 @@ def view_cart():
 # ===============================
 @bp.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
-
     user = current_user()
-
     if not user:
-        flash('Please login first')
         return redirect(url_for('auth.login'))
 
     item_id = request.form.get('item_id')
 
-    carts = (CARTS_FILE, {})
+    cart = carts_col.find_one({'user_id': user['id']})
 
-    if not isinstance(carts, dict):
-        carts = {}
-
-    user_id = str(user['id'])
-    user_cart = carts.get(user_id, [])
-
-    for c in user_cart:
-        if str(c.get('item_id')) == str(item_id):
-            c['qty'] += 1
-            break
+    if not cart:
+        carts_col.insert_one({
+            'user_id': user['id'],
+            'items': [{'item_id': item_id, 'qty': 1}]
+        })
     else:
-        user_cart.append({'item_id': item_id, 'qty': 1})
+        items = cart['items']
+        for c in items:
+            if c['item_id'] == item_id:
+                c['qty'] += 1
+                break
+        else:
+            items.append({'item_id': item_id, 'qty': 1})
 
-    carts[user_id] = user_cart
-    (CARTS_FILE, carts)
+        carts_col.update_one(
+            {'user_id': user['id']},
+            {'$set': {'items': items}}
+        )
 
-    flash('Added to cart')
-
+    flash("Added to cart")
     return redirect(url_for('main.menu'))
 
 
