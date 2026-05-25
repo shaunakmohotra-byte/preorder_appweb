@@ -61,7 +61,6 @@ def add_item():
             'image': image_filename   # 👈 NEW FIELD
         }
         items.append(new_item)
-        (ITEMS_FILE, items)
 
         flash(f'Added {name}')
 
@@ -73,7 +72,6 @@ def delete_item(item_id):
     
     items = (ITEMS_FILE, [])
     items = [it for it in items if it.get('id') != item_id]
-    (ITEMS_FILE, items)
     
     flash('Item deleted')
     return redirect(url_for('admin.index'))
@@ -94,7 +92,6 @@ def edit_user(user_id):
         user['email'] = request.form.get('email')
         user['is_admin'] = True if request.form.get('is_admin') else False
         
-        (USERS_FILE, users)
         flash('User updated')
         return redirect(url_for('admin.index'))
 
@@ -113,7 +110,6 @@ def delete_user():
         return redirect(url_for('admin.index'))
 
     users = [u for u in users if u.get('id') != user_id]
-    (USERS_FILE, users)
     flash('User deleted')
     return redirect(url_for('admin.index'))
 
