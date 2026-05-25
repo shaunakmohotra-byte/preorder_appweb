@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from .store import load_json, save_json, ITEMS_FILE, USERS_FILE, ORDERS_FILE
+from .store import ITEMS_FILE, USERS_FILE, ORDERS_FILE
 import uuid
 from collections import Counter
 from datetime import datetime
@@ -12,7 +12,7 @@ def is_admin():
     uid = session.get('user_id')
     if not uid:
         return False
-    users = load_json(USERS_FILE, [])
+    users = (USERS_FILE, [])
     user = next((u for u in users if u.get('id') == uid), None)
     return user and user.get('is_admin') is True
 
@@ -24,9 +24,9 @@ def index():
         flash('Admin access required.')
         return redirect(url_for('auth.login'))
     
-    users = load_json(USERS_FILE, [])
-    items = load_json(ITEMS_FILE, [])
-    orders = load_json(ORDERS_FILE, [])
+    users = (USERS_FILE, [])
+    items = (ITEMS_FILE, [])
+    orders = (ORDERS_FILE, [])
     
     return render_template('admin.html', 
                            users=users, 
@@ -53,7 +53,7 @@ def add_item():
         image.save(os.path.join(UPLOAD_FOLDER, image_filename))
 
     if name and price:
-        items = load_json(ITEMS_FILE, [])
+        items = (ITEMS_FILE, [])
         new_item = {
             'id': str(uuid.uuid4())[:8],
             'name': name,
@@ -61,7 +61,7 @@ def add_item():
             'image': image_filename   # 👈 NEW FIELD
         }
         items.append(new_item)
-        save_json(ITEMS_FILE, items)
+        (ITEMS_FILE, items)
 
         flash(f'Added {name}')
 
@@ -71,9 +71,9 @@ def add_item():
 def delete_item(item_id):
     if not is_admin(): return redirect(url_for('auth.login'))
     
-    items = load_json(ITEMS_FILE, [])
+    items = (ITEMS_FILE, [])
     items = [it for it in items if it.get('id') != item_id]
-    save_json(ITEMS_FILE, items)
+    (ITEMS_FILE, items)
     
     flash('Item deleted')
     return redirect(url_for('admin.index'))
@@ -82,7 +82,7 @@ def delete_item(item_id):
 def edit_user(user_id):
     if not is_admin(): return redirect(url_for('auth.login'))
 
-    users = load_json(USERS_FILE, [])
+    users = (USERS_FILE, [])
     user = next((u for u in users if u.get('id') == user_id), None)
     
     if not user:
@@ -94,7 +94,7 @@ def edit_user(user_id):
         user['email'] = request.form.get('email')
         user['is_admin'] = True if request.form.get('is_admin') else False
         
-        save_json(USERS_FILE, users)
+        (USERS_FILE, users)
         flash('User updated')
         return redirect(url_for('admin.index'))
 
@@ -105,7 +105,7 @@ def delete_user():
     if not is_admin(): return redirect(url_for('auth.login'))
 
     user_id = request.form.get('user_id')
-    users = load_json(USERS_FILE, [])
+    users = (USERS_FILE, [])
     
     # Prevent admin from deleting themselves
     if user_id == session.get('user_id'):
@@ -113,7 +113,7 @@ def delete_user():
         return redirect(url_for('admin.index'))
 
     users = [u for u in users if u.get('id') != user_id]
-    save_json(USERS_FILE, users)
+    (USERS_FILE, users)
     flash('User deleted')
     return redirect(url_for('admin.index'))
 
