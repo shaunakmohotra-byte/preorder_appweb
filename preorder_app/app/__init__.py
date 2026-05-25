@@ -1,19 +1,57 @@
 from flask import Flask
-from .store import init_default_data
+from pymongo import MongoClient
 import os
-from flask import Flask
-def create_app():
-    # Tell Flask the template folder is one level up from this file
-    template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    static_dir = os.path.abspath(os.path.join(base_dir, '..', 'static'))
-    app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)    
-    app.config['SECRET_KEY'] = 'dev-secret-key-123'
-   
-    # Ensure JSON files exist before the app starts
-    init_default_data()
 
-    # Register Blueprints
+def create_app():
+
+    # ===============================
+    # PATH SETUP
+    # ===============================
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+
+    template_dir = os.path.abspath(os.path.join(base_dir, '..', 'templates'))
+    static_dir = os.path.abspath(os.path.join(base_dir, '..', 'static'))
+
+    app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
+
+    # ===============================
+    # SECRET KEY
+    # ===============================
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret')
+
+    # ===============================
+    # MONGODB CONNECTION
+    # ===============================
+    MONGO_URI = os.environ.get("MONGO_URI")
+
+    if not MONGO_URI:
+        raise Exception("MONGO_URI not set in environment variables")
+
+    client = MongoClient(MONGO_URI)
+
+    # 👇 IMPORTANT: database name comes here
+    db = client["cafeteria_app"]   # <-- YOU CHOOSE THIS NAME
+
+    # Attach DB to app
+    app.db = db
+
+    # ===============================
+    # CREATE DEFAULT ADMIN (ONLY ONCE)
+    # ===============================
+    from werkzeug.security import generate_password_hash
+
+    if not db.users.find_one({"email": "admin@example.com"}):
+        db.users.insert_one({
+            "id": "admin-1",
+            "name": "Admin",
+            "email": "admin@example.com",
+            "password_hash": generate_password_hash("admin123"),
+            "is_admin": True
+        })
+
+    # ===============================
+    # REGISTER BLUEPRINTS
+    # ===============================
     from .routes import bp as main_bp
     from .auth import bp as auth_bp
     from .admin import bp as admin_bp
