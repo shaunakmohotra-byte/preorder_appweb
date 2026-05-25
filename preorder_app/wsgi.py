@@ -3,7 +3,6 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = create_app()
 
-# Fix proxy headers on Render
 app.wsgi_app = ProxyFix(
     app.wsgi_app,
     x_for=1,
@@ -13,4 +12,4 @@ app.wsgi_app = ProxyFix(
 )
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=5000)
