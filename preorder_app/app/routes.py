@@ -39,59 +39,45 @@ def menu():
 # ===============================
 # VIEW CART
 # ===============================
+from .db import carts_col, items_col
+
 @bp.route('/cart')
 def view_cart():
-
     user = current_user()
 
     if not user:
-        flash('Please login to view cart')
+        flash('Login first')
         return redirect(url_for('auth.login'))
 
-    carts = (CARTS_FILE, {})
+    cart = carts_col.find_one({'user_id': user['id']})
 
-    if not isinstance(carts, dict):
-        carts = {}
-
-    items = (ITEMS_FILE, [])
-    items_map = {str(i['id']): i for i in items if 'id' in i}
-
-    user_id = str(user['id'])
-    user_cart = carts.get(user_id, [])
+    if not cart:
+        return render_template('cart.html', cart_details=[], total=0)
 
     cart_details = []
     total = 0
 
-    for c in user_cart:
+    for c in cart['items']:
+        item = items_col.find_one({'id': c['item_id']})
 
-        item_id = str(c.get('item_id'))
-        qty = int(c.get('qty', 0))
-
-        item = items_map.get(item_id)
-
-        if not item or qty <= 0:
+        if not item:
             continue
 
-        price = int(item.get('price', 0))
-        subtotal = price * qty
-
+        subtotal = item['price'] * c['qty']
         total += subtotal
 
         cart_details.append({
-            'item_id': item_id,
-            'name': item.get('name', 'Unknown Item'),
-            'qty': qty,
-            'price': price,
+            'item_id': item['id'],
+            'name': item['name'],
+            'qty': c['qty'],
+            'price': item['price'],
             'subtotal': subtotal
         })
 
-    return render_template(
-        'cart.html',
-        cart_details=cart_details,
-        total=total,
-        user=user
-    )
-
+    return render_template('cart.html',
+                           cart_details=cart_details,
+                           total=total,
+                           user=user)
 
 # ===============================
 # ADD TO CART
