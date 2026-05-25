@@ -1,7 +1,7 @@
 import uuid
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
-from .store import load_json, save_json, USERS_FILE
+from .store import USERS_FILE
 
 bp = Blueprint('auth', __name__)
 
@@ -9,7 +9,7 @@ def get_current_user():
     uid = session.get('user_id')
     if not uid:
         return None
-    users = load_json(USERS_FILE, [])
+    users = (USERS_FILE, [])
     return next((u for u in users if u.get('id') == uid), None)
 
 @bp.route('/register', methods=['GET', 'POST'])
@@ -19,7 +19,7 @@ def register():
         email = request.form.get('email')
         pwd = request.form.get('password')
         
-        users = load_json(USERS_FILE, [])
+        users = (USERS_FILE, [])
         if any(u.get('email') == email for u in users):
             flash('Email already registered')
             return redirect(url_for('auth.register'))
@@ -33,7 +33,7 @@ def register():
         }
         
         users.append(new_user)
-        save_json(USERS_FILE, users)
+        (USERS_FILE, users)
         flash('Registration successful! Please login.')
         return redirect(url_for('auth.login'))
         
@@ -45,7 +45,7 @@ def login():
         email = request.form.get('email')
         pwd = request.form.get('password')
         
-        users = load_json(USERS_FILE, [])
+        users = (USERS_FILE, [])
         user = next((u for u in users if u.get('email') == email), None)
         
         # Verify password against 'password_hash' key
