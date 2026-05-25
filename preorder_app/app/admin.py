@@ -5,6 +5,8 @@ import uuid
 import os
 
 bp = Blueprint('admin', __name__)
+
+bp = Blueprint('admin', __name__)
 UPLOAD_FOLDER = os.path.join('app', 'static', 'uploads')
 
 def is_admin():
@@ -13,6 +15,11 @@ def is_admin():
         return False
     user = users_col.find_one({'id': uid})
     return user and user.get('is_admin') is True
+
+
+# ===============================
+# ADMIN DASHBOARD
+# ===============================
 
 
 @bp.route('/')
@@ -26,6 +33,10 @@ def index():
 
     return render_template('admin.html', users=users, items=items, orders=orders)
 
+
+# ===============================
+# ADD ITEM
+# ===============================
 
 @bp.route('/add_item', methods=['POST'])
 def add_item():
@@ -64,3 +75,52 @@ def delete_item(item_id):
     flash("Item deleted")
     return redirect(url_for('admin.index'))
 
+# ===============================
+# EDIT USER
+# ===============================
+@bp.route('/edit_user/<user_id>', methods=['GET', 'POST'])
+def edit_user(user_id):
+    if not is_admin():
+        return redirect(url_for('auth.login'))
+
+    users = load_json(USERS_FILE, [])
+    user = next((u for u in users if u.get('id') == user_id), None)
+
+    if not user:
+        flash('User not found')
+        return redirect(url_for('admin.index'))
+
+    if request.method == 'POST':
+        user['name'] = request.form.get('name')
+        user['email'] = request.form.get('email')
+        user['is_admin'] = True if request.form.get('is_admin') else False
+
+        save_json(USERS_FILE, users)
+
+        flash('User updated')
+        return redirect(url_for('admin.index'))
+
+    return render_template('edit_user.html', user=user)
+
+
+# ===============================
+# DELETE USER
+# ===============================
+@bp.route('/delete_user', methods=['POST'])
+def delete_user():
+    if not is_admin():
+        return redirect(url_for('auth.login'))
+
+    user_id = request.form.get('user_id')
+    users = load_json(USERS_FILE, [])
+
+    # Prevent self delete
+    if user_id == session.get('user_id'):
+        flash("You cannot delete your own account!")
+        return redirect(url_for('admin.index'))
+
+    users = [u for u in users if u.get('id') != user_id]
+    save_json(USERS_FILE, users)
+
+    flash('User deleted')
+    return redirect(url_for('admin.index'))
