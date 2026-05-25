@@ -1,7 +1,18 @@
 from app import create_app
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-app = create_app()
+def create_app():
+    print("🔥 APP STARTING...")
+
+    ...
+    
+    MONGO_URI = os.environ.get("MONGO_URI")
+    print("MONGO_URI:", MONGO_URI)
+
+    if not MONGO_URI:
+        raise Exception("MONGO_URI not set")
+
+    ...
 
 app.wsgi_app = ProxyFix(
     app.wsgi_app,
