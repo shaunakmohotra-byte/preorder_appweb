@@ -18,7 +18,10 @@ def current_user():
         return None
     return users_col.find_one({'id': uid})
 
-
+def delete_order_after_delay(order_id, delay=60):
+    import time
+    time.sleep(delay)
+    orders_col.delete_one({'id': order_id})
 # ===============================
 # HOME
 # ===============================
@@ -306,5 +309,12 @@ def mark_order_paid(order_id):
         {'$set': {'status': 'Delivered'}}
     )
 
-    flash("Order marked delivered")
+    # Start background thread to delete after 1 minute
+    thread = threading.Thread(
+        target=delete_order_after_delay,
+        args=(order_id,)
+    )
+    thread.start()
+
+    flash("Order marked delivered (will auto-delete in 1 minute)")
     return redirect(url_for('main.cafeteria'))
