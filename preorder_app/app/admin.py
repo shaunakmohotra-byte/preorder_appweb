@@ -90,24 +90,32 @@ def edit_user(user_id):
         return redirect(url_for('admin.index'))
 
     if request.method == 'POST':
+        update_data = {}
+
         name = request.form.get('name')
         email = request.form.get('email')
-        is_admin_flag = True if request.form.get('is_admin') else False
 
-        users_col.update_one(
-            {'id': user_id},
-            {'$set': {
-                'name': name,
-                'email': email,
-                'is_admin': is_admin_flag
-            }}
-        )
+        if name:
+            update_data['name'] = name
 
-        flash('User updated')
+        if email:
+            update_data['email'] = email
+
+        # checkbox handling (important fix)
+        update_data['is_admin'] = True if request.form.get('is_admin') else False
+
+        if update_data:
+            users_col.update_one(
+                {'id': user_id},
+                {'$set': update_data}
+            )
+            flash('User updated')
+        else:
+            flash('No changes made')
+
         return redirect(url_for('admin.index'))
 
     return render_template('edit_user.html', user=user)
-
 
 # ===============================
 # DELETE USER
@@ -118,6 +126,10 @@ def delete_user():
         return redirect(url_for('auth.login'))
 
     user_id = request.form.get('user_id')
+
+    if not user_id:
+        flash("Invalid request")
+        return redirect(url_for('admin.index'))
 
     # Prevent self delete
     if user_id == session.get('user_id'):
