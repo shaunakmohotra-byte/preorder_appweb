@@ -83,19 +83,25 @@ def edit_user(user_id):
     if not is_admin():
         return redirect(url_for('auth.login'))
 
-    users = load_json(USERS_FILE, [])
-    user = next((u for u in users if u.get('id') == user_id), None)
+    user = users_col.find_one({'id': user_id})
 
     if not user:
         flash('User not found')
         return redirect(url_for('admin.index'))
 
     if request.method == 'POST':
-        user['name'] = request.form.get('name')
-        user['email'] = request.form.get('email')
-        user['is_admin'] = True if request.form.get('is_admin') else False
+        name = request.form.get('name')
+        email = request.form.get('email')
+        is_admin_flag = True if request.form.get('is_admin') else False
 
-        save_json(USERS_FILE, users)
+        users_col.update_one(
+            {'id': user_id},
+            {'$set': {
+                'name': name,
+                'email': email,
+                'is_admin': is_admin_flag
+            }}
+        )
 
         flash('User updated')
         return redirect(url_for('admin.index'))
@@ -112,15 +118,17 @@ def delete_user():
         return redirect(url_for('auth.login'))
 
     user_id = request.form.get('user_id')
-    users = load_json(USERS_FILE, [])
 
     # Prevent self delete
     if user_id == session.get('user_id'):
         flash("You cannot delete your own account!")
         return redirect(url_for('admin.index'))
 
-    users = [u for u in users if u.get('id') != user_id]
-    save_json(USERS_FILE, users)
+    result = users_col.delete_one({'id': user_id})
 
-    flash('User deleted')
+    if result.deleted_count == 0:
+        flash("User not found")
+    else:
+        flash('User deleted')
+
     return redirect(url_for('admin.index'))
