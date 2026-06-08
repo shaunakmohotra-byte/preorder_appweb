@@ -13,8 +13,12 @@
 
 body {
     margin: 0;
+    min-height: 100vh;
+    display: flex;             /* Enables Flexbox */
+    flex-direction: column;    /* Stacks the navbar, container, and footer vertically */
     font-family: 'Rajdhani', sans-serif;
     background: linear-gradient(to bottom, var(--bg-light), var(--bg-soft));
+    background-attachment: fixed;
     color: var(--text-main);
     line-height: 1.6;
 }
