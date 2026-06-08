@@ -161,6 +161,31 @@ table tr:last-child td {
     border-bottom: none;
 }
 
+/* ================= FIX FOR FORMS INSIDE TABLES (ADMIN & CART) ================= */
+
+table form {
+    display: inline-block;  /* Lets buttons sit side-by-side instead of stacking */
+    background: transparent !important; /* Removes the white card background */
+    padding: 0 !important;              /* Removes the massive 20px padding */
+    margin: 0 4px !important;           /* Adds a tiny gap between side-by-side buttons */
+    box-shadow: none !important;        /* Removes the floating drop shadow */
+    width: auto !important;             /* Prevents the form container from stretching */
+}
+
+/* Keeps the table action items aligned cleanly in one horizontal line */
+table td {
+    vertical-align: middle;
+    white-space: nowrap; /* Prevents buttons from snapping onto a new line */
+}
+
+/* Optional: If your "Edit" button is an anchor link (<a>) and "Delete" is a form button, 
+   this keeps them looking uniformly sized */
+table td a.btn, 
+table td button {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 2px;
+}
 /* ================= BUTTONS ================= */
 
 button,
