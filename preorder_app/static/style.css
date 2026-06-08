@@ -125,18 +125,18 @@ body {
 
 .table-wrapper {
     width: 100%;
-    overflow-x: auto;
+    overflow-x: auto;           /* Allows horizontal scrolling ONLY when text would otherwise squash */
+    background: var(--card-bg);
+    border-radius: 14px;
+    box-shadow: var(--shadow-soft);
+    margin-bottom: 30px;
+    -webkit-overflow-scrolling: touch; /* Enables butter-smooth swipe scrolling on iOS devices */
 }
 
 table {
     width: 100%;
-    min-width: 600px;
     border-collapse: collapse;
-    background: var(--card-bg);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: var(--shadow-soft);
-    margin-bottom: 30px;
+    min-width: 550px;           /* Prevents the columns from crushing together on tiny phones */
 }
 
 table th {
@@ -160,7 +160,6 @@ table tr:hover {
 table tr:last-child td {
     border-bottom: none;
 }
-
 
 /* ================= BUTTONS ================= */
 
