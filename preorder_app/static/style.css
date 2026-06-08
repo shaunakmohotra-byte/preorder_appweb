@@ -335,10 +335,11 @@ form.inline input[type="number"] {
         width: 100%;
     }
 
-    table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
+    /* Updated: Removed "display: block" and optimized spacing for mobile tables */
+    table th, 
+    table td {
+        padding: 10px 12px;
+        font-size: 13px;
     }
 }
 
@@ -359,6 +360,7 @@ form.inline input[type="number"] {
     }
 
 }
+
 /* ================= FILE UPLOAD ================= */
 
 .file-upload {
