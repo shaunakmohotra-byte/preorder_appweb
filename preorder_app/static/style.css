@@ -318,12 +318,24 @@ form.inline input[type="number"] {
         justify-content: space-between;
     }
 
+    /* Main buttons expand to be easily tappable on phones */
     button,
     .btn {
         width: 100%;
         padding: 12px;
         font-size: 15px;
         border-radius: 10px;
+        box-sizing: border-box;
+    }
+
+    /* FIX: Prevents tiny table buttons, quantity selectors, and inline forms from stretching out */
+    table button,
+    .cart-table button,
+    .qty-controls button,
+    form.inline button {
+        width: auto;          /* Let them fit their text normally */
+        padding: 6px 12px;    /* Slightly smaller padding for tighter areas */
+        font-size: 13px;
     }
 
     form.inline {
@@ -335,14 +347,12 @@ form.inline input[type="number"] {
         width: 100%;
     }
 
-    /* Updated: Removed "display: block" and optimized spacing for mobile tables */
     table th, 
     table td {
         padding: 10px 12px;
         font-size: 13px;
     }
 }
-
 
 /* ================= SMALL DEVICES ================= */
 
