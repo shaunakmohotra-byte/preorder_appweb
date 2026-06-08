@@ -45,7 +45,14 @@ body {
     font-size: clamp(16px,2vw,20px);
     font-weight: 1000;
     color: var(--primary);
+    text-decoration: none;
 }
+
+/* Optional: Subtle hover effect for the title link */
+.nav-title:hover {
+    color: var(--primary-dark);
+}
+
 
 .nav-links {
     display: flex;
@@ -374,16 +381,4 @@ form.inline input[type="number"] {
 #file-name {
     font-size: 14px;
     color: #555;
-}
-/* Add this right below your .nav-title block */
-.nav-title {
-    font-size: clamp(16px, 2vw, 20px);
-    font-weight: 1000;
-    color: var(--primary);
-    text-decoration: none; /* Removes the default hyperlink underline */
-}
-
-/* Optional: Subtle hover effect for the title link */
-.nav-title:hover {
-    color: var(--primary-dark);
 }
