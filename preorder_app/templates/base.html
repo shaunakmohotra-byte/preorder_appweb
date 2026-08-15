@@ -67,12 +67,14 @@
     Made by Shaunak Mohotra
 </footer>
 
-<!-- Flash auto-hide -->
 <script>
 setTimeout(() => {
     document.querySelectorAll('.auto-hide').forEach(msg => {
-        msg.style.opacity = '0';
-        setTimeout(() => msg.remove(), 500);
+        msg.classList.add('hiding');
+
+        setTimeout(() => {
+            msg.remove();
+        }, 500);
     });
 }, 5000);
 </script>
