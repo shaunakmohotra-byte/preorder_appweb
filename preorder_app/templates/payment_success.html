@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="payment-success-page">
+
+    <div class="success-card">
+
+        <!-- SUCCESS ANIMATION -->
+        <div class="success-animation">
+
+            <div class="success-circle">
+
+                <svg
+                    class="success-check"
+                    viewBox="0 0 52 52"
+                >
+                    <circle
+                        class="check-circle"
+                        cx="26"
+                        cy="26"
+                        r="24"
+                        fill="none"
+                    />
+
+                    <path
+                        class="check-mark"
+                        fill="none"
+                        d="M14 27l8 8 16-18"
+                    />
+                </svg>
+
+            </div>
+
+        </div>
+
+
+        <!-- TITLE -->
+
+        <span class="success-eyebrow">
+            PAYMENT CONFIRMED
+        </span>
+
+        <h1>Payment Successful!</h1>
+
+        <p class="success-message">
+            Your cafeteria order has been placed successfully.
+        </p>
+
+
+        <!-- ORDER DETAILS -->
+
+        <div class="payment-details">
+
+            <div class="payment-detail">
+                <span>Order ID</span>
+                <strong>#{{ order_id }}</strong>
+            </div>
+
+            <div class="payment-detail">
+                <span>Pickup Token</span>
+                <strong class="success-token">
+                    {{ token }}
+                </strong>
+            </div>
+
+            <div class="payment-detail">
+                <span>Amount</span>
+                <strong>₹{{ total }}</strong>
+            </div>
+
+        </div>
+
+
+        <!-- TIMER -->
+
+        <div class="redirect-box">
+
+            <div class="redirect-icon">
+                ⏱
+            </div>
+
+            <div>
+                <strong>
+                    Taking you to your order
+                </strong>
+
+                <span>
+                    Redirecting in
+                    <b id="countdown">5</b>
+                    seconds...
+                </span>
+            </div>
+
+        </div>
+
+
+        <!-- PROGRESS BAR -->
+
+        <div class="success-progress">
+            <div id="success-progress-bar"></div>
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="success-actions">
+
+            <a
+                href="{{ url_for('main.order_progress', order_id=order_id) }}"
+                class="btn success-primary"
+            >
+                View Order
+            </a>
+
+            <a
+                href="{{ url_for('main.download_invoice') }}"
+                class="success-secondary"
+            >
+                Download Invoice
+            </a>
+
+        </div>
+
+
+        <!-- MOCK PAYMENT NOTICE -->
+
+        <div class="mock-payment-notice">
+            <span>ⓘ</span>
+            This is a simulated payment for demonstration purposes.
+            No real monetary transaction has occurred.
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let timeLeft = 5;
+
+const countdown = document.getElementById("countdown");
+const progressBar = document.getElementById("success-progress-bar");
+
+const orderUrl =
+    "{{ url_for('main.order_progress', order_id=order_id) }}";
+
+const timer = setInterval(() => {
+
+    timeLeft--;
+
+    countdown.textContent = timeLeft;
+
+    const progress =
+        ((5 - timeLeft) / 5) * 100;
+
+    progressBar.style.width = progress + "%";
+
+
+    if (timeLeft <= 0) {
+
+        clearInterval(timer);
+
+        window.location.href = orderUrl;
+
+    }
+
+}, 1000);
+
+</script>
+
+{% endblock %}
