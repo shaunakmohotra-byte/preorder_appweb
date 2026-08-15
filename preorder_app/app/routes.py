@@ -27,22 +27,17 @@ from flask import session, redirect, url_for, current_app, flash
 
 @bp.route('/demo-login')
 def demo_login():
-# Now it checks for a specific "ALLOW_DEMO" switch instead of full debug mode
-    if os.environ.get('ALLOW_DEMO') != 'True':
-        return "Demo mode is disabled.", 403
-    if not current_app.debug:
-        return "Demo mode is disabled in this environment.", 403
-
+    # No environment or debug checks! It just works immediately.
+    
     # Inject mock user data into the session
     session['user_id'] = 9999
     session['user_name'] = 'Demo Tester'
     session['user_email'] = 'tester@example.com'
-    session['role'] = 'student' # Change to 'admin' or 'staff' if testing the dashboard
+    session['role'] = 'student' 
 
     flash("Logged in as Demo Tester!", "success")
     
-    # Redirect to the menu or dashboard page
-    return redirect(url_for('main.menu')) # Adjust 'main.menu' to your actual route name
+    return redirect(url_for('main.menu'))
 
 # ===============================
 # CURRENT USER
