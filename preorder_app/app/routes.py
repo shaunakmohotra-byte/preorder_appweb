@@ -356,6 +356,9 @@ def download_invoice():
         as_attachment=True,
         download_name=os.path.basename(pdf_path)
     )
+# ===============================
+# ORDER PROGRESS
+# ===============================
 @bp.route('/order_progress/<order_id>')
 def order_progress(order_id):
 
@@ -365,14 +368,27 @@ def order_progress(order_id):
         flash("Please login first")
         return redirect(url_for('auth.login'))
 
+    # Find the order
     order = orders_col.find_one(
-        {'id': order_id},
-        {'_id': 0}
+        {
+            'id': order_id,
+            'user_id': user['id']
+        },
+        {
+            '_id': 0
+        }
     )
 
     if not order:
         flash("Order not found")
         return redirect(url_for('main.menu'))
+
+    # Make sure older orders don't break the template
+    order.setdefault("items", [])
+    order.setdefault("token", "N/A")
+    order.setdefault("total", 0)
+    order.setdefault("status", "Paid")
+    order.setdefault("id", order_id)
 
     return render_template(
         'order_progress.html',
