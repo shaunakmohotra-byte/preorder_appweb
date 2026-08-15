@@ -27,8 +27,9 @@ from flask import session, redirect, url_for, current_app, flash
 
 @bp.route('/demo-login')
 def demo_login():
-    # ⚠️ SECURITY CHECK: Ensure this only runs in development or if specifically enabled
-    # You can remove this check if you WANT it live on the internet for public testing
+# Now it checks for a specific "ALLOW_DEMO" switch instead of full debug mode
+    if os.environ.get('ALLOW_DEMO') != 'True':
+        return "Demo mode is disabled.", 403
     if not current_app.debug:
         return "Demo mode is disabled in this environment.", 403
 
