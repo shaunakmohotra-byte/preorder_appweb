@@ -76,8 +76,9 @@
                 <div class="menu-card-footer">
 
                     <span class="menu-availability">
-                        ● Available
+                        <span>●</span> Available
                     </span>
+
 
                     <form
                         method="POST"
@@ -91,33 +92,42 @@
                             value="{{ it.id }}"
                         >
 
-                        <!-- QUANTITY -->
-                        <div class="quantity-control">
-    <button
-        type="button"
-        class="quantity-btn"
-        onclick="changeQuantity('{{ it.id }}', -1)"
-        aria-label="Decrease quantity"
-    >−</button>
 
-    <input
-        type="number"
-        name="quantity"
-        id="quantity-{{ it.id }}"
-        class="quantity-input"
-        value="1"
-        min="1"
-        max="10"
-        readonly
-    >
+                        <!-- QUANTITY SELECTOR -->
+                        <div class="quantity-wrapper">
 
-    <button
-        type="button"
-        class="quantity-btn"
-        onclick="changeQuantity('{{ it.id }}', 1)"
-        aria-label="Increase quantity"
-    >+</button>
-</div>
+                            <button
+                                type="button"
+                                class="quantity-btn minus"
+                                onclick="changeQuantity({{ it.id }}, -1)"
+                                aria-label="Decrease quantity"
+                            >
+                                −
+                            </button>
+
+
+                            <input
+                                type="text"
+                                class="quantity-value"
+                                id="quantity-{{ it.id }}"
+                                name="quantity"
+                                value="1"
+                                readonly
+                                aria-label="Quantity"
+                            >
+
+
+                            <button
+                                type="button"
+                                class="quantity-btn plus"
+                                onclick="changeQuantity({{ it.id }}, 1)"
+                                aria-label="Increase quantity"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
 
                         <!-- ADD BUTTON -->
                         <button
@@ -141,6 +151,7 @@
     </div>
 
 
+    <!-- EMPTY MENU -->
     {% if not items %}
 
     <div class="empty-state">
@@ -160,23 +171,40 @@
     {% endif %}
 
 </div>
+
+
 <script>
 function changeQuantity(itemId, amount) {
+
     const input = document.getElementById("quantity-" + itemId);
+
+    if (!input) {
+        return;
+    }
 
     let quantity = parseInt(input.value) || 1;
 
     quantity += amount;
 
+    // Minimum quantity
     if (quantity < 1) {
         quantity = 1;
     }
 
+    // Maximum quantity
     if (quantity > 10) {
         quantity = 10;
     }
 
     input.value = quantity;
+
+    // Small animation
+    input.classList.remove("pop");
+
+    void input.offsetWidth;
+
+    input.classList.add("pop");
 }
 </script>
+
 {% endblock %}
