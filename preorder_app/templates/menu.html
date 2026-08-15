@@ -154,5 +154,24 @@
     {% endif %}
 
 </div>
+<script>
+let cartCount = parseInt(document.getElementById('cart-counter')?.textContent) || 0; 
+const counterBadge = document.getElementById('cart-counter');
 
+document.querySelectorAll('.menu-add-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        cartCount++;
+        if (counterBadge) {
+            counterBadge.style.display = 'inline-flex'; // Ensures badge shows up if it was hidden at 0
+            counterBadge.textContent = cartCount;
+            
+            // Trigger a subtle pop animation effect
+            counterBadge.classList.add('bump');
+            setTimeout(() => {
+                counterBadge.classList.remove('bump');
+            }, 200);
+        }
+    });
+});
+</script>
 {% endblock %}
