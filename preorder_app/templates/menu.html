@@ -347,6 +347,308 @@
             padding: 0 12px;
         }
     }
+    /* =========================================
+   HORIZONTAL MENU CAROUSEL
+   ========================================= */
+
+.menu-carousel {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding: 10px 5px 30px;
+
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: thin;
+}
+
+/* Chrome / Edge / Safari */
+.menu-carousel::-webkit-scrollbar {
+    height: 8px;
+}
+
+.menu-carousel::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 20px;
+}
+
+.menu-carousel::-webkit-scrollbar-thumb {
+    background: #ff7518;
+    border-radius: 20px;
+}
+
+.menu-track {
+    display: flex;
+    gap: 24px;
+
+    width: max-content;
+
+    padding: 5px 5px 10px;
+}
+
+
+/* =========================================
+   MENU CARD
+   ========================================= */
+
+.menu-carousel .menu-card {
+    flex: 0 0 340px;
+
+    width: 340px;
+
+    scroll-snap-align: start;
+
+    box-sizing: border-box;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.menu-carousel .menu-card:hover {
+    transform: translateY(-6px);
+}
+
+
+/* =========================================
+   IMAGE
+   ========================================= */
+
+.menu-carousel .menu-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+}
+
+.menu-carousel .menu-image {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition: transform 0.4s ease;
+}
+
+.menu-carousel .menu-card:hover .menu-image {
+    transform: scale(1.05);
+}
+
+
+/* =========================================
+   FOOD BADGE
+   ========================================= */
+
+.menu-carousel .food-badge {
+    position: absolute;
+
+    top: 14px;
+    left: 14px;
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.92);
+
+    color: #ff6b00;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+}
+
+
+/* =========================================
+   CARD CONTENT
+   ========================================= */
+
+.menu-carousel .menu-card-content {
+    padding: 20px;
+}
+
+.menu-carousel .menu-card-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.menu-carousel .menu-card-title-row h3 {
+    margin: 0;
+
+    font-size: 22px;
+    font-weight: 800;
+
+    color: #252525;
+}
+
+.menu-carousel .price {
+    white-space: nowrap;
+
+    font-size: 21px;
+    font-weight: 800;
+
+    color: #ff7518;
+}
+
+
+/* =========================================
+   FOOTER
+   ========================================= */
+
+.menu-carousel .menu-card-footer {
+    margin-top: 18px;
+}
+
+.menu-carousel .menu-availability {
+    display: block;
+
+    margin-bottom: 14px;
+
+    color: #2e9d4d;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   QUANTITY
+   ========================================= */
+
+.menu-carousel .menu-add-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+}
+
+.quantity-btn {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #ff7518;
+    color: white;
+
+    font-size: 25px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        background 0.15s ease;
+}
+
+.quantity-btn:hover {
+    background: #e9620b;
+    transform: scale(1.05);
+}
+
+.quantity-btn:active {
+    transform: scale(0.95);
+}
+
+.quantity-control input {
+    flex: 1;
+
+    height: 48px;
+
+    margin: 0 8px;
+
+    border: 1px solid #ddd;
+    border-radius: 12px;
+
+    background: #fafafa;
+
+    text-align: center;
+
+    font-size: 17px;
+    color: #333;
+
+    outline: none;
+}
+
+
+/* =========================================
+   ADD TO CART
+   ========================================= */
+
+.menu-carousel .menu-add-btn {
+    width: 100%;
+
+    min-height: 50px;
+
+    border: none;
+    border-radius: 13px;
+
+    background: #ff7518;
+    color: white;
+
+    font-size: 16px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.menu-carousel .menu-add-btn:hover {
+    background: #ed650b;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 20px rgba(255, 117, 24, 0.25);
+}
+
+.menu-carousel .menu-add-btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    .menu-carousel .menu-card {
+        flex-basis: 82vw;
+        width: 82vw;
+    }
+
+    .menu-carousel .menu-image-wrapper {
+        height: 190px;
+    }
+
+    .menu-track {
+        gap: 16px;
+    }
+}
 </style>
 
 
@@ -372,34 +674,30 @@
     </div>
 
 
-    <!-- MENU -->
-    {% if items %}
+    <!-- MENU CAROUSEL -->
+<div class="menu-carousel">
 
-    <div class="cafeteria-menu-grid">
+    <div class="menu-track">
 
         {% for it in items %}
 
-        <div class="cafeteria-menu-card">
+        <div class="card menu-card">
 
             <!-- IMAGE -->
             <div class="menu-image-wrapper">
 
                 {% if it.get('image') %}
-
                     <img
                         src="{{ url_for('static', filename='uploads/' + it.image) }}"
                         class="menu-image"
                         alt="{{ it.name }}"
                     >
-
                 {% else %}
-
                     <img
                         src="{{ url_for('static', filename='uploads/default.png') }}"
                         class="menu-image"
                         alt="Default food image"
                     >
-
                 {% endif %}
 
                 <div class="food-badge">
@@ -407,6 +705,122 @@
                 </div>
 
             </div>
+
+            <!-- DETAILS -->
+            <div class="menu-card-content">
+
+                <div class="menu-card-title-row">
+                    <h3>{{ it.name }}</h3>
+
+                    <div class="price">
+                        ₹{{ it.price }}
+                    </div>
+                </div>
+
+                <div class="menu-card-footer">
+
+                    <span class="menu-availability">
+                        ● Available
+                    </span>
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('main.add_to_cart') }}"
+                        class="menu-add-form"
+                    >
+
+                        <input
+                            type="hidden"
+                            name="item_id"
+                            value="{{ it.id }}"
+                        >
+
+                        <div class="quantity-control">
+
+                            <button
+                                type="button"
+                                class="quantity-btn"
+                                onclick="changeQuantity({{ it.id }}, -1)"
+                            >
+                                −
+                            </button>
+
+                            <input
+                                type="number"
+                                id="quantity-{{ it.id }}"
+                                name="quantity"
+                                value="1"
+                                min="1"
+                                max="10"
+                                readonly
+                            >
+
+                            <button
+                                type="button"
+                                class="quantity-btn"
+                                onclick="changeQuantity({{ it.id }}, 1)"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+                        <button
+                            class="btn menu-add-btn"
+                            type="submit"
+                        >
+                            <span>＋</span>
+                            Add to Cart
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+{% if not items %}
+
+<div class="empty-state">
+
+    <div class="empty-icon">
+        🍽️
+    </div>
+
+    <h3>Menu is currently empty</h3>
+
+    <p>
+        Please check back later for available items.
+    </p>
+
+</div>
+
+{% endif %}
+
+
+<script>
+function changeQuantity(itemId, amount) {
+
+    const input = document.getElementById("quantity-" + itemId);
+
+    let quantity = parseInt(input.value) || 1;
+
+    quantity += amount;
+
+    quantity = Math.max(1, Math.min(10, quantity));
+
+    input.value = quantity;
+}
+</script>
 
 
             <!-- DETAILS -->
