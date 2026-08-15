@@ -5,8 +5,6 @@ import uuid
 import os
 
 bp = Blueprint('admin', __name__)
-
-bp = Blueprint('admin', __name__)
 UPLOAD_FOLDER = os.path.join('app', 'static', 'uploads')
 
 def is_admin():

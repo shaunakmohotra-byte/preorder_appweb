@@ -1,6 +1,8 @@
 from flask import Flask
-from pymongo import MongoClient
 import os
+
+from .db import db
+
 
 def create_app():
 
@@ -18,19 +20,6 @@ def create_app():
     # SECRET KEY
     # ===============================
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret')
-
-    # ===============================
-    # MONGODB CONNECTION
-    # ===============================
-    MONGO_URI = os.environ.get("MONGO_URI")
-
-    if not MONGO_URI:
-        raise Exception("MONGO_URI not set in environment variables")
-
-    client = MongoClient(MONGO_URI)
-
-    # 👇 IMPORTANT: database name comes here
-    db = client["cafeteria_app"]   # <-- YOU CHOOSE THIS NAME
 
     # Attach DB to app
     app.db = db

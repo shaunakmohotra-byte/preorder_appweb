@@ -1,18 +1,7 @@
 from app import create_app
 from werkzeug.middleware.proxy_fix import ProxyFix
-import os
 
-print("🔥 APP STARTING...")
-
-# Create app
 app = create_app()
-
-# Check Mongo URI
-MONGO_URI = os.environ.get("MONGO_URI")
-print("MONGO_URI:", MONGO_URI)
-
-if not MONGO_URI:
-    raise Exception("❌ MONGO_URI not set")
 
 # Fix proxy headers (for Render)
 app.wsgi_app = ProxyFix(
