@@ -4319,3 +4319,181 @@ body::after {
     }
 
 }
+/* =========================================
+   ORDER DASHBOARD
+========================================= */
+
+.orders-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+}
+
+.orders-table th {
+    padding: 15px;
+    text-align: left;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #777;
+    background: rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.orders-table td {
+    padding: 16px 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.orders-table tbody tr {
+    transition: 0.2s ease;
+}
+
+.orders-table tbody tr:hover {
+    background: rgba(255,255,255,0.035);
+}
+
+
+/* TOKEN */
+
+.dashboard-token {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 52px;
+    height: 52px;
+
+    border-radius: 14px;
+
+    font-size: 20px;
+    font-weight: 800;
+
+    background: rgba(46, 204, 113, 0.12);
+    color: #35d47a;
+
+    border: 1px solid rgba(46, 204, 113, 0.25);
+}
+
+
+/* ORDER ID */
+
+.order-id {
+    font-family: monospace;
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+
+/* ITEMS */
+
+.dashboard-items {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.dashboard-items li {
+    margin: 4px 0;
+}
+
+
+/* STATUS */
+
+.order-status {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 8px 12px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.order-status.preparing {
+    background: rgba(255, 166, 0, 0.12);
+    color: #ffad22;
+    border: 1px solid rgba(255, 166, 0, 0.25);
+}
+
+.order-status.ready {
+    background: rgba(72, 149, 239, 0.12);
+    color: #62aaff;
+    border: 1px solid rgba(72, 149, 239, 0.25);
+}
+
+.order-status.delivered {
+    background: rgba(46, 204, 113, 0.12);
+    color: #35d47a;
+    border: 1px solid rgba(46, 204, 113, 0.25);
+}
+
+
+/* STATUS BUTTONS */
+
+.status-btn {
+    border: none;
+    border-radius: 10px;
+
+    padding: 10px 14px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.status-btn:hover {
+    transform: translateY(-2px);
+}
+
+.ready-btn {
+    background: rgba(72, 149, 239, 0.15);
+    color: #62aaff;
+    border: 1px solid rgba(72, 149, 239, 0.3);
+}
+
+.ready-btn:hover {
+    box-shadow: 0 8px 25px rgba(72, 149, 239, 0.15);
+}
+
+.delivered-btn {
+    background: rgba(46, 204, 113, 0.15);
+    color: #35d47a;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.delivered-btn:hover {
+    box-shadow: 0 8px 25px rgba(46, 204, 113, 0.15);
+}
+
+.completed-label {
+    color: #35d47a;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .orders-table {
+        min-width: 950px;
+    }
+
+}
