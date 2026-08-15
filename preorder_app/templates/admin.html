@@ -4,7 +4,9 @@
 
 <div class="page-shell admin-page">
 
-    <!-- ================= HEADER ================= -->
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
 
     <div class="page-header">
 
@@ -29,7 +31,9 @@
     </div>
 
 
-    <!-- ================= USERS ================= -->
+    <!-- =====================================================
+         USERS
+         ===================================================== -->
 
     <section class="admin-section">
 
@@ -134,7 +138,6 @@
 
                                 </form>
 
-
                                 <form
                                     action="{{ url_for('admin.delete_user') }}"
                                     method="POST"
@@ -173,7 +176,9 @@
     </section>
 
 
-    <!-- ================= ITEMS ================= -->
+    <!-- =====================================================
+         MENU ITEMS
+         ===================================================== -->
 
     <section class="admin-section">
 
@@ -245,7 +250,9 @@
                         </td>
 
                         <td>
-                            <strong>{{ it["name"] }}</strong>
+                            <strong>
+                                {{ it["name"] }}
+                            </strong>
                         </td>
 
                         <td>
@@ -286,7 +293,9 @@
         </div>
 
 
-        <!-- ADD ITEM -->
+        <!-- =================================================
+             ADD ITEM
+             ================================================= -->
 
         <div class="add-item-card">
 
@@ -298,7 +307,9 @@
 
                 <div>
 
-                    <h3>Add New Item</h3>
+                    <h3>
+                        Add New Item
+                    </h3>
 
                     <p>
                         Add a new food or drink to the cafeteria menu.
@@ -316,18 +327,22 @@
                 class="admin-form"
             >
 
+                <!-- NAME + PRICE -->
+
                 <div class="form-row">
 
                     <div class="form-field">
 
-                        <label>
+                        <label for="itemName">
                             Item Name
                         </label>
 
                         <input
+                            id="itemName"
                             type="text"
                             name="name"
                             placeholder="e.g. Veg Sandwich"
+                            autocomplete="off"
                             required
                         >
 
@@ -336,14 +351,17 @@
 
                     <div class="form-field">
 
-                        <label>
+                        <label for="itemPrice">
                             Price (₹)
                         </label>
 
                         <input
+                            id="itemPrice"
                             type="number"
                             name="price"
                             placeholder="e.g. 80"
+                            min="0"
+                            step="1"
                             required
                         >
 
@@ -352,7 +370,9 @@
                 </div>
 
 
-                <div class="file-upload admin-file-upload">
+                <!-- IMAGE -->
+
+                <div class="admin-file-upload">
 
                     <label
                         for="imageUpload"
@@ -376,6 +396,8 @@
                 </div>
 
 
+                <!-- SUBMIT -->
+
                 <button
                     type="submit"
                     class="btn admin-add-btn"
@@ -390,7 +412,9 @@
     </section>
 
 
-    <!-- ================= ORDERS ================= -->
+    <!-- =====================================================
+         ORDERS
+         ===================================================== -->
 
     <section class="admin-section">
 
@@ -506,22 +530,24 @@
 
 <script>
 
-const input = document.getElementById('imageUpload');
-const fileName = document.getElementById('file-name');
+/* =========================================================
+   FILE NAME DISPLAY
+   ========================================================= */
 
-if (input && fileName) {
+const imageInput = document.getElementById("imageUpload");
+const fileName = document.getElementById("file-name");
 
-    input.addEventListener('change', function() {
+if (imageInput && fileName) {
 
-        if (this.files.length > 0) {
+    imageInput.addEventListener("change", function () {
 
-            fileName.textContent =
-                this.files[0].name;
+        if (this.files && this.files.length > 0) {
+
+            fileName.textContent = this.files[0].name;
 
         } else {
 
-            fileName.textContent =
-                "No file chosen";
+            fileName.textContent = "No file chosen";
 
         }
 
