@@ -19,7 +19,29 @@ def cafeteria():
 
     return render_template('cafeteria.html', orders=orders, user=user)
 
+from flask import session, redirect, url_for, current_app, flash
 
+# ===============================
+# Dev Tester
+# ===============================
+
+@app.route('/demo-login')
+def demo_login():
+    # ⚠️ SECURITY CHECK: Ensure this only runs in development or if specifically enabled
+    # You can remove this check if you WANT it live on the internet for public testing
+    if not current_app.debug:
+        return "Demo mode is disabled in this environment.", 403
+
+    # Inject mock user data into the session
+    session['user_id'] = 9999
+    session['user_name'] = 'Demo Tester'
+    session['user_email'] = 'tester@example.com'
+    session['role'] = 'student' # Change to 'admin' or 'staff' if testing the dashboard
+
+    flash("Logged in as Demo Tester!", "success")
+    
+    # Redirect to the menu or dashboard page
+    return redirect(url_for('main.menu')) # Adjust 'main.menu' to your actual route name
 
 # ===============================
 # CURRENT USER
