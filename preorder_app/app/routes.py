@@ -61,7 +61,29 @@ def current_user():
 
     # If it's a real user, look them up in the database normally
     return users_col.find_one({'id': uid})
+def get_cart_count():
+    user = current_user()
 
+    if not user:
+        return 0
+
+    cart = carts_col.find_one({'user_id': user['id']})
+
+    if not cart or not cart.get('items'):
+        return 0
+
+    return sum(
+        int(item.get('qty', 0))
+        for item in cart['items']
+    )
+
+
+@bp.app_context_processor
+def inject_cart_count():
+    return {
+        'cart_count': get_cart_count()
+    }
+    
 def delete_order_after_delay(order_id, delay=60):
     import time
     time.sleep(delay)
@@ -194,7 +216,6 @@ def add_to_cart():
         flash(f'{item["name"]} added to cart')
     else:
         flash(f'{quantity} × {item["name"]} added to cart')
-    session['cart_count'] = session.get('cart_count', 0) + int(request.form.get('quantity', 1))
     return redirect(url_for('main.menu'))
 
 # ===============================
