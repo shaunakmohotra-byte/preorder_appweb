@@ -953,48 +953,158 @@ table form button:hover {
 }
 
 
-/* =========================================================
-   FLASH MESSAGES
-   ========================================================= */
+/* ================= FLASH MESSAGES ================= */
 
 #flash-messages {
     position: fixed;
-
-    top: 20px;
-    right: 20px;
-
+    top: 90px;
+    right: 24px;
     z-index: 9999;
 
-    animation:
-        flashContainer
-        0.35s
-        ease-out
-        both;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    width: min(380px, calc(100vw - 32px));
+    pointer-events: none;
 }
 
 .flash-msg {
-    margin-bottom: 10px;
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    min-height: 52px;
+    box-sizing: border-box;
 
     padding: 14px 18px;
+    padding-left: 48px;
 
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.94);
+    color: var(--text-main);
 
-    background: #4caf50;
-
-    color: white;
+    border: 1px solid rgba(252, 128, 25, 0.18);
+    border-left: 4px solid var(--primary);
+    border-radius: 12px;
 
     box-shadow:
-        0 5px 18px
-        rgba(0,0,0,0.12);
+        0 10px 30px rgba(0, 0, 0, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.05);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+
+    pointer-events: auto;
 
     animation:
-        flashMessage
-        0.4s
-        ease-out
-        both;
+        flashSlideIn 0.45s cubic-bezier(.22, 1, .36, 1),
+        flashGlow 2s ease-in-out;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        opacity 0.5s ease;
+}
+
+/* Checkmark / notification icon */
+.flash-msg::before {
+    content: "✓";
+
+    position: absolute;
+    left: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 24px;
+    height: 24px;
+
+    border-radius: 50%;
+
+    background: rgba(76, 175, 80, 0.12);
+    color: #4caf50;
+
+    font-size: 14px;
+    font-weight: 900;
+}
+
+/* Hover */
+.flash-msg:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 14px 35px rgba(0, 0, 0, 0.16),
+        0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+/* Entry animation */
+@keyframes flashSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(40px) translateY(-8px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) translateY(0) scale(1);
+    }
+}
+
+/* Subtle highlight animation */
+@keyframes flashGlow {
+    0% {
+        box-shadow:
+            0 0 0 rgba(252, 128, 25, 0),
+            0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    50% {
+        box-shadow:
+            0 0 20px rgba(252, 128, 25, 0.12),
+            0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    100% {
+        box-shadow:
+            0 10px 30px rgba(0, 0, 0, 0.12);
+    }
 }
 
 
+/* ================= FLASH EXIT ================= */
+
+.flash-msg.hiding {
+    opacity: 0;
+    transform: translateX(30px) scale(0.96);
+}
+
+
+/* ================= MOBILE FLASH ================= */
+
+@media (max-width: 600px) {
+
+    #flash-messages {
+        top: 16px;
+        left: 16px;
+        right: 16px;
+
+        width: auto;
+    }
+
+    .flash-msg {
+        width: 100%;
+        font-size: 13px;
+        padding: 13px 16px;
+        padding-left: 46px;
+        border-radius: 11px;
+    }
+}
 /* =========================================================
    PAGE HEADER
    ========================================================= */
