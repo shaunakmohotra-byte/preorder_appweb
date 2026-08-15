@@ -277,6 +277,7 @@ def pay_now():
 
     for c in cart['items']:
         item = items_col.find_one({'id': c['item_id']})
+
         if not item:
             continue
 
@@ -290,7 +291,7 @@ def pay_now():
             "subtotal": subtotal
         })
 
-    order_id = str(uuid.uuid4())[:8]
+    order_id = str(uuid.uuid4())[:8].upper()
 
     last_order = orders_col.find_one(sort=[("token", -1)])
     token = (last_order['token'] + 1) if last_order else 1
@@ -305,11 +306,13 @@ def pay_now():
         "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     })
 
+    # Empty cart
     carts_col.update_one(
         {'user_id': user['id']},
         {'$set': {'items': []}}
     )
 
+    # Generate invoice
     pdf_path = generate_invoice_pdf(
         order_id=order_id,
         user=user,
@@ -318,20 +321,63 @@ def pay_now():
         token=token
     )
 
-    return send_file(pdf_path, as_attachment=True)
+    # Store invoice path temporarily for this session
+    session['invoice_path'] = pdf_path
 
+    return render_template(
+        'payment_success.html',
+        order_id=order_id,
+        token=token,
+        total=total,
+        user=user
+    )
+# ===============================
+# DOWNLOAD INVOICE
+# ===============================
+@bp.route('/download_invoice')
+def download_invoice():
 
-# ===============================
-# CAFETERIA
-# ===============================
-@bp.route('/cafeteria')
-def cafeteria():
     user = current_user()
-    orders = list(orders_col.find({}, {'_id': 0}))
 
-    return render_template('cafeteria.html', orders=orders, user=user)
+    if not user:
+        return redirect(url_for('auth.login'))
 
+    pdf_path = session.get('invoice_path')
 
+    if not pdf_path or not os.path.exists(pdf_path):
+        flash("Invoice is no longer available")
+        return redirect(url_for('main.menu'))
+
+    return send_file(
+        pdf_path,
+        as_attachment=True,
+        download_name=os.path.basename(pdf_path)
+    )
+# ===============================
+# ORDER PROGRESS
+# ===============================
+@bp.route('/order_progress/<order_id>')
+def order_progress(order_id):
+
+    user = current_user()
+
+    if not user:
+        return redirect(url_for('auth.login'))
+
+    order = orders_col.find_one(
+        {'id': order_id},
+        {'_id': 0}
+    )
+
+    if not order:
+        flash("Order not found")
+        return redirect(url_for('main.menu'))
+
+    return render_template(
+        'order_progress.html',
+        order=order,
+        user=user
+    )
 # ===============================
 # MARK DELIVERED
 # ===============================
