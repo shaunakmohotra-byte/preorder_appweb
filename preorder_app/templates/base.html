@@ -38,17 +38,15 @@
     </div>
 
     <div class="nav-links">
-        <a href="{{ url_for('main.menu') }}">Menu</a>
-        
-        <!-- My Cart with Badge Counter -->
         <a href="{{ url_for('main.view_cart') }}" class="cart-link">
-            My Cart 
-            {% if cart_count and cart_count > 0 %}
-                <span id="cart-counter" class="cart-badge">{{ cart_count }}</span>
-            {% else %}
-                <span id="cart-counter" class="cart-badge" style="display: none;">0</span>
-            {% endif %}
-        </a>
+    My Cart
+
+    {% if cart_count > 0 %}
+        <span id="cart-counter" class="cart-badge">
+            {{ cart_count }}
+        </span>
+    {% endif %}
+</a>
 
         {% if user and user.is_admin %}
             <a href="{{ url_for('admin.index') }}">Admin</a>
