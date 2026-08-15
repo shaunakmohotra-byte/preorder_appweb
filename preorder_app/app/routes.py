@@ -9,6 +9,17 @@ from .utils.pdf_invoice import generate_invoice_pdf
 
 bp = Blueprint('main', __name__)
 
+# ===============================
+# CAFETERIA
+# ===============================
+@bp.route('/cafeteria')
+def cafeteria():
+    user = current_user()
+    orders = list(orders_col.find({}, {'_id': 0}))
+
+    return render_template('cafeteria.html', orders=orders, user=user)
+
+
 
 # ===============================
 # CURRENT USER
