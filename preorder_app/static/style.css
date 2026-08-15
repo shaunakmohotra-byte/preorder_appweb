@@ -2943,3 +2943,435 @@ body::after {
         0 0 0 3px
         rgba(252,128,25,0.10);
 }
+
+.payment-details small {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #999;
+
+    font-size: 11px;
+}
+
+
+/* UPI PREFIX */
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-prefix {
+    position: absolute;
+
+    top: 50%;
+    left: 12px;
+
+    transform:
+        translateY(-50%);
+
+    color: #999;
+
+    font-weight: 700;
+
+    pointer-events: none;
+}
+
+.input-wrapper input {
+    padding-left: 29px !important;
+}
+
+
+/* PAYMENT FORM */
+
+.payment-form {
+    margin: 20px 0 0;
+
+    padding: 0;
+
+    background: transparent;
+
+    box-shadow: none;
+}
+
+.pay-button {
+    width: 100%;
+
+    min-height: 54px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 0 18px;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            #ff941f
+        );
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 7px 18px
+        rgba(252,128,25,0.23);
+}
+
+.pay-button:hover {
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary-dark),
+            var(--primary)
+        );
+
+    box-shadow:
+        0 10px 24px
+        rgba(252,128,25,0.30);
+}
+
+.pay-button:active {
+    transform: scale(.985);
+}
+
+.pay-amount {
+    opacity: .95;
+
+    font-size: 16px;
+}
+
+.payment-footer {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    margin-top: 15px;
+
+    color: #999;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .cart-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .cart-summary {
+        position: static;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-header {
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    .secure-badge {
+        display: none;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    .container {
+        padding: 0 16px;
+
+        margin: 20px auto;
+    }
+
+    .navbar {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 10px;
+    }
+
+    .nav-links {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+    button,
+    .btn {
+        width: 100%;
+
+        padding: 12px;
+
+        font-size: 15px;
+
+        border-radius: 10px;
+    }
+
+    table button,
+    .qty-controls button,
+    form.inline button {
+        width: auto;
+
+        padding: 6px 12px;
+
+        font-size: 13px;
+    }
+
+    form.inline {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    form.inline input[type="number"] {
+        width: 100%;
+    }
+
+    table th,
+    table td {
+        padding: 10px 12px;
+
+        font-size: 13px;
+    }
+
+    .cursor-glow {
+        display: none;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .page-shell {
+        width: calc(100% - 24px);
+
+        margin-top: 22px;
+    }
+
+    .page-header {
+        align-items: flex-start;
+    }
+
+    .page-badge,
+    .section-label {
+        display: none;
+    }
+
+    .admin-section-header {
+        align-items: flex-start;
+    }
+
+    .cart-item {
+        grid-template-columns:
+            1fr
+            auto
+            auto;
+
+        gap: 10px;
+
+        padding: 15px 38px 15px 0;
+    }
+
+    .cart-item-info {
+        grid-column: 1 / -1;
+    }
+
+    .cart-quantity {
+        align-items: flex-start;
+    }
+
+    .cart-item-price {
+        text-align: right;
+    }
+
+    .remove-form {
+        position: absolute;
+
+        right: 0;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    #flash-messages {
+        top: 16px;
+
+        left: 16px;
+        right: 16px;
+    }
+
+    .flash-msg {
+        font-size: 14px;
+
+        text-align: center;
+    }
+
+    .page-header h1 {
+        font-size: 32px;
+    }
+
+    .menu-image-wrapper {
+        height: 170px;
+    }
+
+    .menu-card-footer {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .menu-card-footer form,
+    .menu-add-btn {
+        width: 100%;
+    }
+
+    .cart-card-header {
+        padding: 18px;
+    }
+
+    .cart-items {
+        padding: 0 18px;
+    }
+
+    .add-item-card {
+        padding: 17px;
+    }
+
+    .admin-section-title h2 {
+        font-size: 18px;
+    }
+
+    .container > h1:first-child {
+        margin-top: 25px;
+
+        font-size: 34px;
+    }
+
+    .container > form:first-of-type {
+        width: calc(100% - 20px);
+
+        padding: 28px 22px 25px;
+
+        margin-top: 22px;
+
+        border-radius: 18px;
+    }
+
+    .container > form:first-of-type input {
+        height: 48px;
+    }
+
+    .container > form:first-of-type button,
+    .container > form:first-of-type input[type="submit"] {
+        height: 50px;
+
+        margin-top: 18px;
+    }
+
+    .payment-page {
+        width: calc(100% - 24px);
+
+        margin-top: 20px;
+    }
+
+    .simulation-notice {
+        padding: 13px;
+
+        gap: 10px;
+    }
+
+    .simulation-notice strong {
+        font-size: 11px;
+    }
+
+    .simulation-notice p {
+        font-size: 11px;
+    }
+
+    .payment-header h1 {
+        font-size: 30px;
+    }
+
+    .order-summary,
+    .payment-methods {
+        padding: 20px;
+
+        border-radius: 15px;
+    }
+
+    .total-section strong {
+        font-size: 22px;
+    }
+
+    .pay-button {
+        min-height: 52px;
+
+        font-size: 14px;
+    }
+
+    .file-upload {
+        flex-wrap: wrap;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.01ms !important;
+    }
+
+    #interactive-background::before,
+    #interactive-background::after,
+    .cursor-glow {
+        animation: none !important;
+    }
+
+    .cursor-glow {
+        display: none;
+    }
+}
