@@ -3,6 +3,7 @@ from .db import users_col, items_col, carts_col, orders_col
 import uuid
 from datetime import datetime
 import threading
+import os
 
 from .utils.pdf_invoice import generate_invoice_pdf
 
