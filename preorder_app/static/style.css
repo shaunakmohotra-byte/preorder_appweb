@@ -7,20 +7,88 @@
     --text-main: #282c3f;
     --border-soft: #eee;
     --shadow-soft: 0 4px 14px rgba(0,0,0,0.08);
+
+    /* Added aesthetic variables */
+    --shadow-hover: 0 12px 30px rgba(0,0,0,0.12);
+    --shadow-navbar: 0 4px 20px rgba(0,0,0,0.08);
+    --radius: 14px;
 }
 
+
 /* ================= BASE ================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: stretch; /* Ensures elements span the full width of the screen */
+    align-items: stretch;
+
     font-family: 'Rajdhani', sans-serif;
-    background: linear-gradient(to bottom, var(--bg-light), var(--bg-soft));
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(252,128,25,0.08),
+            transparent 30%
+        ),
+        linear-gradient(
+            to bottom,
+            var(--bg-light),
+            var(--bg-soft)
+        );
+
     background-attachment: fixed;
     color: var(--text-main);
     line-height: 1.6;
+
+    /* Page entrance animation */
+    animation: pageFadeIn 0.55s ease-out both;
+}
+
+
+/* ================= PAGE TRANSITION ================= */
+
+@keyframes pageFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes contentFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 
@@ -30,10 +98,36 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     padding: 12px 22px;
-    background: var(--card-bg);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+    background: rgba(255,255,255,0.94);
+
+    box-shadow: var(--shadow-navbar);
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    /* Smooth appearance */
+    animation: navbarDrop 0.45s ease-out both;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
+
+@keyframes navbarDrop {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 
 .nav-left {
     display: flex;
@@ -43,6 +137,14 @@ body {
 
 .nav-logo {
     height: 56px;
+
+    transition:
+        transform 0.25s ease,
+        filter 0.25s ease;
+}
+
+.nav-logo:hover {
+    transform: scale(1.05);
 }
 
 .nav-title {
@@ -50,13 +152,19 @@ body {
     font-weight: 1000;
     color: var(--primary);
     text-decoration: none;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
 }
 
-/* Optional: Subtle hover effect for the title link */
 .nav-title:hover {
     color: var(--primary-dark);
+    transform: translateY(-1px);
 }
 
+
+/* ================= NAV LINKS ================= */
 
 .nav-links {
     display: flex;
@@ -67,25 +175,63 @@ body {
 .nav-links a {
     text-decoration: none;
     color: var(--text-main);
-    font-weight: 500;
+    font-weight: 600;
+
+    position: relative;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+/* Animated underline */
+
+.nav-links a::after {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+
+    width: 0;
+    height: 2px;
+
+    background: var(--primary);
+    border-radius: 10px;
+
+    transition: width 0.25s ease;
 }
 
 .nav-links a:hover {
     color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
 }
 
 
 /* ================= CONTAINER ================= */
+
 .container {
-    flex: 1;             /* Pushes footer to the absolute bottom */
-    width: 100%;         /* Forces container to take up horizontal space */
+    flex: 1;
+    width: 100%;
     max-width: min(1100px, 92vw);
+
     margin: 30px auto;
+
     padding: 0 20px;
-    box-sizing: border-box; /* Prevents padding from breaking layout widths */
+
+    box-sizing: border-box;
+
+    /* Main content transition */
+    animation: contentFadeIn 0.65s ease-out 0.08s both;
 }
 
-/* ================= GRID (Keep this exactly like this) ================= */
+
+/* ================= GRID (KEEP EXACTLY THE SAME) ================= */
+
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -97,19 +243,57 @@ body {
 
 .card {
     background: var(--card-bg);
+
     border-radius: 14px;
+
     padding: 18px;
+
     box-shadow: var(--shadow-soft);
 
     display: flex;
     flex-direction: column;
     gap: 10px;
 
-    transition: transform 0.2s ease;
+    position: relative;
+    overflow: hidden;
+
+    transition:
+        transform 0.28s cubic-bezier(.2,.8,.2,1),
+        box-shadow 0.28s ease;
+}
+
+/* Small orange accent */
+
+.card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 3px;
+
+    background: linear-gradient(
+        90deg,
+        var(--primary),
+        #ffad63
+    );
+
+    transform: scaleX(0);
+    transform-origin: left;
+
+    transition: transform 0.3s ease;
 }
 
 .card:hover {
-    transform: scale(1.02);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.card:hover::before {
+    transform: scaleX(1);
 }
 
 .price {
@@ -125,89 +309,169 @@ body {
 
 .table-wrapper {
     width: 100%;
-    overflow-x: auto;           /* Allows horizontal scrolling ONLY when text would otherwise squash */
+    overflow-x: auto;
+
     background: var(--card-bg);
+
     border-radius: 14px;
+
     box-shadow: var(--shadow-soft);
+
     margin-bottom: 30px;
-    -webkit-overflow-scrolling: touch; /* Enables butter-smooth swipe scrolling on iOS devices */
+
+    -webkit-overflow-scrolling: touch;
+
+    animation: contentFadeIn 0.6s ease-out both;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 550px;           /* Prevents the columns from crushing together on tiny phones */
+    min-width: 550px;
 }
 
 table th {
     background-color: #fdf2e9;
+
     padding: 14px 16px;
+
     font-weight: 700;
     font-size: 14px;
+
     text-align: left;
+
+    color: var(--text-main);
 }
 
 table td {
     padding: 14px 16px;
+
     font-size: 14px;
+
     border-bottom: 1px solid var(--border-soft);
+
+    transition:
+        background-color 0.2s ease,
+        padding-left 0.2s ease;
 }
 
-table tr:hover {
-    background-color: #fafafa;
+table tr:hover td {
+    background-color: #fffaf6;
 }
 
 table tr:last-child td {
     border-bottom: none;
 }
 
-/* ================= FIX FOR FORMS INSIDE TABLES (ADMIN & CART) ================= */
+
+/* ================= FIX FOR FORMS INSIDE TABLES ================= */
 
 table form {
-    display: inline-block;  /* Lets buttons sit side-by-side instead of stacking */
-    background: transparent !important; /* Removes the white card background */
-    padding: 0 !important;              /* Removes the massive 20px padding */
-    margin: 0 4px !important;           /* Adds a tiny gap between side-by-side buttons */
-    box-shadow: none !important;        /* Removes the floating drop shadow */
-    width: auto !important;             /* Prevents the form container from stretching */
+    display: inline-block;
+
+    background: transparent !important;
+
+    padding: 0 !important;
+
+    margin: 0 4px !important;
+
+    box-shadow: none !important;
+
+    width: auto !important;
 }
 
-/* Keeps the table action items aligned cleanly in one horizontal line */
 table td {
     vertical-align: middle;
-    white-space: nowrap; /* Prevents buttons from snapping onto a new line */
+    white-space: nowrap;
 }
 
-/* Optional: If your "Edit" button is an anchor link (<a>) and "Delete" is a form button, 
-   this keeps them looking uniformly sized */
-table td a.btn, 
+table td a.btn,
 table td button {
     display: inline-block;
+
     vertical-align: middle;
+
     margin: 2px;
 }
+
+
 /* ================= BUTTONS ================= */
 
 button,
 .btn {
+    position: relative;
+    overflow: hidden;
+
     background-color: var(--primary);
+
     color: white;
+
     border: none;
+
     padding: 10px 16px;
+
     border-radius: 8px;
+
     cursor: pointer;
+
     font-weight: 600;
-    transition: all 0.2s ease;
+
+    text-decoration: none;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* Button shine */
+
+button::after,
+.btn::after {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 60%;
+    height: 100%;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.2),
+        transparent
+    );
+
+    transform: skewX(-20deg);
+
+    transition: left 0.45s ease;
+}
+
+button:hover::after,
+.btn:hover::after {
+    left: 130%;
 }
 
 button:hover,
 .btn:hover {
     background-color: var(--primary-dark);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 14px rgba(252,128,25,0.25);
 }
 
-button:active {
-    transform: scale(0.98);
+button:active,
+.btn:active {
+    transform: translateY(0) scale(0.98);
+
+    box-shadow: none;
 }
+
 
 table form button {
     background-color: #e23744;
@@ -215,6 +479,8 @@ table form button {
 
 table form button:hover {
     background-color: #c62828;
+
+    box-shadow: 0 5px 14px rgba(226,55,68,0.25);
 }
 
 
@@ -222,14 +488,28 @@ table form button:hover {
 
 form {
     background: var(--card-bg);
+
     padding: 20px;
+
     border-radius: 14px;
+
     box-shadow: var(--shadow-soft);
+
     margin-bottom: 20px;
 
     display: flex;
     flex-direction: column;
     gap: 12px;
+
+    animation: contentFadeIn 0.55s ease-out both;
+
+    transition:
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+}
+
+form:focus-within {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.10);
 }
 
 input[type="text"],
@@ -237,15 +517,34 @@ input[type="number"],
 input[type="email"],
 input[type="password"] {
     padding: 10px 12px;
+
     border: 1px solid #ddd;
+
     border-radius: 8px;
+
     font-size: 14px;
+
+    background: #fff;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+input:hover {
+    border-color: #ccc;
 }
 
 input:focus {
     outline: none;
+
     border-color: var(--primary);
-    box-shadow: 0 0 5px rgba(252,128,25,0.4);
+
+    box-shadow:
+        0 0 0 3px rgba(252,128,25,0.12);
+
+    transform: translateY(-1px);
 }
 
 
@@ -253,7 +552,9 @@ input:focus {
 
 form.inline {
     flex-direction: row;
+
     align-items: center;
+
     gap: 8px;
 }
 
@@ -266,9 +567,14 @@ form.inline input[type="number"] {
 
 .card form {
     background: transparent;
+
     box-shadow: none;
+
     padding: 0;
+
     margin: 10px 0 0 0;
+
+    animation: none;
 }
 
 
@@ -281,26 +587,35 @@ form.inline input[type="number"] {
 
 .qty-controls {
     display: flex;
+
     justify-content: center;
+
     align-items: center;
+
     gap: 6px;
 }
 
 .cart-table form {
     display: inline-block;
+
     padding: 0;
+
     margin: 0;
+
     box-shadow: none;
+
     background: transparent;
 }
 
 .qty-number {
     min-width: 20px;
+
     font-weight: 600;
 }
 
 .cart-table button {
     padding: 4px 8px;
+
     font-size: 14px;
 }
 
@@ -309,17 +624,53 @@ form.inline input[type="number"] {
 
 #flash-messages {
     position: fixed;
+
     top: 20px;
     right: 20px;
+
     z-index: 9999;
+
+    animation: flashContainer 0.35s ease-out both;
+}
+
+@keyframes flashContainer {
+    from {
+        opacity: 0;
+        transform: translateX(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .flash-msg {
     background-color: #4caf50;
+
     color: white;
+
     padding: 14px 18px;
+
     margin-bottom: 10px;
+
     border-radius: 8px;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,0.12);
+
+    animation: flashMessage 0.4s ease-out both;
+}
+
+@keyframes flashMessage {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 
@@ -329,42 +680,58 @@ form.inline input[type="number"] {
 
     .container {
         padding: 0 16px;
+
         margin: 20px auto;
     }
 
     .navbar {
         flex-direction: column;
+
         align-items: flex-start;
+
         gap: 10px;
     }
 
     .nav-links {
         width: 100%;
+
         justify-content: space-between;
     }
 
-    /* Main buttons expand to be easily tappable on phones */
+
+    /* Main buttons */
+
     button,
     .btn {
         width: 100%;
+
         padding: 12px;
+
         font-size: 15px;
+
         border-radius: 10px;
+
         box-sizing: border-box;
     }
 
-    /* FIX: Prevents tiny table buttons, quantity selectors, and inline forms from stretching out */
+
+    /* Table buttons */
+
     table button,
     .cart-table button,
     .qty-controls button,
     form.inline button {
-        width: auto;          /* Let them fit their text normally */
-        padding: 6px 12px;    /* Slightly smaller padding for tighter areas */
+        width: auto;
+
+        padding: 6px 12px;
+
         font-size: 13px;
     }
 
+
     form.inline {
         flex-direction: column;
+
         align-items: stretch;
     }
 
@@ -372,12 +739,14 @@ form.inline input[type="number"] {
         width: 100%;
     }
 
-    table th, 
+    table th,
     table td {
         padding: 10px 12px;
+
         font-size: 13px;
     }
 }
+
 
 /* ================= SMALL DEVICES ================= */
 
@@ -385,40 +754,89 @@ form.inline input[type="number"] {
 
     #flash-messages {
         left: 16px;
+
         right: 16px;
+
         top: 16px;
     }
 
     .flash-msg {
         text-align: center;
+
         font-size: 14px;
     }
-
 }
+
 
 /* ================= FILE UPLOAD ================= */
 
 .file-upload {
     display: flex;
+
     align-items: center;
+
     gap: 12px;
 }
 
 .custom-file-btn {
     background-color: var(--primary);
+
     color: white;
+
     padding: 10px 16px;
+
     border-radius: 8px;
+
     cursor: pointer;
+
     font-weight: 600;
-    transition: 0.2s;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .custom-file-btn:hover {
     background-color: var(--primary-dark);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 14px rgba(252,128,25,0.25);
 }
 
 #file-name {
     font-size: 14px;
+
     color: #555;
+}
+
+
+/* ================= PAGE TRANSITION HELPERS ================= */
+
+/*
+   Add class="page-content" to a main wrapper if desired.
+   This gives the actual page content its own transition.
+*/
+
+.page-content {
+    animation: contentFadeIn 0.55s ease-out both;
+}
+
+
+/* ================= REDUCED MOTION ================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
