@@ -1,16 +1,363 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h2>Mock Transaction Page</h2>
 
-<ul>
-    {% for c in cart_details %}
-        <li>{{ c.name }} × {{ c.qty }} = ₹{{ c.subtotal }}</li>
-    {% endfor %}
-</ul>
+<div class="payment-page">
 
-<h3>Total: ₹{{ total }}</h3>
+    <!-- ================= SIMULATION NOTICE ================= -->
 
-<form action="{{ url_for('main.pay_now') }}" method="post">
-    <button type="submit">Pay Now</button>
-</form>
+    <div class="simulation-notice">
+        <div class="simulation-icon">ⓘ</div>
+
+        <div>
+            <strong>SIMULATION MODE — NO MONETARY TRANSACTION</strong>
+
+            <p>
+                This is a mock payment interface created only to make the
+                application feel more realistic. No money will be charged,
+                transferred, or deducted from any account.
+            </p>
+        </div>
+    </div>
+
+
+    <!-- ================= PAGE HEADER ================= -->
+
+    <div class="payment-header">
+
+        <div>
+            <span class="payment-label">SECURE CHECKOUT</span>
+
+            <h1>Complete Your Order</h1>
+
+            <p>
+                Select a payment method to continue with your order.
+            </p>
+        </div>
+
+        <div class="secure-badge">
+            🔒 Simulation
+        </div>
+
+    </div>
+
+
+    <div class="payment-layout">
+
+
+        <!-- ================= ORDER SUMMARY ================= -->
+
+        <section class="order-summary">
+
+            <div class="section-heading">
+                <div class="section-number">1</div>
+
+                <div>
+                    <h2>Order Summary</h2>
+                    <p>Review your items before continuing.</p>
+                </div>
+            </div>
+
+
+            <div class="order-items">
+
+                {% for c in cart_details %}
+
+                <div class="order-item">
+
+                    <div class="item-info">
+
+                        <div class="item-icon">
+                            🍽️
+                        </div>
+
+                        <div>
+                            <strong>{{ c.name }}</strong>
+
+                            <span>
+                                Quantity: {{ c.qty }}
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="item-price">
+                        ₹{{ c.subtotal }}
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="total-section">
+
+                <span>Total Amount</span>
+
+                <strong>
+                    ₹{{ total }}
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= PAYMENT ================= -->
+
+        <section class="payment-methods">
+
+            <div class="section-heading">
+
+                <div class="section-number">2</div>
+
+                <div>
+                    <h2>Payment Method</h2>
+
+                    <p>
+                        Choose how you would like to pay.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="payment-options">
+
+
+                <!-- ================= UPI ================= -->
+
+                <label class="payment-option">
+
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="upi"
+                        checked
+                    >
+
+                    <div class="payment-option-content">
+
+                        <div class="payment-icon upi-icon">
+                            UPI
+                        </div>
+
+                        <div class="payment-info">
+
+                            <strong>UPI</strong>
+
+                            <span>
+                                Pay using a UPI ID
+                            </span>
+
+                        </div>
+
+                        <div class="radio-circle"></div>
+
+                    </div>
+
+                </label>
+
+
+                <!-- ================= NET BANKING ================= -->
+
+                <label class="payment-option">
+
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="netbanking"
+                    >
+
+                    <div class="payment-option-content">
+
+                        <div class="payment-icon bank-icon">
+                            🏦
+                        </div>
+
+                        <div class="payment-info">
+
+                            <strong>Net Banking</strong>
+
+                            <span>
+                                Pay using your bank account
+                            </span>
+
+                        </div>
+
+                        <div class="radio-circle"></div>
+
+                    </div>
+
+                </label>
+
+
+            </div>
+
+
+            <!-- ================= UPI DETAILS ================= -->
+
+            <div class="payment-details upi-details">
+
+                <label for="upi_id">
+                    UPI ID
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-prefix">
+                        @
+                    </span>
+
+                    <input
+                        type="text"
+                        id="upi_id"
+                        placeholder="example@upi"
+                        autocomplete="off"
+                    >
+
+                </div>
+
+                <small>
+                    This is a simulated field. No UPI transaction will occur.
+                </small>
+
+            </div>
+
+
+            <!-- ================= BANK DETAILS ================= -->
+
+            <div class="payment-details bank-details">
+
+                <label for="bank">
+                    Select Bank
+                </label>
+
+                <select id="bank">
+
+                    <option value="">
+                        Select your bank
+                    </option>
+
+                    <option>State Bank of India</option>
+                    <option>HDFC Bank</option>
+                    <option>ICICI Bank</option>
+                    <option>Axis Bank</option>
+                    <option>Kotak Mahindra Bank</option>
+                    <option>Punjab National Bank</option>
+
+                </select>
+
+                <small>
+                    This is a simulated selection. No bank account will be accessed.
+                </small>
+
+            </div>
+
+
+            <!-- ================= PAY ================= -->
+
+            <form
+                action="{{ url_for('main.pay_now') }}"
+                method="post"
+                class="payment-form"
+            >
+
+                <button
+                    type="submit"
+                    class="pay-button"
+                >
+                    <span>Proceed with Mock Payment</span>
+
+                    <span class="pay-amount">
+                        ₹{{ total }}
+                    </span>
+                </button>
+
+            </form>
+
+
+            <div class="payment-footer">
+
+                <span>🔒 Secure Simulation</span>
+
+                <span>•</span>
+
+                <span>No real payment</span>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+
+<!-- ================= PAYMENT METHOD INTERACTION ================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const paymentOptions =
+        document.querySelectorAll(
+            'input[name="payment_method"]'
+        );
+
+    const upiDetails =
+        document.querySelector(".upi-details");
+
+    const bankDetails =
+        document.querySelector(".bank-details");
+
+
+    function updatePaymentMethod() {
+
+        const selected =
+            document.querySelector(
+                'input[name="payment_method"]:checked'
+            );
+
+        if (!selected) return;
+
+
+        if (selected.value === "upi") {
+
+            upiDetails.style.display = "block";
+
+            bankDetails.style.display = "none";
+
+        }
+
+        else {
+
+            upiDetails.style.display = "none";
+
+            bankDetails.style.display = "block";
+
+        }
+
+    }
+
+
+    paymentOptions.forEach(function (option) {
+
+        option.addEventListener(
+            "change",
+            updatePaymentMethod
+        );
+
+    });
+
+
+    updatePaymentMethod();
+
+});
+
+</script>
+
 {% endblock %}
