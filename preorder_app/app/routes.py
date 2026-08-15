@@ -383,18 +383,18 @@ def order_progress(order_id):
 # MARK DELIVERED
 # ===============================
 @bp.route('/mark_order_delivered/<order_id>', methods=['POST'])
-def mark_order_paid(order_id):
+def mark_order_delivered(order_id):
 
     orders_col.update_one(
         {'id': order_id},
         {'$set': {'status': 'Delivered'}}
     )
 
-    # Start background thread to delete after 1 minute
     thread = threading.Thread(
         target=delete_order_after_delay,
         args=(order_id,)
     )
+
     thread.start()
 
     flash("Order marked delivered (will auto-delete in 1 minute)")
