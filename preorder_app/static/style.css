@@ -1734,51 +1734,264 @@ table form button:hover {
 }
 
 
-/* ADD ITEM */
+/* =========================================================
+   ADD ITEM FORM
+   ========================================================= */
 
-.add-item-card {
-    padding: 22px;
+.add-item-form {
+    width: 100%;
+    box-sizing: border-box;
 
-    background:
-        linear-gradient(
-            135deg,
-            #fffaf6,
-            #ffffff
-        );
+    padding: 28px 32px 32px;
 
-    border:
-        1px solid
-        #f3dfce;
+    background: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 22px;
 
-    border-radius: 15px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   TOP INPUTS
+   ========================================================= */
+
+.add-item-form .form-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 270px;
+    gap: 22px;
+
+    width: 100%;
+}
+
+.add-item-form .form-group {
+    min-width: 0;
+    position: relative;
+}
+
+.add-item-form label {
+    display: block;
+
+    margin: 0 0 8px;
+
+    color: #292d38;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    /* Prevent inherited weird styles */
+    text-decoration: none;
+}
+
+.add-item-form input[type="text"],
+.add-item-form input[type="number"] {
+    display: block;
+
+    width: 100%;
+    height: 58px;
+
+    box-sizing: border-box;
+
+    margin: 0;
+    padding: 0 18px;
+
+    border: 1px solid #dcdcdc;
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    color: #292d38;
+
+    font-family: inherit;
+    font-size: 17px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.add-item-form input[type="text"]:focus,
+.add-item-form input[type="number"]:focus {
+    border-color: #ff7518;
 
     box-shadow:
-        0 4px 15px
-        rgba(0,0,0,0.04);
+        0 0 0 3px rgba(255, 117, 24, 0.12);
 }
 
-.add-item-header {
-    display: flex;
+.add-item-form input::placeholder {
+    color: #999999;
+}
 
+
+/* =========================================================
+   IMAGE UPLOAD
+   ========================================================= */
+
+.add-item-form .image-upload {
+    margin-top: 25px;
+}
+
+.add-item-form input[type="file"] {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+.add-item-form .file-upload-label {
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
 
-    gap: 11px;
+    width: auto;
+    min-width: 250px;
+    height: 52px;
 
-    margin-bottom: 18px;
-}
+    box-sizing: border-box;
 
-.add-item-header h3 {
+    padding: 0 24px;
+
     margin: 0;
 
-    font-size: 17px;
+    border-radius: 13px;
+
+    background: #ff7518;
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-.add-item-header p {
-    margin: 2px 0 0;
+.add-item-form .file-upload-label:hover {
+    background: #ed650c;
 
-    color: #888;
+    transform: translateY(-1px);
 
-    font-size: 12px;
+    box-shadow:
+        0 8px 20px rgba(255, 117, 24, 0.22);
+}
+
+.add-item-form .file-upload-label:active {
+    transform: translateY(1px);
+}
+
+.add-item-form .file-name {
+    display: inline-block;
+
+    margin-left: 15px;
+
+    color: #666666;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+   ========================================================= */
+
+.add-item-form .submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 54px;
+
+    margin-top: 28px;
+
+    padding: 0 20px;
+
+    border: none;
+    border-radius: 13px;
+
+    background: #ff7518;
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 18px rgba(255, 117, 24, 0.20);
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.add-item-form .submit-btn:hover {
+    background: #ed650c;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 24px rgba(255, 117, 24, 0.28);
+}
+
+.add-item-form .submit-btn:active {
+    transform: translateY(1px);
+}
+
+
+/* =========================================================
+   REMOVE WEIRD GLOBAL/PSEUDO ELEMENTS
+   ========================================================= */
+
+.add-item-form .form-group::before,
+.add-item-form .form-group::after,
+.add-item-form label::before,
+.add-item-form label::after,
+.add-item-form input::before,
+.add-item-form input::after {
+    content: none !important;
+    display: none !important;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .add-item-form {
+        padding: 22px;
+    }
+
+    .add-item-form .form-row {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .add-item-form .image-upload {
+        margin-top: 20px;
+    }
+
+    .add-item-form .file-upload-label {
+        width: 100%;
+    }
+
+    .add-item-form .file-name {
+        display: block;
+        margin: 8px 0 0;
+    }
 }
 
 .admin-form {
