@@ -1,29 +1,136 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Menu</h2>
 
-<div class="grid">
-{% for it in items %}
-  <div class="card">
+<div class="page-shell">
 
-      {% if it.get('image') %}
-        <img src="{{ url_for('static', filename='uploads/' + it.image) }}" 
-             style="width:100%; height:150px; object-fit:cover;">
-      {% else %}
-        <img src="{{ url_for('static', filename='uploads/default.png') }}" 
-             style="width:100%; height:150px;">
-      {% endif %}
+    <!-- PAGE HEADER -->
+    <div class="page-header">
 
-      <h3>{{ it.name }}</h3>
-      <div class="price">₹{{ it.price }}</div>
+        <div>
+            <span class="page-eyebrow">CAFETERIA MENU</span>
 
-      <form method="POST" action="{{ url_for('main.add_to_cart') }}">
-          <input type="hidden" name="item_id" value="{{ it.id }}">
-          <button class="btn">Add</button>
-      </form>
-  </div>
-{% endfor %}
+            <h1>Today's Menu</h1>
+
+            <p>
+                Choose your favourites and add them to your order.
+            </p>
+        </div>
+
+        <div class="page-badge">
+            🍽️ Fresh & Ready
+        </div>
+
+    </div>
+
+
+    <!-- MENU -->
+    <div class="grid menu-grid">
+
+        {% for it in items %}
+
+        <div class="card menu-card">
+
+            <!-- IMAGE -->
+
+            <div class="menu-image-wrapper">
+
+                {% if it.get('image') %}
+
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + it.image) }}"
+                        class="menu-image"
+                        alt="{{ it.name }}"
+                    >
+
+                {% else %}
+
+                    <img
+                        src="{{ url_for('static', filename='uploads/default.png') }}"
+                        class="menu-image"
+                        alt="Default food image"
+                    >
+
+                {% endif %}
+
+                <div class="food-badge">
+                    CAFETERIA
+                </div>
+
+            </div>
+
+
+            <!-- DETAILS -->
+
+            <div class="menu-card-content">
+
+                <div class="menu-card-title-row">
+
+                    <h3>{{ it.name }}</h3>
+
+                    <div class="price">
+                        ₹{{ it.price }}
+                    </div>
+
+                </div>
+
+
+                <div class="menu-card-footer">
+
+                    <span class="menu-availability">
+                        ● Available
+                    </span>
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('main.add_to_cart') }}"
+                    >
+
+                        <input
+                            type="hidden"
+                            name="item_id"
+                            value="{{ it.id }}"
+                        >
+
+                        <button
+                            class="btn menu-add-btn"
+                            type="submit"
+                        >
+                            <span>＋</span>
+                            Add to Cart
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    {% if not items %}
+
+    <div class="empty-state">
+
+        <div class="empty-icon">
+            🍽️
+        </div>
+
+        <h3>Menu is currently empty</h3>
+
+        <p>
+            Please check back later for available items.
+        </p>
+
+    </div>
+
+    {% endif %}
+
 </div>
 
 {% endblock %}

@@ -1,59 +1,333 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
-<h2>Your Cart</h2>
+<div class="page-shell cart-page">
 
-{% if cart_details %}
-<div class="table-wrapper">
-<table class="cart-table">
-    <tr>
-        <th>Item</th>
-        <th>Qty</th>
-        <th>Subtotal</th>
-        <th>Action</th>
-    </tr>
+    <!-- ================= HEADER ================= -->
 
-    {% for c in cart_details %}
-    <tr>
-        <td>{{ c.name }}</td>
+    <div class="page-header">
 
-            <td class="qty-controls">
+        <div>
 
-                <form action="{{ url_for('main.cart_decrease') }}" method="POST">
-                <input type="hidden" name="item_id" value="{{ c.item_id }}">
-                <button type="submit">−</button>
-                </form>
+            <span class="page-eyebrow">
+                YOUR ORDER
+            </span>
 
-                <span class="qty-number">{{ c.qty }}</span>
+            <h1>Your Cart</h1>
 
-                <form action="{{ url_for('main.cart_increase') }}" method="POST">
-                <input type="hidden" name="item_id" value="{{ c.item_id }}">
-                <button type="submit">+</button>
-                </form>
+            <p>
+                Review your items before proceeding to checkout.
+            </p>
 
-            </td>
+        </div>
 
-        <td>₹{{ c.subtotal }}</td>
+        <div class="page-badge">
+            🛒 Order Summary
+        </div>
 
-        <td>
-            <form action="{{ url_for('main.cart_decrease') }}" method="POST">
-                <input type="hidden" name="item_id" value="{{ c.item_id }}">
-                <button type="submit">Remove</button>
+    </div>
+
+
+    {% if cart_details %}
+
+    <div class="cart-layout">
+
+        <!-- ================= CART ITEMS ================= -->
+
+        <section class="cart-card">
+
+            <div class="cart-card-header">
+
+                <div>
+
+                    <h2>Order Items</h2>
+
+                    <p>
+                        Adjust quantities or remove items.
+                    </p>
+
+                </div>
+
+                <div class="cart-count">
+                    {{ cart_details|length }}
+                    {% if cart_details|length == 1 %}
+                        item
+                    {% else %}
+                        items
+                    {% endif %}
+                </div>
+
+            </div>
+
+
+            <div class="cart-items">
+
+                {% for c in cart_details %}
+
+                <div class="cart-item">
+
+                    <!-- ITEM -->
+
+                    <div class="cart-item-info">
+
+                        <div class="cart-item-icon">
+                            🍽️
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                {{ c.name }}
+                            </strong>
+
+                            <span>
+                                ₹{{ c.subtotal }} subtotal
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- QUANTITY -->
+
+                    <div class="cart-quantity">
+
+                        <span class="quantity-label">
+                            Quantity
+                        </span>
+
+                        <div class="qty-controls">
+
+                            <form
+                                action="{{ url_for('main.cart_decrease') }}"
+                                method="POST"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="item_id"
+                                    value="{{ c.item_id }}"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="quantity-btn"
+                                >
+                                    −
+                                </button>
+
+                            </form>
+
+
+                            <span class="qty-number">
+                                {{ c.qty }}
+                            </span>
+
+
+                            <form
+                                action="{{ url_for('main.cart_increase') }}"
+                                method="POST"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="item_id"
+                                    value="{{ c.item_id }}"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="quantity-btn"
+                                >
+                                    +
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PRICE -->
+
+                    <div class="cart-item-price">
+
+                        <span>
+                            Subtotal
+                        </span>
+
+                        <strong>
+                            ₹{{ c.subtotal }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- REMOVE -->
+
+                    <form
+                        action="{{ url_for('main.cart_decrease') }}"
+                        method="POST"
+                        class="remove-form"
+                    >
+
+                        <input
+                            type="hidden"
+                            name="item_id"
+                            value="{{ c.item_id }}"
+                        >
+
+                        <button
+                            type="submit"
+                            class="remove-btn"
+                        >
+                            ×
+                        </button>
+
+                    </form>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SUMMARY ================= -->
+
+        <aside class="cart-summary">
+
+            <div class="summary-header">
+
+                <span class="page-eyebrow">
+                    CHECKOUT
+                </span>
+
+                <h2>Order Summary</h2>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Items
+                </span>
+
+                <strong>
+                    {{ cart_details|length }}
+                </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Subtotal
+                </span>
+
+                <strong>
+                    ₹{{ total }}
+                </strong>
+
+            </div>
+
+
+            <div class="summary-divider"></div>
+
+
+            <div class="summary-total">
+
+                <span>
+                    Total
+                </span>
+
+                <strong>
+                    ₹{{ total }}
+                </strong>
+
+            </div>
+
+
+            <div class="summary-note">
+
+                <span>🔒</span>
+
+                <p>
+                    You will review your payment method
+                    on the next step.
+                </p>
+
+            </div>
+
+
+            <form
+                action="{{ url_for('main.checkout') }}"
+                method="GET"
+                class="checkout-form"
+            >
+
+                <button
+                    type="submit"
+                    class="checkout-btn"
+                >
+                    <span>
+                        Proceed to Checkout
+                    </span>
+
+                    <span>
+                        →
+                    </span>
+
+                </button>
+
             </form>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+
+
+            <div class="secure-checkout">
+                🔒 Secure checkout
+                <span>•</span>
+                No real payment
+            </div>
+
+        </aside>
+
+    </div>
+
+
+    {% else %}
+
+    <!-- ================= EMPTY CART ================= -->
+
+    <div class="empty-state cart-empty">
+
+        <div class="empty-icon">
+            🛒
+        </div>
+
+        <h2>Your cart is empty</h2>
+
+        <p>
+            Looks like you haven't added anything yet.
+        </p>
+
+        <a
+            href="{{ url_for('main.menu') }}"
+            class="btn empty-cart-btn"
+        >
+            Browse Menu
+        </a>
+
+    </div>
+
+    {% endif %}
+
 </div>
-
-<h3>Total: ₹{{ total }}</h3>
-
-<form action="{{ url_for('main.checkout') }}" method="GET">
-    <button type="submit">Proceed to Checkout</button>
-</form>
-
-{% else %}
-<p>Your cart is empty.</p>
-{% endif %}
 
 {% endblock %}

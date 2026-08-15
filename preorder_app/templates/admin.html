@@ -1,145 +1,534 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
-<h2>Admin Dashboard</h2>
+<div class="page-shell admin-page">
 
-<!-- ================= USERS ================= -->
-<h3>Users</h3>
+    <!-- ================= HEADER ================= -->
 
-<div class="table-wrapper">
-<table border="1" cellpadding="8">
-    <tr>
-    <th>Username</th>
-    <th>Email</th>
-    <th>Admin</th>
-    <th>Action</th>
-    </tr>
-    {% for user in users %}
-    <tr>
-        <td>{{ user["name"] }}</td>
-        <td>{{ user["email"] }}</td>
-        <td>{{ "Yes" if user.get("is_admin") else "No" }}</td>
-        <td>
-            <form action="{{ url_for('admin.edit_user', user_id=user['id']) }}" method="GET" style="display:inline;">
-                <button type="submit">Edit</button>
-            </form>
+    <div class="page-header">
 
-            <form action="{{ url_for('admin.delete_user') }}" method="POST" style="display:inline;">
-                <input type="hidden" name="user_id" value="{{ user['id'] }}">
-                <button type="submit" onclick="return confirm('Delete this user?');">
-                    Delete
+        <div>
+
+            <span class="page-eyebrow">
+                MANAGEMENT SYSTEM
+            </span>
+
+            <h1>Admin Dashboard</h1>
+
+            <p>
+                Manage users, cafeteria items and incoming orders.
+            </p>
+
+        </div>
+
+        <div class="page-badge admin-badge">
+            ⚙️ Administrator
+        </div>
+
+    </div>
+
+
+    <!-- ================= USERS ================= -->
+
+    <section class="admin-section">
+
+        <div class="admin-section-header">
+
+            <div class="admin-section-title">
+
+                <div class="admin-section-icon">
+                    👥
+                </div>
+
+                <div>
+                    <h2>Users</h2>
+                    <p>Manage registered cafeteria users.</p>
+                </div>
+
+            </div>
+
+            <span class="section-label">
+                USER MANAGEMENT
+            </span>
+
+        </div>
+
+
+        <div class="table-wrapper admin-table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Admin</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for user in users %}
+
+                    <tr>
+
+                        <td>
+
+                            <div class="user-cell">
+
+                                <div class="user-avatar">
+                                    {{ user["name"][0]|upper }}
+                                </div>
+
+                                <strong>
+                                    {{ user["name"] }}
+                                </strong>
+
+                            </div>
+
+                        </td>
+
+                        <td>
+                            <span class="muted-text">
+                                {{ user["email"] }}
+                            </span>
+                        </td>
+
+                        <td>
+
+                            {% if user.get("is_admin") %}
+
+                                <span class="status-pill status-admin">
+                                    ✓ Admin
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-pill status-user">
+                                    User
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <div class="table-actions">
+
+                                <form
+                                    action="{{ url_for('admin.edit_user', user_id=user['id']) }}"
+                                    method="GET"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="action-btn edit-btn"
+                                    >
+                                        Edit
+                                    </button>
+
+                                </form>
+
+
+                                <form
+                                    action="{{ url_for('admin.delete_user') }}"
+                                    method="POST"
+                                >
+
+                                    <input
+                                        type="hidden"
+                                        name="user_id"
+                                        value="{{ user['id'] }}"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="action-btn delete-btn"
+                                        onclick="return confirm('Delete this user?');"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= ITEMS ================= -->
+
+    <section class="admin-section">
+
+        <div class="admin-section-header">
+
+            <div class="admin-section-title">
+
+                <div class="admin-section-icon">
+                    🍔
+                </div>
+
+                <div>
+                    <h2>Menu Items</h2>
+                    <p>Manage food and drink available in the cafeteria.</p>
+                </div>
+
+            </div>
+
+            <span class="section-label">
+                MENU MANAGEMENT
+            </span>
+
+        </div>
+
+
+        <div class="table-wrapper admin-table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for it in items %}
+
+                    <tr>
+
+                        <td>
+
+                            <div class="admin-food-image">
+
+                                {% if it.get('image') %}
+
+                                    <img
+                                        src="{{ url_for('static', filename='uploads/' + it.image) }}"
+                                        alt="{{ it.name }}"
+                                    >
+
+                                {% else %}
+
+                                    <img
+                                        src="{{ url_for('static', filename='uploads/default.png') }}"
+                                        alt="Default item"
+                                    >
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+                        <td>
+                            <strong>{{ it["name"] }}</strong>
+                        </td>
+
+                        <td>
+
+                            <span class="admin-price">
+                                ₹{{ it["price"] }}
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('admin.delete_item', item_id=it['id']) }}"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="action-btn delete-btn"
+                                    onclick="return confirm('Delete this item?');"
+                                >
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ADD ITEM -->
+
+        <div class="add-item-card">
+
+            <div class="add-item-header">
+
+                <div class="admin-section-icon">
+                    ＋
+                </div>
+
+                <div>
+
+                    <h3>Add New Item</h3>
+
+                    <p>
+                        Add a new food or drink to the cafeteria menu.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('admin.add_item') }}"
+                enctype="multipart/form-data"
+                class="admin-form"
+            >
+
+                <div class="form-row">
+
+                    <div class="form-field">
+
+                        <label>
+                            Item Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="e.g. Veg Sandwich"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Price (₹)
+                        </label>
+
+                        <input
+                            type="number"
+                            name="price"
+                            placeholder="e.g. 80"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="file-upload admin-file-upload">
+
+                    <label
+                        for="imageUpload"
+                        class="custom-file-btn"
+                    >
+                        📷 Choose Image
+                    </label>
+
+                    <input
+                        id="imageUpload"
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        hidden
+                    >
+
+                    <span id="file-name">
+                        No file chosen
+                    </span>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn admin-add-btn"
+                >
+                    ＋ Add Item
                 </button>
+
             </form>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= ORDERS ================= -->
+
+    <section class="admin-section">
+
+        <div class="admin-section-header">
+
+            <div class="admin-section-title">
+
+                <div class="admin-section-icon">
+                    📦
+                </div>
+
+                <div>
+
+                    <h2>Orders</h2>
+
+                    <p>
+                        View cafeteria orders and their current status.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <span class="section-label">
+                ORDER MANAGEMENT
+            </span>
+
+        </div>
+
+
+        <div class="table-wrapper admin-table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Order ID</th>
+                        <th>User</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for o in orders %}
+
+                    <tr>
+
+                        <td>
+
+                            <span class="order-id">
+                                #{{ o["id"] }}
+                            </span>
+
+                        </td>
+
+                        <td>
+                            <strong>
+                                {{ o["user_name"] }}
+                            </strong>
+                        </td>
+
+                        <td>
+
+                            <div class="order-items-list">
+
+                                {% for it in o["items"] %}
+
+                                <span>
+                                    {{ it["qty"] }} × {{ it["name"] }}
+                                </span>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </td>
+
+                        <td>
+
+                            <strong class="admin-price">
+                                ₹{{ o["total"] }}
+                            </strong>
+
+                        </td>
+
+                        <td>
+
+                            <span class="status-pill status-order">
+                                {{ o["status"] }}
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
 </div>
 
-<hr>
 
-<!-- ================= ITEMS ================= -->
-<h3>Items</h3>
-
-<div class="table-wrapper">
-<table border="1" cellpadding="6">
-    <tr>
-        <th>Image</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Action</th>
-    </tr>
-
-    {% for it in items %}
-<tr>
-    <td>
-        {% if it.get('image') %}
-            <img src="{{ url_for('static', filename='uploads/' + it.image) }}" 
-                 style="width:60px; height:60px; object-fit:cover; border-radius:8px;">
-        {% else %}
-            <img src="{{ url_for('static', filename='uploads/default.png') }}" 
-                 style="width:60px; height:60px; border-radius:8px;">
-        {% endif %}
-    </td>
-
-    <td>{{ it["name"] }}</td>
-    <td>₹{{ it["price"] }}</td>
-
-    <td>
-        <form method="POST" action="{{ url_for('admin.delete_item', item_id=it['id']) }}">
-            <button type="submit" onclick="return confirm('Delete this item?');">
-                Delete
-            </button>
-        </form>
-    </td>
-</tr>
-{% endfor %}
-</table>
-</div>
-
-<h4>Add Item</h4>
-
-<form method="POST" action="{{ url_for('admin.add_item') }}" enctype="multipart/form-data">
-
-    <label>Item Name</label>
-    <input type="text" name="name" placeholder="Enter food name" required>
-
-    <label>Price (₹)</label>
-    <input type="number" name="price" placeholder="Enter price" required>
-
-    <div class="file-upload">
-    <label for="imageUpload" class="custom-file-btn">Upload Image</label>
-    <input id="imageUpload" type="file" name="image" accept="image/*" hidden>
-    <span id="file-name">No file chosen</span>
-</div>
-
-    <button type="submit">Add Item</button>
-
-</form>
-<hr>
-
-<!-- ================= ORDERS ================= -->
-<h3>Orders</h3>
-
-<div class="table-wrapper">
-<table border="1" cellpadding="6">
-    <tr>
-        <th>Order ID</th>
-        <th>User</th>
-        <th>Items</th>
-        <th>Total</th>
-        <th>Status</th>
-    </tr>
-
-    {% for o in orders %}
-    <tr>
-        <td>{{ o["id"] }}</td>
-        <td>{{ o["user_name"] }}</td>
-        <td>
-            <ul>
-                {% for it in o["items"] %}
-                <li>{{ it["qty"] }} × {{ it["name"] }}</li>
-                {% endfor %}
-            </ul>
-        </td>
-        <td>₹{{ o["total"] }}</td>
-        <td>{{ o["status"] }}</td>
-    </tr>
-    {% endfor %}
-</table>
-</div>
 <script>
+
 const input = document.getElementById('imageUpload');
 const fileName = document.getElementById('file-name');
 
-input.addEventListener('change', function() {
-    if (this.files.length > 0) {
-        fileName.textContent = this.files[0].name;
-    } else {
-        fileName.textContent = "No file chosen";
-    }
-});
+if (input && fileName) {
+
+    input.addEventListener('change', function() {
+
+        if (this.files.length > 0) {
+
+            fileName.textContent =
+                this.files[0].name;
+
+        } else {
+
+            fileName.textContent =
+                "No file chosen";
+
+        }
+
+    });
+
+}
+
 </script>
+
 {% endblock %}
-
-
