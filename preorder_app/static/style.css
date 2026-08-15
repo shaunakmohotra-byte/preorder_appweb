@@ -2,7 +2,9 @@
    CAFETERIA PRE-ORDER SYSTEM
    CONSOLIDATED STYLESHEET
    ========================================================= */
-
+.page-shell {
+    flex: 1; 
+}
 
 /* =========================================================
    VARIABLES
