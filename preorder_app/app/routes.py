@@ -25,7 +25,7 @@ from flask import session, redirect, url_for, current_app, flash
 # Dev Tester
 # ===============================
 
-@app.route('/demo-login')
+@bp.route('/demo-login')
 def demo_login():
     # ⚠️ SECURITY CHECK: Ensure this only runs in development or if specifically enabled
     # You can remove this check if you WANT it live on the internet for public testing
