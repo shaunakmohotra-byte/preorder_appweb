@@ -3485,93 +3485,88 @@ body::after {
         display: none;
     }
 }
-/* ================= MENU QUANTITY ================= */
+/* ================= MENU ACTIONS ================= */
 
 .menu-add-form {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    align-items: stretch;
+    gap: 0;
+
     margin: 0;
     padding: 0;
+
     background: transparent;
     box-shadow: none;
 }
 
+/* Quantity control */
 .quantity-selector {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
 
-    padding: 6px 9px;
+    padding: 0 9px;
 
-    background: #f8f8f8;
-    border: 1px solid #e6e6e6;
-    border-radius: 9px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-right: none;
+
+    border-radius: 9px 0 0 9px;
 
     transition: all 0.2s ease;
 }
 
-.quantity-selector:hover {
-    border-color: rgba(252, 128, 25, 0.4);
-    background: #fffaf6;
-}
-
 .quantity-selector label {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
-    color: #7e808c;
+    color: #8a8c96;
 }
 
+/* Dropdown */
 .quantity-select {
     appearance: none;
     -webkit-appearance: none;
 
-    min-width: 42px;
-
-    padding: 5px 22px 5px 7px;
-
     border: none;
-    border-radius: 6px;
+    outline: none;
 
-    background-color: white;
+    background: transparent;
 
     color: var(--text-main);
 
     font-family: inherit;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
+
+    min-width: 28px;
+    padding: 9px 15px 9px 2px;
 
     cursor: pointer;
 
-    /* Custom dropdown arrow */
+    /* Small orange arrow */
     background-image:
         linear-gradient(45deg, transparent 50%, var(--primary) 50%),
         linear-gradient(135deg, var(--primary) 50%, transparent 50%);
 
     background-position:
-        calc(100% - 9px) 50%,
-        calc(100% - 5px) 50%;
+        calc(100% - 8px) 50%,
+        calc(100% - 4px) 50%;
 
     background-size:
         4px 4px,
         4px 4px;
 
     background-repeat: no-repeat;
-
-    transition: all 0.2s ease;
 }
 
-.quantity-select:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.quantity-select:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(252, 128, 25, 0.18);
+/* Highlight the whole control */
+.quantity-selector:focus-within {
+    border-color: rgba(252, 128, 25, 0.5);
+    background: #fffaf6;
 }
 
 
-/* ================= MENU ADD BUTTON ================= */
+/* ================= ADD BUTTON ================= */
 
 .menu-add-btn {
     display: flex;
@@ -3579,28 +3574,32 @@ body::after {
     justify-content: center;
     gap: 5px;
 
+    border-radius: 0 9px 9px 0;
+
     white-space: nowrap;
 
+    box-shadow: none;
+
     transition:
+        background 0.2s ease,
         transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
+        box-shadow 0.2s ease;
 }
 
 .menu-add-btn span {
-    font-size: 18px;
+    font-size: 17px;
     line-height: 1;
 }
 
 .menu-add-btn:hover {
-    transform: translateY(-1px);
+    transform: none;
 
     box-shadow:
-        0 5px 14px rgba(252, 128, 25, 0.25);
+        0 5px 14px rgba(252, 128, 25, 0.22);
 }
 
 .menu-add-btn:active {
-    transform: translateY(0) scale(0.98);
+    transform: scale(0.98);
 }
 
 
@@ -3610,16 +3609,13 @@ body::after {
 
     .menu-add-form {
         width: 100%;
-        flex-wrap: wrap;
     }
 
     .quantity-selector {
-        flex: 1;
-        min-width: 85px;
-        justify-content: center;
+        flex: 0 0 auto;
     }
 
     .menu-add-btn {
-        flex: 2;
+        flex: 1;
     }
 }
