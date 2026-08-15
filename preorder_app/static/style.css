@@ -4804,3 +4804,793 @@ body::after {
     }
 
 }
+/* =========================================================
+   CAFETERIA MENU CAROUSEL
+   ========================================================= */
+
+.menu-carousel-container {
+    position: relative;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+}
+
+
+/* =========================================================
+   CAROUSEL
+   ========================================================= */
+
+.menu-carousel {
+    position: relative;
+
+    width: 100%;
+
+    min-width: 0;
+
+    overflow-x: auto;
+    overflow-y: visible;
+
+    padding: 15px 20px 40px;
+
+    box-sizing: border-box;
+
+    scroll-behavior: smooth;
+
+    scroll-snap-type: x mandatory;
+
+    scroll-padding-left: 20px;
+    scroll-padding-right: 20px;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: none;
+}
+
+.menu-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* =========================================================
+   TRACK
+   ========================================================= */
+
+.menu-track {
+    display: flex;
+
+    width: max-content;
+
+    gap: 36px;
+
+    padding: 0 20px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MENU CARDS
+   ========================================================= */
+
+.menu-carousel .menu-card {
+
+    position: relative;
+
+    flex: 0 0 510px;
+
+    width: 510px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    scroll-snap-align: start;
+
+    border-radius: 26px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.08);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+.menu-carousel .menu-card:hover {
+
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================================================
+   IMAGE
+   ========================================================= */
+
+.menu-carousel .menu-image-wrapper {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 330px;
+
+    overflow: hidden;
+
+    background: #f5f5f5;
+}
+
+
+.menu-carousel .menu-image {
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.4s ease;
+}
+
+
+.menu-carousel .menu-card:hover .menu-image {
+
+    transform: scale(1.035);
+}
+
+
+/* =========================================================
+   FOOD BADGE
+   ========================================================= */
+
+.menu-carousel .food-badge {
+
+    position: absolute;
+
+    top: 20px;
+    left: 20px;
+
+    padding: 10px 18px;
+
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.96);
+
+    color: #ff6b00;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    box-shadow:
+        0 5px 18px rgba(0, 0, 0, 0.10);
+}
+
+
+/* =========================================================
+   CARD CONTENT
+   ========================================================= */
+
+.menu-carousel .menu-card-content {
+
+    padding: 32px 30px 30px;
+}
+
+
+.menu-carousel .menu-card-title-row {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    min-height: 42px;
+}
+
+
+.menu-carousel .menu-card-title-row h3 {
+
+    margin: 0;
+
+    color: #252832;
+
+    font-size: 29px;
+
+    line-height: 1.15;
+
+    font-weight: 800;
+}
+
+
+.menu-carousel .price {
+
+    flex-shrink: 0;
+
+    color: #ff7518;
+
+    font-size: 29px;
+
+    line-height: 1.15;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.menu-carousel .menu-card-footer {
+
+    margin-top: 35px;
+}
+
+
+/* =========================================================
+   AVAILABILITY
+   ========================================================= */
+
+.menu-carousel .menu-availability {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 27px;
+
+    color: #299f50;
+
+    font-size: 16px;
+
+    font-weight: 700;
+}
+
+
+.menu-carousel .availability-dot {
+
+    width: 10px;
+    height: 10px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #35b85d;
+
+    box-shadow:
+        0 0 0 5px rgba(53, 184, 93, 0.12);
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.menu-carousel .menu-add-form {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+
+/* =========================================================
+   QUANTITY CONTROL
+   ========================================================= */
+
+.menu-carousel .quantity-control {
+
+    display: flex;
+
+    align-items: center;
+
+    width: 255px;
+
+    height: 68px;
+
+    margin: 0 auto;
+
+    overflow: hidden;
+
+    border: 3px solid #ff7518;
+
+    border-radius: 20px;
+
+    background: #ffffff;
+
+    box-sizing: border-box;
+}
+
+
+.menu-carousel .quantity-btn {
+
+    width: 70px;
+
+    height: 100%;
+
+    flex-shrink: 0;
+
+    border: 0;
+
+    background: #ffffff;
+
+    color: #ff7518;
+
+    font-size: 28px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+.menu-carousel .quantity-btn:hover {
+
+    background: #fff1e7;
+}
+
+
+.menu-carousel .quantity-btn:active {
+
+    transform: scale(0.92);
+}
+
+
+.menu-carousel .quantity-control input {
+
+    flex: 1;
+
+    width: 100%;
+
+    height: 100%;
+
+    margin: 0;
+
+    padding: 0;
+
+    border: 0;
+
+    border-left: 1px solid #eeeeee;
+
+    border-right: 1px solid #eeeeee;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #252832;
+
+    text-align: center;
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    box-sizing: border-box;
+
+    appearance: textfield;
+
+    -moz-appearance: textfield;
+}
+
+
+.menu-carousel
+.quantity-control
+input::-webkit-inner-spin-button,
+.menu-carousel
+.quantity-control
+input::-webkit-outer-spin-button {
+
+    -webkit-appearance: none;
+
+    margin: 0;
+}
+
+
+/* =========================================================
+   ADD TO CART
+   ========================================================= */
+
+.menu-carousel .menu-add-btn {
+
+    width: 255px;
+
+    min-height: 70px;
+
+    margin: 0 auto;
+
+    border: 0;
+
+    border-radius: 18px;
+
+    background: #ff7518;
+
+    color: #ffffff;
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 25px rgba(255, 117, 24, 0.25);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.menu-carousel .menu-add-btn:hover {
+
+    background: #ed650b;
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 14px 30px rgba(255, 117, 24, 0.32);
+}
+
+
+.menu-carousel .menu-add-btn:active {
+
+    transform: translateY(0);
+}
+
+
+.menu-carousel .menu-add-btn span {
+
+    margin-right: 5px;
+
+    font-size: 22px;
+}
+
+
+/* =========================================================
+   NAVIGATION ARROWS
+   ========================================================= */
+
+.carousel-arrow {
+
+    position: absolute;
+
+    top: 50%;
+
+    z-index: 20;
+
+    width: 58px;
+
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    color: #ff7518;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 42px;
+
+    font-weight: 400;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.16);
+
+    transform: translateY(-50%);
+
+    transition:
+        transform 0.18s ease,
+        background 0.18s ease,
+        color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+.carousel-arrow:hover {
+
+    background: #ff7518;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 10px 30px rgba(255, 117, 24, 0.30);
+
+    transform:
+        translateY(-50%)
+        scale(1.08);
+}
+
+
+.carousel-arrow:active {
+
+    transform:
+        translateY(-50%)
+        scale(0.94);
+}
+
+
+/* LEFT */
+
+.carousel-arrow-left {
+
+    left: -10px;
+}
+
+
+/* RIGHT */
+
+.carousel-arrow-right {
+
+    right: -10px;
+}
+
+
+/* =========================================================
+   SUBTLE EDGE FADE
+   ========================================================= */
+
+.menu-carousel-container::before,
+.menu-carousel-container::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    z-index: 5;
+
+    width: 70px;
+
+    height: calc(100% - 40px);
+
+    pointer-events: none;
+}
+
+
+.menu-carousel-container::before {
+
+    left: 0;
+
+    background:
+        linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0.95),
+            rgba(255, 255, 255, 0)
+        );
+}
+
+
+.menu-carousel-container::after {
+
+    right: 0;
+
+    background:
+        linear-gradient(
+            to left,
+            rgba(255, 255, 255, 0.95),
+            rgba(255, 255, 255, 0)
+        );
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.menu-empty-state {
+
+    padding: 70px 20px;
+
+    text-align: center;
+
+    border: 1px dashed #dddddd;
+
+    border-radius: 20px;
+
+    background: #fafafa;
+}
+
+
+.menu-empty-icon {
+
+    margin-bottom: 12px;
+
+    font-size: 48px;
+}
+
+
+.menu-empty-state h3 {
+
+    margin: 0 0 8px;
+
+    color: #333;
+
+    font-size: 22px;
+}
+
+
+.menu-empty-state p {
+
+    margin: 0;
+
+    color: #888;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .menu-carousel .menu-card {
+
+        flex-basis: 440px;
+
+        width: 440px;
+    }
+
+
+    .carousel-arrow {
+
+        width: 50px;
+
+        height: 50px;
+
+        font-size: 36px;
+    }
+
+
+    .carousel-arrow-left {
+
+        left: 5px;
+    }
+
+
+    .carousel-arrow-right {
+
+        right: 5px;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .menu-carousel {
+
+        padding-left: 15px;
+
+        padding-right: 15px;
+
+        scroll-padding-left: 15px;
+
+        scroll-padding-right: 15px;
+    }
+
+
+    .menu-track {
+
+        gap: 18px;
+
+        padding-left: 15px;
+
+        padding-right: 15px;
+    }
+
+
+    .menu-carousel .menu-card {
+
+        flex: 0 0 82vw;
+
+        width: 82vw;
+
+        border-radius: 22px;
+    }
+
+
+    .menu-carousel .menu-image-wrapper {
+
+        height: 230px;
+    }
+
+
+    .menu-carousel .menu-card-content {
+
+        padding: 24px 20px 25px;
+    }
+
+
+    .menu-carousel .menu-card-title-row h3 {
+
+        font-size: 22px;
+    }
+
+
+    .menu-carousel .price {
+
+        font-size: 22px;
+    }
+
+
+    .menu-carousel .quantity-control,
+    .menu-carousel .menu-add-btn {
+
+        width: 100%;
+    }
+
+
+    .carousel-arrow {
+
+        width: 44px;
+
+        height: 44px;
+
+        font-size: 32px;
+    }
+
+
+    .carousel-arrow-left {
+
+        left: 3px;
+    }
+
+
+    .carousel-arrow-right {
+
+        right: 3px;
+    }
+
+
+    .menu-carousel-container::before,
+    .menu-carousel-container::after {
+
+        width: 35px;
+    }
+}
