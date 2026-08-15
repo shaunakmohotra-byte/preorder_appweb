@@ -304,7 +304,7 @@ def pay_now():
         "user_name": user.get("name"),
         "items": order_items,
         "total": total,
-        "status": "Paid",
+        "status": "Preparing",
         "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     })
