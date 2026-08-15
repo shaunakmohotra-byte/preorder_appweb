@@ -194,7 +194,7 @@ def add_to_cart():
         flash(f'{item["name"]} added to cart')
     else:
         flash(f'{quantity} × {item["name"]} added to cart')
-
+    session['cart_count'] = session.get('cart_count', 0) + int(request.form.get('quantity', 1))
     return redirect(url_for('main.menu'))
 
 # ===============================
