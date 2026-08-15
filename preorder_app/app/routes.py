@@ -395,3 +395,48 @@ def order_progress(order_id):
         order=order,
         user=user
     )
+# ===============================
+# UPDATE ORDER STATUS
+# ===============================
+@bp.route('/update_order_status/<order_id>/<status>', methods=['POST'])
+def update_order_status(order_id, status):
+
+    allowed_statuses = {
+        "Preparing",
+        "Ready for Collection",
+        "Delivered"
+    }
+
+    if status not in allowed_statuses:
+        flash("Invalid order status")
+        return redirect(url_for('main.cafeteria'))
+
+    order = orders_col.find_one({'id': order_id})
+
+    if not order:
+        flash("Order not found")
+        return redirect(url_for('main.cafeteria'))
+
+    orders_col.update_one(
+        {'id': order_id},
+        {'$set': {'status': status}}
+    )
+
+    # Only delete after the order has actually been delivered
+    if status == "Delivered":
+        thread = threading.Thread(
+            target=delete_order_after_delay,
+            args=(order_id,)
+        )
+        thread.daemon = True
+        thread.start()
+
+        flash("Order marked as delivered. It will be removed in 1 minute.")
+
+    elif status == "Ready for Collection":
+        flash("Order is ready for collection.")
+
+    elif status == "Preparing":
+        flash("Order is now being prepared.")
+
+    return redirect(url_for('main.cafeteria'))
