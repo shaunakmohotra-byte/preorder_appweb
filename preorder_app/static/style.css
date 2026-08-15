@@ -4223,3 +4223,39 @@ body::after {
     }
 
 }
+/* Position container relatively so the badge anchors properly */
+.cart-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    font-weight: 500;
+}
+
+/* Badge Styling */
+.cart-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    margin-left: 5px;
+    
+    background-color: var(--primary); /* Uses your primary orange color */
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 9px; /* Pill/Capsule shape */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    
+    /* Smooth transition for when the count changes */
+    transition: transform 0.2s cubic-bezier(.2, .8, .2, 1);
+}
+
+/* Optional pop animation when an item is added */
+.cart-badge.bump {
+    transform: scale(1.3);
+}
