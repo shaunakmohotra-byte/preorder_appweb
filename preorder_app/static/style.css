@@ -3953,42 +3953,31 @@ body::after {
 
 /* SUMMARY */
 
-.order-summary {
+/* SUMMARY (Scoped for Progress Page) */
+
+.progress-card .order-summary {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-
     gap: 12px;
-
     margin: 25px 0;
 }
 
-.order-summary > div {
+.progress-card .order-summary > div {
     padding: 15px;
-
     background: #f8f8f8;
-
     border-radius: 12px;
 }
 
-.order-summary span {
+.progress-card .order-summary span {
     display: block;
-
     font-size: 11px;
-
     color: #898b94;
-
     margin-bottom: 4px;
 }
 
-.order-summary strong {
+.progress-card .order-summary strong {
     font-size: 14px;
 }
-
-.status-paid {
-    color: #4caf50;
-}
-
-
 /* TIMELINE */
 
 .order-timeline {
