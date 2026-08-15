@@ -92,26 +92,32 @@
                         >
 
                         <!-- QUANTITY -->
-                        <div class="quantity-selector">
+                        <div class="quantity-control">
+    <button
+        type="button"
+        class="quantity-btn"
+        onclick="changeQuantity('{{ it.id }}', -1)"
+        aria-label="Decrease quantity"
+    >−</button>
 
-                            <label for="quantity-{{ it.id }}">
-                                Qty
-                            </label>
+    <input
+        type="number"
+        name="quantity"
+        id="quantity-{{ it.id }}"
+        class="quantity-input"
+        value="1"
+        min="1"
+        max="10"
+        readonly
+    >
 
-                            <select
-                                name="quantity"
-                                id="quantity-{{ it.id }}"
-                                class="quantity-select"
-                            >
-                                {% for qty in range(1, 11) %}
-                                    <option value="{{ qty }}">
-                                        {{ qty }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-
-                        </div>
-
+    <button
+        type="button"
+        class="quantity-btn"
+        onclick="changeQuantity('{{ it.id }}', 1)"
+        aria-label="Increase quantity"
+    >+</button>
+</div>
 
                         <!-- ADD BUTTON -->
                         <button
@@ -154,4 +160,23 @@
     {% endif %}
 
 </div>
+<script>
+function changeQuantity(itemId, amount) {
+    const input = document.getElementById("quantity-" + itemId);
+
+    let quantity = parseInt(input.value) || 1;
+
+    quantity += amount;
+
+    if (quantity < 1) {
+        quantity = 1;
+    }
+
+    if (quantity > 10) {
+        quantity = 10;
+    }
+
+    input.value = quantity;
+}
+</script>
 {% endblock %}
