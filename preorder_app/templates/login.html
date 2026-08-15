@@ -1,13 +1,21 @@
-        {% extends 'base.html' %}
+{% extends 'base.html' %}
+
 {% block content %}
 <h2>Login</h2>
-<form method='post'>Email: <input name='email' required type='email'><br>Password: <input name='password' type='password' required><br><button>Login</button></form>
+
+<form method='post'>
+    Email: <input name='email' required type='email'><br>
+    Password: <input name='password' type='password' required><br>
+    <button>Login</button>
+</form>
+
 <div class="demo-login-wrapper" style="margin-top: 20px; text-align: center;">
     <p style="font-size: 13px; color: #666; margin-bottom: 10px;">
         Just want to look around?
     </p>
     
-    <a href="{{ url_for('demo_login') }}" class="btn demo-btn" style="
+    <!-- FIX: Added 'main.' to the url_for -->
+    <a href="{{ url_for('main.demo_login') }}" class="btn demo-btn" style="
         display: inline-block;
         padding: 10px 20px;
         background-color: #f1f3f5;
@@ -21,4 +29,5 @@
         🧪 Test the App (Guest Mode)
     </a>
 </div>
+
 {% endblock %}
