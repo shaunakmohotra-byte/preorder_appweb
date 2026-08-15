@@ -90,34 +90,68 @@ def add_to_cart():
         return redirect(url_for('auth.login'))
 
     item_id = request.form.get('item_id')
+
+    try:
+        quantity = int(request.form.get('quantity', 1))
+    except (TypeError, ValueError):
+        quantity = 1
+
+    # Keep quantity sensible
+    quantity = max(1, min(quantity, 20))
+
     user_id = user['id']
+
+    # Make sure the item actually exists
+    item = items_col.find_one({'id': item_id})
+
+    if not item:
+        flash('Item not found')
+        return redirect(url_for('main.menu'))
 
     cart = carts_col.find_one({'user_id': user_id})
 
     if not cart:
         carts_col.insert_one({
             'user_id': user_id,
-            'items': [{'item_id': item_id, 'qty': 1}]
+            'items': [
+                {
+                    'item_id': item_id,
+                    'qty': quantity
+                }
+            ]
         })
+
     else:
         found = False
-        for item in cart['items']:
-            if item['item_id'] == item_id:
-                item['qty'] += 1
+
+        for cart_item in cart['items']:
+            if cart_item['item_id'] == item_id:
+
+                cart_item['qty'] += quantity
+
+                # Prevent an item from exceeding 20
+                cart_item['qty'] = min(cart_item['qty'], 20)
+
                 found = True
                 break
 
         if not found:
-            cart['items'].append({'item_id': item_id, 'qty': 1})
+            cart['items'].append({
+                'item_id': item_id,
+                'qty': quantity
+            })
 
         carts_col.update_one(
             {'user_id': user_id},
             {'$set': {'items': cart['items']}}
         )
 
-    flash('Added to cart')
-    return redirect(url_for('main.menu'))
+    if quantity == 1:
+        flash(f'{item["name"]} added to cart')
+    else:
+        flash(f'{quantity} × {item["name"]} added to cart')
 
+    return redirect(url_for('main.menu'))
 
 # ===============================
 # INCREASE CART
