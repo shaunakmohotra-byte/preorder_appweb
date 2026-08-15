@@ -307,6 +307,7 @@ def pay_now():
         "status": "Preparing",
         "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+
     })
 
     # Empty cart
