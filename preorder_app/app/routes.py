@@ -42,10 +42,24 @@ def demo_login():
 # ===============================
 # CURRENT USER
 # ===============================
+# ===============================
+# CURRENT USER
+# ===============================
 def current_user():
     uid = session.get('user_id')
     if not uid:
         return None
+        
+    # Catch the Demo Tester BEFORE asking the database
+    if uid == 9999:
+        return {
+            'id': 9999,
+            'name': session.get('user_name', 'Demo Tester'),
+            'email': session.get('user_email', 'tester@example.com'),
+            'role': session.get('role', 'student')
+        }
+
+    # If it's a real user, look them up in the database normally
     return users_col.find_one({'id': uid})
 
 def delete_order_after_delay(order_id, delay=60):
