@@ -299,12 +299,14 @@ def pay_now():
 
     orders_col.insert_one({
         "id": order_id,
+        "user_id": user['id'],
         "token": token,
         "user_name": user.get("name"),
         "items": order_items,
         "total": total,
         "status": "Paid",
         "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     })
 
     # Empty cart
@@ -363,39 +365,28 @@ def order_progress(order_id):
     user = current_user()
 
     if not user:
+        flash("Please login first")
         return redirect(url_for('auth.login'))
 
+    # Find the order
     order = orders_col.find_one(
         {'id': order_id},
         {'_id': 0}
     )
 
+    # Order doesn't exist
     if not order:
         flash("Order not found")
         return redirect(url_for('main.menu'))
+
+    # Make sure older orders don't break the template
+    order.setdefault('token', 'N/A')
+    order.setdefault('total', 0)
+    order.setdefault('status', 'Paid')
+    order.setdefault('items', [])
 
     return render_template(
         'order_progress.html',
         order=order,
         user=user
     )
-# ===============================
-# MARK DELIVERED
-# ===============================
-@bp.route('/mark_order_delivered/<order_id>', methods=['POST'])
-def mark_order_delivered(order_id):
-
-    orders_col.update_one(
-        {'id': order_id},
-        {'$set': {'status': 'Delivered'}}
-    )
-
-    thread = threading.Thread(
-        target=delete_order_after_delay,
-        args=(order_id,)
-    )
-
-    thread.start()
-
-    flash("Order marked delivered (will auto-delete in 1 minute)")
-    return redirect(url_for('main.cafeteria'))
