@@ -1312,15 +1312,43 @@ table form button:hover {
 }
 
 .menu-card-footer form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     width: auto;
-
     margin: 0;
-
     padding: 0;
-
     background: transparent;
-
     box-shadow: none;
+}
+
+/* Quantity Dropdown Styling */
+.menu-card-footer select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+    transition: 
+        border-color 0.2s ease, 
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.menu-card-footer select:hover {
+    border-color: #ccc;
+    background-color: #fff;
+}
+
+.menu-card-footer select:focus {
+    border-color: var(--primary);
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(252, 128, 25, 0.12);
 }
 
 .menu-add-btn {
