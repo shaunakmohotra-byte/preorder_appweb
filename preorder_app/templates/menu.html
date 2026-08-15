@@ -3,353 +3,67 @@
 {% block content %}
 
 <style>
-    /* ================================
-       CAFETERIA MENU
-       ================================ */
+/* =========================================================
+   CAFETERIA MENU PAGE
+   ========================================================= */
 
-    .cafeteria-menu-page {
-        width: 100%;
-        max-width: 1250px;
-        margin: 0 auto;
-        padding: 35px 25px 60px;
-        box-sizing: border-box;
-    }
+.cafeteria-menu-page {
+    width: 100%;
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 35px 25px 60px;
+    box-sizing: border-box;
+}
 
-    /* HEADER */
+/* =========================================================
+   HEADER
+   ========================================================= */
 
-    .cafeteria-menu-page .menu-page-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 25px;
-        margin-bottom: 35px;
-    }
+.menu-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 30px;
+}
 
-    .cafeteria-menu-page .menu-eyebrow {
-        display: inline-block;
-        margin-bottom: 8px;
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: 2px;
-        color: #ff7518;
-    }
+.menu-eyebrow {
+    display: inline-block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #ff7518;
+}
 
-    .cafeteria-menu-page .menu-page-header h1 {
-        margin: 0;
-        font-size: clamp(30px, 4vw, 46px);
-        line-height: 1.1;
-        font-weight: 800;
-        color: #20232a;
-    }
+.menu-page-header h1 {
+    margin: 0;
+    font-size: clamp(30px, 4vw, 46px);
+    line-height: 1.1;
+    font-weight: 800;
+    color: #20232a;
+}
 
-    .cafeteria-menu-page .menu-page-header p {
-        margin: 10px 0 0;
-        color: #777;
-        font-size: 15px;
-    }
+.menu-page-header p {
+    margin: 10px 0 0;
+    color: #777;
+    font-size: 15px;
+}
 
-    .cafeteria-menu-page .menu-badge {
-        flex-shrink: 0;
-        padding: 12px 18px;
-        border-radius: 999px;
-        background: #fff4eb;
-        color: #f56b0a;
-        font-size: 14px;
-        font-weight: 700;
-        box-shadow: 0 5px 20px rgba(255, 117, 24, 0.10);
-    }
+.menu-badge {
+    flex-shrink: 0;
+    padding: 12px 18px;
+    border-radius: 999px;
+    background: #fff4eb;
+    color: #f56b0a;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 5px 20px rgba(255, 117, 24, 0.10);
+}
 
-    /* GRID */
-
-    .cafeteria-menu-page .cafeteria-menu-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 24px;
-    }
-
-    /* CARD */
-
-    .cafeteria-menu-page .cafeteria-menu-card {
-        overflow: hidden;
-        background: #ffffff;
-        border: 1px solid #eeeeee;
-        border-radius: 20px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
-        transition:
-            transform 0.2s ease,
-            box-shadow 0.2s ease;
-    }
-
-    .cafeteria-menu-page .cafeteria-menu-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 38px rgba(0, 0, 0, 0.11);
-    }
-
-    /* IMAGE */
-
-    .cafeteria-menu-page .menu-image-wrapper {
-        position: relative;
-        width: 100%;
-        height: 210px;
-        overflow: hidden;
-        background: #f5f5f5;
-    }
-
-    .cafeteria-menu-page .menu-image {
-        width: 100%;
-        height: 100%;
-        display: block;
-        object-fit: cover;
-        transition: transform 0.35s ease;
-    }
-
-    .cafeteria-menu-page .cafeteria-menu-card:hover .menu-image {
-        transform: scale(1.04);
-    }
-
-    .cafeteria-menu-page .food-badge {
-        position: absolute;
-        left: 14px;
-        top: 14px;
-        padding: 7px 11px;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.94);
-        color: #555;
-        font-size: 10px;
-        font-weight: 800;
-        letter-spacing: 1px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    }
-
-    /* CONTENT */
-
-    .cafeteria-menu-page .menu-card-content {
-        padding: 20px;
-    }
-
-    .cafeteria-menu-page .menu-card-title-row {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 15px;
-        margin-bottom: 18px;
-    }
-
-    .cafeteria-menu-page .menu-card-title-row h3 {
-        margin: 0;
-        color: #272a31;
-        font-size: 21px;
-        line-height: 1.25;
-        font-weight: 750;
-    }
-
-    .cafeteria-menu-page .menu-price {
-        flex-shrink: 0;
-        color: #f56b0a;
-        font-size: 22px;
-        font-weight: 800;
-    }
-
-    /* FOOTER */
-
-    .cafeteria-menu-page .menu-card-footer {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .cafeteria-menu-page .menu-availability {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        color: #299b52;
-        font-size: 13px;
-        font-weight: 700;
-    }
-
-    .cafeteria-menu-page .availability-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #35b85d;
-        box-shadow: 0 0 0 4px rgba(53, 184, 93, 0.12);
-    }
-
-    /* FORM */
-
-    .cafeteria-menu-page .menu-add-form {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-        margin: 0;
-    }
-
-    /* QUANTITY */
-
-    .cafeteria-menu-page .quantity-control {
-        display: flex;
-        align-items: center;
-        height: 46px;
-        border: 1px solid #dddddd;
-        border-radius: 12px;
-        background: #ffffff;
-        overflow: hidden;
-        flex-shrink: 0;
-    }
-
-    .cafeteria-menu-page .quantity-btn {
-        width: 42px;
-        height: 46px;
-        border: 0;
-        background: #fff4eb;
-        color: #f56b0a;
-        font-size: 21px;
-        font-weight: 800;
-        cursor: pointer;
-        transition:
-            background 0.15s ease,
-            color 0.15s ease;
-    }
-
-    .cafeteria-menu-page .quantity-btn:hover {
-        background: #ff7518;
-        color: #ffffff;
-    }
-
-    .cafeteria-menu-page .quantity-btn:active {
-        transform: scale(0.95);
-    }
-
-    .cafeteria-menu-page .quantity-input {
-        width: 42px;
-        height: 46px;
-        padding: 0;
-        border: 0;
-        outline: 0;
-        background: #ffffff;
-        color: #292929;
-        text-align: center;
-        font-size: 16px;
-        font-weight: 700;
-        box-sizing: border-box;
-        appearance: textfield;
-        -moz-appearance: textfield;
-    }
-
-    .cafeteria-menu-page .quantity-input::-webkit-inner-spin-button,
-    .cafeteria-menu-page .quantity-input::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    /* ADD BUTTON */
-
-    .cafeteria-menu-page .menu-add-btn {
-        flex: 1;
-        min-width: 0;
-        height: 46px;
-        padding: 0 17px;
-        border: 0;
-        border-radius: 12px;
-        background: #ff7518;
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: 800;
-        cursor: pointer;
-        box-shadow: 0 7px 18px rgba(255, 117, 24, 0.22);
-        transition:
-            background 0.15s ease,
-            transform 0.15s ease,
-            box-shadow 0.15s ease;
-    }
-
-    .cafeteria-menu-page .menu-add-btn:hover {
-        background: #ed650c;
-        box-shadow: 0 9px 22px rgba(255, 117, 24, 0.30);
-        transform: translateY(-1px);
-    }
-
-    .cafeteria-menu-page .menu-add-btn:active {
-        transform: translateY(1px);
-    }
-
-    .cafeteria-menu-page .menu-add-btn span {
-        margin-right: 4px;
-        font-size: 18px;
-        vertical-align: -1px;
-    }
-
-    /* EMPTY STATE */
-
-    .cafeteria-menu-page .menu-empty-state {
-        padding: 70px 20px;
-        text-align: center;
-        border: 1px dashed #dddddd;
-        border-radius: 20px;
-        background: #fafafa;
-    }
-
-    .cafeteria-menu-page .menu-empty-icon {
-        font-size: 48px;
-        margin-bottom: 12px;
-    }
-
-    .cafeteria-menu-page .menu-empty-state h3 {
-        margin: 0 0 8px;
-        color: #333;
-        font-size: 22px;
-    }
-
-    .cafeteria-menu-page .menu-empty-state p {
-        margin: 0;
-        color: #888;
-    }
-
-    /* MOBILE */
-
-    @media (max-width: 650px) {
-
-        .cafeteria-menu-page {
-            padding: 25px 15px 45px;
-        }
-
-        .cafeteria-menu-page .menu-page-header {
-            align-items: flex-start;
-            flex-direction: column;
-        }
-
-        .cafeteria-menu-page .menu-badge {
-            display: none;
-        }
-
-        .cafeteria-menu-page .cafeteria-menu-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .cafeteria-menu-page .menu-image-wrapper {
-            height: 220px;
-        }
-
-        .cafeteria-menu-page .menu-add-form {
-            gap: 8px;
-        }
-
-        .cafeteria-menu-page .quantity-btn {
-            width: 38px;
-        }
-
-        .cafeteria-menu-page .quantity-input {
-            width: 36px;
-        }
-
-        .cafeteria-menu-page .menu-add-btn {
-            padding: 0 12px;
-        }
-    }
-    /* =========================================
-   HORIZONTAL MENU CAROUSEL
-   ========================================= */
+/* =========================================================
+   HORIZONTAL CAROUSEL
+   ========================================================= */
 
 .menu-carousel {
     width: 100%;
@@ -358,21 +72,21 @@
 
     padding: 10px 5px 30px;
 
-    scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
 
     -webkit-overflow-scrolling: touch;
 
     scrollbar-width: thin;
+    scrollbar-color: #ff7518 #eeeeee;
 }
 
-/* Chrome / Edge / Safari */
 .menu-carousel::-webkit-scrollbar {
     height: 8px;
 }
 
 .menu-carousel::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #eeeeee;
     border-radius: 20px;
 }
 
@@ -384,70 +98,71 @@
 .menu-track {
     display: flex;
     gap: 24px;
-
     width: max-content;
-
-    padding: 5px 5px 10px;
+    padding: 5px;
 }
 
+/* =========================================================
+   CARD
+   ========================================================= */
 
-/* =========================================
-   MENU CARD
-   ========================================= */
-
-.menu-carousel .menu-card {
+.menu-card {
     flex: 0 0 340px;
-
     width: 340px;
 
-    scroll-snap-align: start;
+    overflow: hidden;
 
-    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 20px;
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+
+    scroll-snap-align: start;
 
     transition:
         transform 0.25s ease,
         box-shadow 0.25s ease;
 }
 
-.menu-carousel .menu-card:hover {
+.menu-card:hover {
     transform: translateY(-6px);
+    box-shadow: 0 15px 38px rgba(0, 0, 0, 0.11);
 }
 
-
-/* =========================================
+/* =========================================================
    IMAGE
-   ========================================= */
+   ========================================================= */
 
-.menu-carousel .menu-image-wrapper {
+.menu-image-wrapper {
     position: relative;
     width: 100%;
     height: 220px;
     overflow: hidden;
+    background: #f5f5f5;
 }
 
-.menu-carousel .menu-image {
+.menu-image {
     width: 100%;
     height: 100%;
 
-    object-fit: cover;
-
     display: block;
+
+    object-fit: cover;
 
     transition: transform 0.4s ease;
 }
 
-.menu-carousel .menu-card:hover .menu-image {
+.menu-card:hover .menu-image {
     transform: scale(1.05);
 }
 
-
-/* =========================================
+/* =========================================================
    FOOD BADGE
-   ========================================= */
+   ========================================================= */
 
-.menu-carousel .food-badge {
+.food-badge {
     position: absolute;
-
     top: 14px;
     left: 14px;
 
@@ -455,93 +170,118 @@
 
     border-radius: 20px;
 
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, 0.94);
 
     color: #ff6b00;
 
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 800;
 
-    letter-spacing: 0.8px;
+    letter-spacing: 1px;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-
-/* =========================================
+/* =========================================================
    CARD CONTENT
-   ========================================= */
+   ========================================================= */
 
-.menu-carousel .menu-card-content {
+.menu-card-content {
     padding: 20px;
 }
 
-.menu-carousel .menu-card-title-row {
+.menu-card-title-row {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
 
     gap: 15px;
+
+    margin-bottom: 18px;
 }
 
-.menu-carousel .menu-card-title-row h3 {
+.menu-card-title-row h3 {
     margin: 0;
+
+    color: #272a31;
+
+    font-size: 21px;
+    line-height: 1.25;
+    font-weight: 800;
+}
+
+.menu-price {
+    flex-shrink: 0;
+
+    color: #f56b0a;
 
     font-size: 22px;
     font-weight: 800;
-
-    color: #252525;
 }
 
-.menu-carousel .price {
-    white-space: nowrap;
-
-    font-size: 21px;
-    font-weight: 800;
-
-    color: #ff7518;
-}
-
-
-/* =========================================
+/* =========================================================
    FOOTER
-   ========================================= */
+   ========================================================= */
 
-.menu-carousel .menu-card-footer {
-    margin-top: 18px;
+.menu-card-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
-.menu-carousel .menu-availability {
-    display: block;
+.menu-availability {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 
-    margin-bottom: 14px;
-
-    color: #2e9d4d;
+    color: #299b52;
 
     font-size: 13px;
     font-weight: 700;
 }
 
+.availability-dot {
+    width: 8px;
+    height: 8px;
 
-/* =========================================
-   QUANTITY
-   ========================================= */
+    flex-shrink: 0;
 
-.menu-carousel .menu-add-form {
+    border-radius: 50%;
+
+    background: #35b85d;
+
+    box-shadow:
+        0 0 0 4px rgba(53, 184, 93, 0.12);
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.menu-add-form {
     display: flex;
     flex-direction: column;
+    gap: 12px;
 
-    gap: 14px;
+    width: 100%;
+    margin: 0;
 }
+
+/* =========================================================
+   QUANTITY CONTROL
+   ========================================================= */
 
 .quantity-control {
     display: flex;
     align-items: center;
 
     width: 100%;
+    height: 46px;
 }
 
 .quantity-btn {
-    width: 48px;
-    height: 48px;
+    width: 46px;
+    height: 46px;
 
     flex-shrink: 0;
 
@@ -549,104 +289,176 @@
     border-radius: 12px;
 
     background: #ff7518;
-    color: white;
+    color: #ffffff;
 
-    font-size: 25px;
-    font-weight: 700;
-
-    cursor: pointer;
-
-    transition:
-        transform 0.15s ease,
-        background 0.15s ease;
-}
-
-.quantity-btn:hover {
-    background: #e9620b;
-    transform: scale(1.05);
-}
-
-.quantity-btn:active {
-    transform: scale(0.95);
-}
-
-.quantity-control input {
-    flex: 1;
-
-    height: 48px;
-
-    margin: 0 8px;
-
-    border: 1px solid #ddd;
-    border-radius: 12px;
-
-    background: #fafafa;
-
-    text-align: center;
-
-    font-size: 17px;
-    color: #333;
-
-    outline: none;
-}
-
-
-/* =========================================
-   ADD TO CART
-   ========================================= */
-
-.menu-carousel .menu-add-btn {
-    width: 100%;
-
-    min-height: 50px;
-
-    border: none;
-    border-radius: 13px;
-
-    background: #ff7518;
-    color: white;
-
-    font-size: 16px;
+    font-size: 23px;
     font-weight: 800;
 
     cursor: pointer;
 
     transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
+        background 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
 }
 
-.menu-carousel .menu-add-btn:hover {
-    background: #ed650b;
+.quantity-btn:hover {
+    background: #ed650c;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 5px 15px rgba(255, 117, 24, 0.25);
+}
+
+.quantity-btn:active {
+    transform: scale(0.94);
+}
+
+.quantity-input {
+    flex: 1;
+
+    width: 100%;
+    height: 46px;
+
+    margin: 0 8px;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+    border: 1px solid #dddddd;
+    border-radius: 12px;
+
+    background: #fafafa;
+
+    color: #333;
+
+    text-align: center;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    outline: none;
+
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.quantity-input::-webkit-inner-spin-button,
+.quantity-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* =========================================================
+   ADD TO CART
+   ========================================================= */
+
+.menu-add-btn {
+    width: 100%;
+    height: 48px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #ff7518;
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow: 0 7px 18px rgba(255, 117, 24, 0.22);
+
+    transition:
+        background 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.menu-add-btn:hover {
+    background: #ed650c;
 
     transform: translateY(-2px);
 
-    box-shadow: 0 8px 20px rgba(255, 117, 24, 0.25);
+    box-shadow:
+        0 9px 22px rgba(255, 117, 24, 0.30);
 }
 
-.menu-carousel .menu-add-btn:active {
-    transform: translateY(0);
+.menu-add-btn:active {
+    transform: translateY(1px);
 }
 
+.menu-add-btn span {
+    margin-right: 4px;
+    font-size: 18px;
+    vertical-align: -1px;
+}
 
-/* =========================================
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.menu-empty-state {
+    padding: 70px 20px;
+
+    text-align: center;
+
+    border: 1px dashed #dddddd;
+    border-radius: 20px;
+
+    background: #fafafa;
+}
+
+.menu-empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.menu-empty-state h3 {
+    margin: 0 0 8px;
+
+    color: #333;
+
+    font-size: 22px;
+}
+
+.menu-empty-state p {
+    margin: 0;
+    color: #888;
+}
+
+/* =========================================================
    MOBILE
-   ========================================= */
+   ========================================================= */
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
 
-    .menu-carousel .menu-card {
-        flex-basis: 82vw;
-        width: 82vw;
+    .cafeteria-menu-page {
+        padding: 25px 15px 45px;
     }
 
-    .menu-carousel .menu-image-wrapper {
-        height: 190px;
+    .menu-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .menu-badge {
+        display: none;
     }
 
     .menu-track {
         gap: 16px;
+    }
+
+    .menu-card {
+        flex: 0 0 82vw;
+        width: 82vw;
+    }
+
+    .menu-image-wrapper {
+        height: 190px;
     }
 }
 </style>
@@ -654,17 +466,26 @@
 
 <div class="cafeteria-menu-page">
 
-    <!-- HEADER -->
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
     <div class="menu-page-header">
 
         <div>
-            <span class="menu-eyebrow">CAFETERIA MENU</span>
 
-            <h1>Today's Menu</h1>
+            <span class="menu-eyebrow">
+                CAFETERIA MENU
+            </span>
+
+            <h1>
+                Today's Menu
+            </h1>
 
             <p>
                 Choose your favourites, select a quantity and add them to your order.
             </p>
+
         </div>
 
         <div class="menu-badge">
@@ -674,244 +495,154 @@
     </div>
 
 
-    <!-- MENU CAROUSEL -->
-<div class="menu-carousel">
+    <!-- =====================================================
+         MENU CAROUSEL
+         ===================================================== -->
 
-    <div class="menu-track">
+    {% if items %}
 
-        {% for it in items %}
+    <div class="menu-carousel">
 
-        <div class="card menu-card">
+        <div class="menu-track">
 
-            <!-- IMAGE -->
-            <div class="menu-image-wrapper">
+            {% for it in items %}
 
-                {% if it.get('image') %}
+            <div class="card menu-card">
+
+                <!-- IMAGE -->
+
+                <div class="menu-image-wrapper">
+
+                    {% if it.get('image') %}
+
                     <img
                         src="{{ url_for('static', filename='uploads/' + it.image) }}"
                         class="menu-image"
                         alt="{{ it.name }}"
                     >
-                {% else %}
+
+                    {% else %}
+
                     <img
                         src="{{ url_for('static', filename='uploads/default.png') }}"
                         class="menu-image"
                         alt="Default food image"
                     >
-                {% endif %}
 
-                <div class="food-badge">
-                    CAFETERIA
-                </div>
+                    {% endif %}
 
-            </div>
 
-            <!-- DETAILS -->
-            <div class="menu-card-content">
-
-                <div class="menu-card-title-row">
-                    <h3>{{ it.name }}</h3>
-
-                    <div class="price">
-                        ₹{{ it.price }}
+                    <div class="food-badge">
+                        CAFETERIA
                     </div>
+
                 </div>
 
-                <div class="menu-card-footer">
 
-                    <span class="menu-availability">
-                        ● Available
-                    </span>
+                <!-- CONTENT -->
 
-                    <form
-                        method="POST"
-                        action="{{ url_for('main.add_to_cart') }}"
-                        class="menu-add-form"
-                    >
+                <div class="menu-card-content">
 
-                        <input
-                            type="hidden"
-                            name="item_id"
-                            value="{{ it.id }}"
-                        >
+                    <div class="menu-card-title-row">
 
-                        <div class="quantity-control">
+                        <h3>
+                            {{ it.name }}
+                        </h3>
 
-                            <button
-                                type="button"
-                                class="quantity-btn"
-                                onclick="changeQuantity({{ it.id }}, -1)"
-                            >
-                                −
-                            </button>
-
-                            <input
-                                type="number"
-                                id="quantity-{{ it.id }}"
-                                name="quantity"
-                                value="1"
-                                min="1"
-                                max="10"
-                                readonly
-                            >
-
-                            <button
-                                type="button"
-                                class="quantity-btn"
-                                onclick="changeQuantity({{ it.id }}, 1)"
-                            >
-                                +
-                            </button>
-
+                        <div class="menu-price">
+                            ₹{{ it.price }}
                         </div>
 
-                        <button
-                            class="btn menu-add-btn"
-                            type="submit"
-                        >
-                            <span>＋</span>
-                            Add to Cart
-                        </button>
-
-                    </form>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        {% endfor %}
-
-    </div>
-
-</div>
-
-
-{% if not items %}
-
-<div class="empty-state">
-
-    <div class="empty-icon">
-        🍽️
-    </div>
-
-    <h3>Menu is currently empty</h3>
-
-    <p>
-        Please check back later for available items.
-    </p>
-
-</div>
-
-{% endif %}
-
-
-<script>
-function changeQuantity(itemId, amount) {
-
-    const input = document.getElementById("quantity-" + itemId);
-
-    let quantity = parseInt(input.value) || 1;
-
-    quantity += amount;
-
-    quantity = Math.max(1, Math.min(10, quantity));
-
-    input.value = quantity;
-}
-</script>
-
-
-            <!-- DETAILS -->
-            <div class="menu-card-content">
-
-                <div class="menu-card-title-row">
-
-                    <h3>{{ it.name }}</h3>
-
-                    <div class="menu-price">
-                        ₹{{ it.price }}
-                    </div>
-
-                </div>
-
-
-                <div class="menu-card-footer">
-
-                    <div class="menu-availability">
-                        <span class="availability-dot"></span>
-                        Available
                     </div>
 
 
-                    <!-- ADD TO CART -->
-                    <form
-                        method="POST"
-                        action="{{ url_for('main.add_to_cart') }}"
-                        class="menu-add-form"
-                    >
+                    <div class="menu-card-footer">
 
-                        <input
-                            type="hidden"
-                            name="item_id"
-                            value="{{ it.id }}"
-                        >
+                        <!-- AVAILABILITY -->
 
+                        <div class="menu-availability">
 
-                        <!-- QUANTITY -->
-                        <div class="quantity-control">
+                            <span class="availability-dot"></span>
 
-                            <button
-                                type="button"
-                                class="quantity-btn"
-                                onclick="changeQuantity({{ it.id }}, -1)"
-                                aria-label="Decrease quantity"
-                            >
-                                −
-                            </button>
-
-                            <input
-                                type="number"
-                                id="quantity-{{ it.id }}"
-                                name="quantity"
-                                class="quantity-input"
-                                value="1"
-                                min="1"
-                                max="10"
-                                readonly
-                            >
-
-                            <button
-                                type="button"
-                                class="quantity-btn"
-                                onclick="changeQuantity({{ it.id }}, 1)"
-                                aria-label="Increase quantity"
-                            >
-                                +
-                            </button>
+                            Available
 
                         </div>
 
 
-                        <!-- ADD BUTTON -->
-                        <button
-                            type="submit"
-                            class="menu-add-btn"
-                        >
-                            <span>＋</span>
-                            Add to Cart
-                        </button>
+                        <!-- FORM -->
 
-                    </form>
+                        <form
+                            method="POST"
+                            action="{{ url_for('main.add_to_cart') }}"
+                            class="menu-add-form"
+                        >
+
+                            <input
+                                type="hidden"
+                                name="item_id"
+                                value="{{ it.id }}"
+                            >
+
+
+                            <!-- QUANTITY -->
+
+                            <div class="quantity-control">
+
+                                <button
+                                    type="button"
+                                    class="quantity-btn"
+                                    onclick="changeQuantity({{ it.id }}, -1)"
+                                    aria-label="Decrease quantity"
+                                >
+                                    −
+                                </button>
+
+
+                                <input
+                                    type="number"
+                                    id="quantity-{{ it.id }}"
+                                    name="quantity"
+                                    class="quantity-input"
+                                    value="1"
+                                    min="1"
+                                    max="10"
+                                    readonly
+                                >
+
+
+                                <button
+                                    type="button"
+                                    class="quantity-btn"
+                                    onclick="changeQuantity({{ it.id }}, 1)"
+                                    aria-label="Increase quantity"
+                                >
+                                    +
+                                </button>
+
+                            </div>
+
+
+                            <!-- ADD TO CART -->
+
+                            <button
+                                type="submit"
+                                class="menu-add-btn"
+                            >
+                                <span>＋</span>
+                                Add to Cart
+                            </button>
+
+                        </form>
+
+                    </div>
 
                 </div>
 
             </div>
 
-        </div>
+            {% endfor %}
 
-        {% endfor %}
+        </div>
 
     </div>
 
@@ -919,13 +650,16 @@ function changeQuantity(itemId, amount) {
     {% else %}
 
     <!-- EMPTY MENU -->
+
     <div class="menu-empty-state">
 
         <div class="menu-empty-icon">
             🍽️
         </div>
 
-        <h3>Menu is currently empty</h3>
+        <h3>
+            Menu is currently empty
+        </h3>
 
         <p>
             Please check back later for available items.
@@ -937,6 +671,10 @@ function changeQuantity(itemId, amount) {
 
 </div>
 
+
+<!-- =========================================================
+     QUANTITY JAVASCRIPT
+     ========================================================= -->
 
 <script>
 function changeQuantity(itemId, amount) {
