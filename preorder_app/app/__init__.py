@@ -1,6 +1,6 @@
 from flask import Flask
 import os
-
+import resend
 from .db import db
 
 
@@ -14,12 +14,27 @@ def create_app():
     template_dir = os.path.abspath(os.path.join(base_dir, '..', 'templates'))
     static_dir = os.path.abspath(os.path.join(base_dir, '..', 'static'))
 
-    app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
+    app = Flask(
+        __name__,
+        template_folder=template_dir,
+        static_folder=static_dir
+    )
 
     # ===============================
     # SECRET KEY
     # ===============================
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret')
+    app.config['SECRET_KEY'] = os.environ.get(
+        'SECRET_KEY',
+        'dev-secret'
+    )
+
+    # ===============================
+    # RESEND
+    # ===============================
+    resend.api_key = os.environ.get('RESEND_API_KEY')
+
+    if not resend.api_key:
+        print("WARNING: RESEND_API_KEY is not configured.")
 
     # Attach DB to app
     app.db = db
