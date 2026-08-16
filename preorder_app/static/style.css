@@ -5505,11 +5505,129 @@ input::-webkit-outer-spin-button {
     align-items: center;
     width: 100%;
     margin-top: 10px;
+    padding: 0 54px;
+    box-sizing: border-box;
 }
 
 .carousel-track {
     display: flex;
     gap: 20px;
     overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    padding: 6px 4px 30px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.carousel-track::-webkit-scrollbar {
+    display: none;
+}
+
+/* Cards inside the carousel need a fixed width, or they inherit
+   no size at all and their contents (quantity control, add-to-cart
+   button) overflow past the card edges. */
+.carousel-track .menu-card {
+    flex: 0 0 260px;
+    width: 260px;
+    scroll-snap-align: start;
+    box-sizing: border-box;
+}
+
+.carousel-track .menu-image-wrapper {
+    height: 170px;
+}
+
+.carousel-track .menu-card-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.carousel-track .menu-availability {
+    justify-content: flex-start;
+}
+
+.carousel-track .menu-add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+/* Quantity stepper — previously unstyled, which is why it spilled
+   out of the card. */
+.quantity-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 42px;
+    border: 2px solid var(--primary);
+    border-radius: 12px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.quantity-btn {
+    flex: 0 0 40px;
+    height: 100%;
+    border: 0;
+    background: #ffffff;
+    color: var(--primary);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.quantity-btn:hover {
+    background: #fff1e7;
+}
+
+.quantity-btn:active {
+    transform: scale(0.9);
+}
+
+.quantity-value {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    margin: 0;
+    border: 0;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    outline: none;
+    background: #ffffff;
+    color: var(--text-main);
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    box-sizing: border-box;
+}
+
+.quantity-value.pop {
+    animation: quantityPop 0.2s ease;
+}
+
+@keyframes quantityPop {
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+.carousel-track .menu-add-btn {
+    width: 100%;
+    min-height: 44px;
+}
+
+/* Arrows — HTML uses carousel-prev / carousel-next, which had no
+   left/right position rules, so they weren't docked to the edges. */
+.carousel-prev {
+    left: 0;
+}
+
+.carousel-next {
+    right: 0;
 }
 ```[cite: 2]
