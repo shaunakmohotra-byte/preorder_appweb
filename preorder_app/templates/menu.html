@@ -18,9 +18,9 @@
 
         <div class="page-badge">
             🍽️ Fresh & Ready
-        </div>
+                </div>
 
-</div>
+    </div>
 
 
     <!-- MENU CAROUSEL CONTAINER -->
@@ -74,7 +74,7 @@
                         <h3>{{ it.name }}</h3>
 
                         <div class="price">
-                            ₹{{ it.price }}
+                                                    ₹{{ it.price }}
                         </div>
 
                     </div>
@@ -85,8 +85,7 @@
                         <span class="menu-availability">
                             <span>●</span> Available
                         </span>
-
-                        <form
+                                                    <form
                             method="POST"
                             action="{{ url_for('main.add_to_cart') }}"
                             class="menu-add-form"
@@ -100,7 +99,7 @@
 
 
                             <!-- QUANTITY SELECTOR -->
-                            <div class="quantity-control">
+                            <div class="quantity-wrapper">
                             
                                 <button
                                     type="button"
@@ -114,7 +113,7 @@
 
                                 <input
                                     type="text"
-                                    class="quantity-input"
+                                    class="quantity-value"
                                     id="quantity-{{ it.id }}"
                                     name="quantity"
                                     value="1"
@@ -209,6 +208,13 @@ function changeQuantity(itemId, amount) {
     }
 
     input.value = quantity;
+
+    // Small animation
+    input.classList.remove("pop");
+
+    void input.offsetWidth;
+
+    input.classList.add("pop");
 }
 
 function scrollCarousel(direction) {
@@ -219,6 +225,67 @@ function scrollCarousel(direction) {
         behavior: 'smooth'
     });
 }
+
+// Only reveal an arrow when the cursor is near that side of the
+// carousel, and fade cards out as they scroll past the visible edges.
+document.addEventListener('DOMContentLoaded', function () {
+
+    const container = document.querySelector('.carousel-container');
+    const track = document.getElementById('menuCarousel');
+
+    if (!container || !track) {
+        return;
+    }
+
+    const EDGE_ZONE = 130; // px from each side that triggers the arrow
+
+    container.addEventListener('mousemove', function (e) {
+        const rect = container.getBoundingClientRect();
+        const distFromLeft = e.clientX - rect.left;
+        const distFromRight = rect.right - e.clientX;
+
+        container.classList.toggle('near-left', distFromLeft <= EDGE_ZONE);
+        container.classList.toggle('near-right', distFromRight <= EDGE_ZONE);
+    });
+
+    container.addEventListener('mouseleave', function () {
+        container.classList.remove('near-left', 'near-right');
+    });
+
+    // Also let touch users trigger it near the edges without hover
+    container.addEventListener('touchstart', function (e) {
+        const rect = container.getBoundingClientRect();
+        const x = e.touches[0].clientX;
+
+        container.classList.toggle('near-left', (x - rect.left) <= EDGE_ZONE);
+        container.classList.toggle('near-right', (rect.right - x) <= EDGE_ZONE);
+    }, { passive: true });
+
+    // Fade cards as they scroll out of the visible track area
+    const cards = track.querySelectorAll('.menu-card');
+
+    if ('IntersectionObserver' in window && cards.length) {
+
+        const thresholds = [];
+        for (let t = 0; t <= 1; t += 0.02) {
+            thresholds.push(t);
+        }
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                const ratio = entry.intersectionRatio;
+                entry.target.style.opacity = Math.max(0.15, ratio).toFixed(2);
+            });
+        }, {
+            root: track,
+            threshold: thresholds
+        });
+
+        cards.forEach(function (card) {
+            observer.observe(card);
+        });
+    }
+});
 </script>
 
 {% endblock %}
