@@ -18,9 +18,9 @@
 
         <div class="page-badge">
             🍽️ Fresh & Ready
-                </div>
+        </div>
 
-    </div>
+</div>
 
 
     <!-- MENU CAROUSEL CONTAINER -->
@@ -74,7 +74,7 @@
                         <h3>{{ it.name }}</h3>
 
                         <div class="price">
-                                                    ₹{{ it.price }}
+                            ₹{{ it.price }}
                         </div>
 
                     </div>
@@ -85,7 +85,8 @@
                         <span class="menu-availability">
                             <span>●</span> Available
                         </span>
-                                                    <form
+
+                        <form
                             method="POST"
                             action="{{ url_for('main.add_to_cart') }}"
                             class="menu-add-form"
@@ -99,7 +100,7 @@
 
 
                             <!-- QUANTITY SELECTOR -->
-                            <div class="quantity-wrapper">
+                            <div class="quantity-control">
                             
                                 <button
                                     type="button"
@@ -113,7 +114,7 @@
 
                                 <input
                                     type="text"
-                                    class="quantity-value"
+                                    class="quantity-input"
                                     id="quantity-{{ it.id }}"
                                     name="quantity"
                                     value="1"
@@ -208,13 +209,6 @@ function changeQuantity(itemId, amount) {
     }
 
     input.value = quantity;
-
-    // Small animation
-    input.classList.remove("pop");
-
-    void input.offsetWidth;
-
-    input.classList.add("pop");
 }
 
 function scrollCarousel(direction) {
