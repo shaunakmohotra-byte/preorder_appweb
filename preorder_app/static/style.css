@@ -489,7 +489,7 @@ body::before {
    ========================================================= */
 
 .container {
-    flex: 1;
+    width: 100%;
 
     max-width: min(1100px, 92vw);
 
@@ -5663,4 +5663,3 @@ input::-webkit-outer-spin-button {
         box-shadow 0.25s ease;
 }
 ```[cite: 2]
-
