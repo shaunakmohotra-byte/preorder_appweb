@@ -5465,132 +5465,66 @@ input::-webkit-outer-spin-button {
 
 
 /* =========================================================
-   MOBILE
+   CAROUSEL & REDUCED CARD STYLING
    ========================================================= */
 
-@media (max-width: 900px) {
-
-    .menu-carousel .menu-card {
-
-        flex-basis: 440px;
-
-        width: 440px;
-    }
-
-
-    .carousel-arrow {
-
-        width: 50px;
-
-        height: 50px;
-
-        font-size: 36px;
-    }
-
-
-    .carousel-arrow-left {
-
-        left: 5px;
-    }
-
-
-    .carousel-arrow-right {
-
-        right: 5px;
-    }
+.carousel-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
 }
 
+.carousel-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    padding: 10px 4px;
+    width: 100%;
+}
 
-@media (max-width: 650px) {
+.carousel-track::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari, Opera */
+}
 
-    .menu-carousel {
+/* Reduced card sizing specifically for carousel view */
+.carousel-track .menu-card {
+    flex: 0 0 240px; /* Fixed width to make cards smaller and structured */
+    max-width: 240px;
+}
 
-        padding-left: 15px;
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: #ffffff;
+    color: #333333;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
 
-        padding-right: 15px;
+.carousel-arrow:hover {
+    background: var(--primary, #ff5722);
+    color: #ffffff;
+    border-color: var(--primary, #ff5722);
+}
 
-        scroll-padding-left: 15px;
+.carousel-prev {
+    left: -20px;
+}
 
-        scroll-padding-right: 15px;
-    }
-
-
-    .menu-track {
-
-        gap: 18px;
-
-        padding-left: 15px;
-
-        padding-right: 15px;
-    }
-
-
-    .menu-carousel .menu-card {
-
-        flex: 0 0 82vw;
-
-        width: 82vw;
-
-        border-radius: 22px;
-    }
-
-
-    .menu-carousel .menu-image-wrapper {
-
-        height: 100px;
-    }
-
-
-    .menu-carousel .menu-card-content {
-
-        padding: 24px 20px 25px;
-    }
-
-
-    .menu-carousel .menu-card-title-row h3 {
-
-        font-size: 22px;
-    }
-
-
-    .menu-carousel .price {
-
-        font-size: 22px;
-    }
-
-
-    .menu-carousel .quantity-control,
-    .menu-carousel .menu-add-btn {
-
-        width: 100%;
-    }
-
-
-    .carousel-arrow {
-
-        width: 44px;
-
-        height: 44px;
-
-        font-size: 32px;
-    }
-
-
-    .carousel-arrow-left {
-
-        left: 3px;
-    }
-
-
-    .carousel-arrow-right {
-
-        right: 3px;
-    }
-
-
-    .menu-carousel-container::before,
-    .menu-carousel-container::after {
-
-        width: 35px;
-    }
+.carousel-next {
+    right: -20px;
 }
