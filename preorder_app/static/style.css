@@ -54,7 +54,6 @@ body {
     position: relative;
 
     margin: 0;
-    min-height: 100vh;
 
     display: flex;
     flex-direction: column;
@@ -5663,3 +5662,4 @@ input::-webkit-outer-spin-button {
         box-shadow 0.25s ease;
 }
 ```[cite: 2]
+
