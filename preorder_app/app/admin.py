@@ -1,8 +1,13 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import (
+    Blueprint, render_template, request, redirect,
+    url_for, flash, session, current_app
+)
 from werkzeug.utils import secure_filename
 from .db import users_col, items_col, orders_col
+from .mail import send_bulk_email
 import uuid
 import os
+import threading
 
 bp = Blueprint('admin', __name__)
 UPLOAD_FOLDER = os.path.join('app', 'static', 'uploads')
@@ -142,3 +147,59 @@ def delete_user():
         flash('User deleted')
 
     return redirect(url_for('admin.index'))
+
+
+# ===============================
+# EMAIL ALL USERS
+# ===============================
+
+@bp.route('/send_email', methods=['GET', 'POST'])
+def send_email():
+    if not is_admin():
+        return redirect(url_for('auth.login'))
+
+    if request.method == 'POST':
+        subject = request.form.get('subject', '').strip()
+        body = request.form.get('message', '').strip()
+
+        if not subject or not body:
+            flash("Subject and message are both required")
+            return redirect(url_for('admin.send_email'))
+
+        recipients = [
+            u['email']
+            for u in users_col.find({}, {'_id': 0, 'email': 1})
+            if u.get('email')
+        ]
+
+        if not recipients:
+            flash("No users with an email address were found")
+            return redirect(url_for('admin.send_email'))
+
+        # Send in a background thread so this request doesn't sit
+        # waiting on the SMTP server for every recipient before
+        # redirecting the admin back to the dashboard.
+        app_obj = current_app._get_current_object()
+        threading.Thread(
+            target=_send_bulk_email,
+            args=(app_obj, subject, body, recipients),
+            daemon=True
+        ).start()
+
+        flash(f"Sending email to {len(recipients)} user(s)...")
+        return redirect(url_for('admin.index'))
+
+    return render_template('send_email.html')
+
+
+def _send_bulk_email(app, subject, body, recipients):
+    with app.app_context():
+        sent, failed = send_bulk_email(subject, body, recipients)
+
+        if failed:
+            app.logger.error(
+                f"Failed to send email to {len(failed)} recipient(s): {failed}"
+            )
+
+        app.logger.info(f"Sent email to {sent} user(s)")
+
