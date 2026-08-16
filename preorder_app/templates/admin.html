@@ -177,6 +177,69 @@
 
 
     <!-- =====================================================
+         COMMUNICATIONS
+         ===================================================== -->
+
+    <section class="admin-section">
+
+        <div class="admin-section-header">
+
+            <div class="admin-section-title">
+
+                <div class="admin-section-icon">
+                    📧
+                </div>
+
+                <div>
+                    <h2>Communications</h2>
+                    <p>Send an announcement email to every registered user.</p>
+                </div>
+
+            </div>
+
+            <span class="section-label">
+                EMAIL BROADCAST
+            </span>
+
+        </div>
+
+
+        <div class="add-item-card">
+
+            <div class="add-item-header">
+
+                <div class="admin-section-icon">
+                    📣
+                </div>
+
+                <div>
+
+                    <h3>
+                        Email All Users
+                    </h3>
+
+                    <p>
+                        Compose and send a message to every user with a
+                        registered email address ({{ users|length }} total).
+                    </p>
+
+                </div>
+
+            </div>
+
+            <a
+                href="{{ url_for('admin.send_email') }}"
+                class="btn admin-add-btn"
+            >
+                📧 Compose Email
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
          MENU ITEMS
          ===================================================== -->
 
