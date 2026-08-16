@@ -2747,6 +2747,112 @@ body::after {
 
 
 /* =========================================================
+   DEMO LOGIN (GUEST MODE)
+   ========================================================= */
+
+.demo-login-wrapper {
+    width: min(520px, calc(100% - 32px));
+
+    margin: 0 auto 40px;
+
+    text-align: center;
+}
+
+.demo-divider {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    margin: 10px 0 18px;
+
+    color: #aaa;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.demo-divider::before,
+.demo-divider::after {
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background: #e5e5e5;
+}
+
+.demo-divider span {
+    padding: 0 12px;
+}
+
+.demo-login-text {
+    margin: 0 0 12px;
+
+    color: var(--text-muted);
+
+    font-size: 13px;
+}
+
+.demo-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    width: 100%;
+
+    height: 48px;
+
+    padding: 0 20px;
+
+    background: #f6f7f9;
+
+    color: var(--text-main);
+
+    border: 1.5px solid #e2e2e2;
+    border-radius: 11px;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    box-sizing: border-box;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.demo-btn:hover {
+    background: #ffffff;
+
+    border-color: var(--primary);
+
+    color: var(--primary);
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 22px rgba(252, 128, 25, 0.14);
+}
+
+.demo-btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
    MOCK CHECKOUT / PAYMENT
    ========================================================= */
 
