@@ -11,6 +11,7 @@ from .mail import (
 )
 import uuid
 import os
+import threading
 
 bp = Blueprint('admin', __name__)
 UPLOAD_FOLDER = os.path.join('app', 'static', 'uploads')
@@ -184,23 +185,36 @@ def send_email():
             flash("No users with an email address were found")
             return redirect(url_for('admin.send_email'))
 
-        try:
-            sent, failed = send_bulk_email(subject, body, recipients)
-        except EmailConfigurationError as error:
-            current_app.logger.error("Bulk email was not sent: %s", error)
-            flash(f"Email could not be sent: {error}")
-            return redirect(url_for('admin.send_email'))
+        # Do not make the browser wait for Gmail SMTP. Sending happens in a
+        # background thread, while the admin immediately receives confirmation
+        # that the request has been accepted.
+        app_obj = current_app._get_current_object()
+        threading.Thread(
+            target=_send_bulk_email,
+            args=(app_obj, subject, body, recipients),
+            daemon=True,
+        ).start()
 
-        if sent:
-            flash(f"Email sent to {sent} user(s).")
-        if failed:
-            current_app.logger.error(
-                "Failed to send email to %s recipient(s); see the SMTP error above.",
-                len(failed),
-            )
-            flash(f"Email could not be sent to {len(failed)} user(s).")
+        flash(f"Email is being sent to {len(recipients)} user(s).")
 
         return redirect(url_for('admin.index'))
 
     return render_template('send_email.html')
+
+
+def _send_bulk_email(app, subject, body, recipients):
+    with app.app_context():
+        try:
+            sent, failed = send_bulk_email(subject, body, recipients)
+        except EmailConfigurationError as error:
+            app.logger.error("Bulk email was not sent: %s", error)
+            return
+
+        if failed:
+            app.logger.error(
+                "Failed to send email to %s recipient(s); see the SMTP error above.",
+                len(failed),
+            )
+
+        app.logger.info("Email accepted by Gmail for %s user(s)", sent)
 
