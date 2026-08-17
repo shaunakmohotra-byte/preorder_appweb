@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="admin-section" style="max-width: 760px; margin: 32px auto;">
+<section class="admin-section email-compose-page">
     <div class="admin-section-header">
         <div class="admin-section-title">
             <div class="admin-section-icon">📧</div>
@@ -13,7 +13,7 @@
         <span class="section-label">EMAIL BROADCAST</span>
     </div>
 
-    <form method="post" class="add-item-form">
+    <form method="post" class="email-compose-form">
         <div class="form-group">
             <label for="subject">Subject</label>
             <input
@@ -38,9 +38,9 @@
             ></textarea>
         </div>
 
-        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-            <button class="btn submit-btn" type="submit">📨 Send email</button>
-            <a class="btn" href="{{ url_for('admin.index') }}">Cancel</a>
+        <div class="email-compose-actions">
+            <button class="btn email-compose-submit" type="submit">📨 Send email</button>
+            <a class="btn email-compose-cancel" href="{{ url_for('admin.index') }}">Cancel</a>
         </div>
     </form>
 </section>
