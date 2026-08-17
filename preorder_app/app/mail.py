@@ -1,11 +1,13 @@
 import logging
 import os
+import ssl
 import smtplib
 from email.message import EmailMessage
 
 
 SMTP_HOST = "smtp.gmail.com"
 SMTP_PORT = 465  # Gmail SMTP over SSL
+SMTP_TLS_PORT = 587  # Gmail SMTP with STARTTLS fallback
 SMTP_TIMEOUT_SECONDS = 30
 logger = logging.getLogger(__name__)
 
@@ -43,6 +45,30 @@ def _message(sender, recipient, subject, body):
     return message
 
 
+def _connect_to_gmail(username, password):
+    """Connect using Gmail's SSL endpoint, then fall back to STARTTLS."""
+    try:
+        smtp = smtplib.SMTP_SSL(
+            SMTP_HOST, SMTP_PORT, timeout=SMTP_TIMEOUT_SECONDS
+        )
+        smtp.login(username, password)
+        return smtp
+    except (OSError, smtplib.SMTPException):
+        logger.warning(
+            "Gmail SSL SMTP connection failed; retrying with STARTTLS on port %s",
+            SMTP_TLS_PORT,
+        )
+
+    smtp = smtplib.SMTP(
+        SMTP_HOST, SMTP_TLS_PORT, timeout=SMTP_TIMEOUT_SECONDS
+    )
+    smtp.ehlo()
+    smtp.starttls(context=ssl.create_default_context())
+    smtp.ehlo()
+    smtp.login(username, password)
+    return smtp
+
+
 def send_bulk_email(subject, body, recipients):
     """Send one private plain-text email per recipient through Gmail SMTP.
 
@@ -59,10 +85,7 @@ def send_bulk_email(subject, body, recipients):
     failed = []
 
     try:
-        with smtplib.SMTP_SSL(
-            SMTP_HOST, SMTP_PORT, timeout=SMTP_TIMEOUT_SECONDS
-        ) as smtp:
-            smtp.login(username, password)
+        with _connect_to_gmail(username, password) as smtp:
 
             for recipient in recipients:
                 try:
