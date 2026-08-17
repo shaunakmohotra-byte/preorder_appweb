@@ -1,81 +1,71 @@
+"""Email delivery through SendGrid's HTTPS API.
+
+Render cannot reach Gmail's SMTP ports, so this module uses an HTTPS API
+instead. SendGrid can verify a single Gmail sender address.
+"""
+
+import json
 import logging
 import os
-import ssl
-import smtplib
-from email.message import EmailMessage
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 
 
-SMTP_HOST = "smtp.gmail.com"
-SMTP_PORT = 465  # Gmail SMTP over SSL
-SMTP_TLS_PORT = 587  # Gmail SMTP with STARTTLS fallback
-SMTP_TIMEOUT_SECONDS = 30
+SENDGRID_MAIL_SEND_URL = "https://api.sendgrid.com/v3/mail/send"
+REQUEST_TIMEOUT_SECONDS = 30
 logger = logging.getLogger(__name__)
 
 
 class EmailConfigurationError(RuntimeError):
-    """Raised when Gmail SMTP has not been configured."""
+    """Raised when the SendGrid email provider has not been configured."""
 
 
 def get_email_configuration_error():
     """Return a safe-to-display configuration error, or None when ready."""
-    if not os.environ.get("GMAIL_SMTP_EMAIL", "").strip():
-        return "GMAIL_SMTP_EMAIL is not configured."
-    if not os.environ.get("GMAIL_APP_PASSWORD", "").strip():
-        return "GMAIL_APP_PASSWORD is not configured."
+    if not os.environ.get("SENDGRID_API_KEY", "").strip():
+        return "SENDGRID_API_KEY is not configured."
+    if not os.environ.get("EMAIL_FROM", "").strip():
+        return "EMAIL_FROM is not configured."
     return None
 
 
-def _smtp_configuration():
+def _sendgrid_configuration():
     error = get_email_configuration_error()
     if error:
         raise EmailConfigurationError(error)
 
-    username = os.environ["GMAIL_SMTP_EMAIL"].strip()
-    password = os.environ["GMAIL_APP_PASSWORD"].replace(" ", "").strip()
-    sender = os.environ.get("EMAIL_FROM", username).strip()
-    return username, password, sender
-
-
-def _message(sender, recipient, subject, body):
-    message = EmailMessage()
-    message["From"] = sender
-    message["To"] = recipient
-    message["Subject"] = subject
-    message.set_content(body)
-    return message
-
-
-def _connect_to_gmail(username, password):
-    """Connect using Gmail's SSL endpoint, then fall back to STARTTLS."""
-    try:
-        smtp = smtplib.SMTP_SSL(
-            SMTP_HOST, SMTP_PORT, timeout=SMTP_TIMEOUT_SECONDS
-        )
-        smtp.login(username, password)
-        return smtp
-    except (OSError, smtplib.SMTPException):
-        logger.warning(
-            "Gmail SSL SMTP connection failed; retrying with STARTTLS on port %s",
-            SMTP_TLS_PORT,
-        )
-
-    smtp = smtplib.SMTP(
-        SMTP_HOST, SMTP_TLS_PORT, timeout=SMTP_TIMEOUT_SECONDS
+    return (
+        os.environ["SENDGRID_API_KEY"].strip(),
+        os.environ["EMAIL_FROM"].strip(),
     )
-    smtp.ehlo()
-    smtp.starttls(context=ssl.create_default_context())
-    smtp.ehlo()
-    smtp.login(username, password)
-    return smtp
+
+
+def _send_one_email(api_key, sender, recipient, subject, body):
+    """Send one private message and return only when SendGrid accepts it."""
+    payload = {
+        "personalizations": [{"to": [{"email": recipient}]}],
+        "from": {"email": sender},
+        "subject": subject,
+        "content": [{"type": "text/plain", "value": body}],
+    }
+    request = Request(
+        SENDGRID_MAIL_SEND_URL,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    with urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+        if response.status != 202:
+            raise RuntimeError(f"SendGrid returned HTTP {response.status}")
 
 
 def send_bulk_email(subject, body, recipients):
-    """Send one private plain-text email per recipient through Gmail SMTP.
-
-    Returns ``(sent_count, failed_recipients)``. Gmail is kept to one SMTP
-    connection per broadcast, which is faster than opening one per recipient.
-    """
-    username, password, sender = _smtp_configuration()
+    """Send one private plain-text email per recipient via SendGrid HTTPS."""
+    api_key, sender = _sendgrid_configuration()
     recipients = list(dict.fromkeys(
         email.strip().lower() for email in recipients
         if isinstance(email, str) and email.strip()
@@ -83,25 +73,12 @@ def send_bulk_email(subject, body, recipients):
 
     sent = 0
     failed = []
-
-    try:
-        with _connect_to_gmail(username, password) as smtp:
-
-            for recipient in recipients:
-                try:
-                    refused = smtp.send_message(
-                        _message(sender, recipient, subject, body)
-                    )
-                    if refused:
-                        failed.append(recipient)
-                        logger.error("Gmail refused delivery to one recipient")
-                    else:
-                        sent += 1
-                except smtplib.SMTPException:
-                    failed.append(recipient)
-                    logger.exception("Gmail failed to deliver to one recipient")
-    except (OSError, smtplib.SMTPException):
-        logger.exception("Could not connect to or authenticate with Gmail SMTP")
-        failed.extend(recipients)
+    for recipient in recipients:
+        try:
+            _send_one_email(api_key, sender, recipient, subject, body)
+            sent += 1
+        except (HTTPError, URLError, OSError, RuntimeError):
+            failed.append(recipient)
+            logger.exception("SendGrid did not accept an email for one recipient")
 
     return sent, failed
