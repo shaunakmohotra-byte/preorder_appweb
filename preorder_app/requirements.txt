@@ -4,4 +4,3 @@ gunicorn
 reportlab
 pymongo
 dnspython
-resend

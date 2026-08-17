@@ -4,7 +4,11 @@ from flask import (
 )
 from werkzeug.utils import secure_filename
 from .db import users_col, items_col, orders_col
-from .mail import send_bulk_email
+from .mail import (
+    EmailConfigurationError,
+    get_email_configuration_error,
+    send_bulk_email,
+)
 import uuid
 import os
 import threading
@@ -162,6 +166,11 @@ def send_email():
         subject = request.form.get('subject', '').strip()
         body = request.form.get('message', '').strip()
 
+        email_configuration_error = get_email_configuration_error()
+        if email_configuration_error:
+            flash(f"Email cannot be sent: {email_configuration_error}")
+            return redirect(url_for('admin.send_email'))
+
         if not subject or not body:
             flash("Subject and message are both required")
             return redirect(url_for('admin.send_email'))
@@ -177,7 +186,7 @@ def send_email():
             return redirect(url_for('admin.send_email'))
 
         # Send in a background thread so this request doesn't sit
-        # waiting on the SMTP server for every recipient before
+        # waiting on the email provider for every recipient before
         # redirecting the admin back to the dashboard.
         app_obj = current_app._get_current_object()
         threading.Thread(
@@ -194,11 +203,16 @@ def send_email():
 
 def _send_bulk_email(app, subject, body, recipients):
     with app.app_context():
-        sent, failed = send_bulk_email(subject, body, recipients)
+        try:
+            sent, failed = send_bulk_email(subject, body, recipients)
+        except EmailConfigurationError as error:
+            app.logger.error("Bulk email was not sent: %s", error)
+            return
 
         if failed:
             app.logger.error(
-                f"Failed to send email to {len(failed)} recipient(s): {failed}"
+                "Failed to send email to %s recipient(s); see the SMTP error above.",
+                len(failed),
             )
 
         app.logger.info(f"Sent email to {sent} user(s)")

@@ -1,6 +1,5 @@
 from flask import Flask
 import os
-import resend
 from .db import db
 
 
@@ -27,14 +26,6 @@ def create_app():
         'SECRET_KEY',
         'dev-secret'
     )
-
-    # ===============================
-    # RESEND
-    # ===============================
-    resend.api_key = os.environ.get('RESEND_API_KEY')
-
-    if not resend.api_key:
-        print("WARNING: RESEND_API_KEY is not configured.")
 
     # Attach DB to app
     app.db = db
