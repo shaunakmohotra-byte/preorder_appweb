@@ -2036,15 +2036,18 @@ table form button:hover {
     display: flex;
     gap: 12px;
     align-items: center;
-    justify-content: flex-end;
+    width: 100%;
 }
 
 .email-compose-submit {
-    min-width: 180px;
+    width: 100%;
+    min-height: 68px;
     border: none;
+    font-size: 19px;
 }
 
 .email-compose-cancel {
+    flex: 0 0 auto;
     background: #f2f2f2;
     color: #292d38;
 }

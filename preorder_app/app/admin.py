@@ -11,7 +11,6 @@ from .mail import (
 )
 import uuid
 import os
-import threading
 
 bp = Blueprint('admin', __name__)
 UPLOAD_FOLDER = os.path.join('app', 'static', 'uploads')
@@ -185,35 +184,23 @@ def send_email():
             flash("No users with an email address were found")
             return redirect(url_for('admin.send_email'))
 
-        # Send in a background thread so this request doesn't sit
-        # waiting on the email provider for every recipient before
-        # redirecting the admin back to the dashboard.
-        app_obj = current_app._get_current_object()
-        threading.Thread(
-            target=_send_bulk_email,
-            args=(app_obj, subject, body, recipients),
-            daemon=True
-        ).start()
-
-        flash(f"Sending email to {len(recipients)} user(s)...")
-        return redirect(url_for('admin.index'))
-
-    return render_template('send_email.html')
-
-
-def _send_bulk_email(app, subject, body, recipients):
-    with app.app_context():
         try:
             sent, failed = send_bulk_email(subject, body, recipients)
         except EmailConfigurationError as error:
-            app.logger.error("Bulk email was not sent: %s", error)
-            return
+            current_app.logger.error("Bulk email was not sent: %s", error)
+            flash(f"Email could not be sent: {error}")
+            return redirect(url_for('admin.send_email'))
 
+        if sent:
+            flash(f"Email sent to {sent} user(s).")
         if failed:
-            app.logger.error(
+            current_app.logger.error(
                 "Failed to send email to %s recipient(s); see the SMTP error above.",
                 len(failed),
             )
+            flash(f"Email could not be sent to {len(failed)} user(s).")
 
-        app.logger.info(f"Sent email to {sent} user(s)")
+        return redirect(url_for('admin.index'))
+
+    return render_template('send_email.html')
 
